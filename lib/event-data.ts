@@ -17,7 +17,7 @@ export const EVENT_DATA = {
   
   organizer: {
     name: 'BBS College of Engineering and Technology (BBSCET)',
-    location: 'BBS Campus Santipuram, Prayagraj 210013',
+    location: 'BBS Campus Santipuram, Prayagraj 211013',
   },
 
   eventType: 'Quiz Challenge',
