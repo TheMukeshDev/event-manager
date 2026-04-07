@@ -112,25 +112,34 @@ export function AmbassadorSection({ ambassadors }: AmbassadorSectionProps) {
               <div className="rounded-full bg-slate-900 px-4 py-2 text-sm text-slate-300">Updated weekly</div>
             </div>
 
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {ambassadors.slice(0, 4).map((ambassador) => {
-                const referrals = ambassador.totalReferrals ?? ambassador.validReferralCount ?? 0
-                const name = ambassador.name ?? ambassador.fullName
-                const college = ambassador.college ?? ambassador.collegeName
+            <div className="mt-6">
+              {ambassadors.length > 0 ? (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {ambassadors.slice(0, 4).map((ambassador) => {
+                    const referrals = ambassador.totalReferrals ?? ambassador.validReferralCount ?? 0
+                    const name = ambassador.name ?? ambassador.fullName
+                    const college = ambassador.college ?? ambassador.collegeName
 
-                return (
-                  <div key={ambassador.id} className="rounded-3xl border border-slate-700/80 bg-slate-900/80 p-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <p className="text-base font-semibold text-white">{name}</p>
-                        <p className="text-sm text-slate-400">{college}</p>
+                    return (
+                      <div key={ambassador.id} className="rounded-3xl border border-slate-700/80 bg-slate-900/80 p-4">
+                        <div className="flex items-center justify-between gap-3">
+                          <div>
+                            <p className="text-base font-semibold text-white">{name}</p>
+                            <p className="text-sm text-slate-400">{college}</p>
+                          </div>
+                          <span className="rounded-full bg-cyan-500/15 px-3 py-1 text-xs font-semibold text-cyan-200">{referrals} refs</span>
+                        </div>
+                        <p className="mt-3 text-sm text-slate-400">{getRewardLabel(referrals)}</p>
                       </div>
-                      <span className="rounded-full bg-cyan-500/15 px-3 py-1 text-xs font-semibold text-cyan-200">{referrals} refs</span>
-                    </div>
-                    <p className="mt-3 text-sm text-slate-400">{getRewardLabel(referrals)}</p>
-                  </div>
-                )
-              })}
+                    )
+                  })}
+                </div>
+              ) : (
+                <div className="rounded-3xl border border-slate-700/80 bg-slate-900/80 p-6 text-sm text-slate-300">
+                  <p className="font-semibold text-white">Ambassador leaderboard is coming soon.</p>
+                  <p className="mt-2 text-slate-400">Approved ambassadors and referral standings will appear here once the program is active.</p>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>
@@ -257,12 +266,6 @@ export function AmbassadorSection({ ambassadors }: AmbassadorSectionProps) {
                   className="inline-flex items-center justify-center rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm font-semibold text-white transition hover:border-cyan-400"
                 >
                   Submit ambassador proof
-                </a>
-                <a
-                  href="/ambassador"
-                  className="inline-flex items-center justify-center rounded-2xl border border-cyan-500 bg-cyan-500/10 px-4 py-3 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-500/20"
-                >
-                  Visit ambassador portal
                 </a>
               </div>
 

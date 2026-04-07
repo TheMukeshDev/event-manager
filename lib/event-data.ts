@@ -6,9 +6,9 @@ export const EVENT_DATA = {
   shortName: 'Tech Hub BBS',
   description: 'Test your C programming and computer awareness skills in this exciting online quiz challenge',
   mode: 'Online',
-  date: '12 April 2026',
+  date: '8 April 2026',
   time: '6:00 PM – 6:30 PM IST',
-  registrationDeadline: '11 April 2026, 12:00 AM IST',
+  registrationDeadline: '7 April 2026, 12:00 AM IST',
   duration: '20 minutes',
   questions: 20,
   capacity: 50,
@@ -140,7 +140,7 @@ export const EVENT_DATA = {
   faqs: [
     {
       question: 'What is the registration deadline?',
-      answer: 'The registration deadline is 11 April 2026 at 12:00 AM IST. Make sure to register before this date to participate.',
+      answer: 'The registration deadline is 7 April 2026 at 12:00 AM IST. Make sure to register before this date to participate.',
     },
     {
       question: 'How long is the quiz?',
@@ -176,18 +176,18 @@ export const EVENT_DATA = {
     },
     {
       phase: 'Registration Deadline',
-      date: '11 April 2026, 12:00 AM IST',
+      date: '7 April 2026, 12:00 AM IST',
       description: 'Last day to register for the quiz challenge',
     },
     {
       phase: 'Quiz Challenge',
-      date: '12 April 2026',
+      date: '8 April 2026',
       time: '6:00 PM - 6:30 PM IST',
       description: 'Take the 20-minute online quiz',
     },
     {
       phase: 'Result Announcement',
-      date: '12 April 2026 (Evening)',
+      date: '8 April 2026 (Evening)',
       description: 'Winners and results announced',
     },
     {

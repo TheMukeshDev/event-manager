@@ -144,7 +144,7 @@ export function Footer() {
           className="pt-8 border-t border-gray-700"
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
-            <p>&copy; 2024 EventManager. All rights reserved.</p>
+            <p>&copy; 2026 Tech Hub BBS. All rights reserved.</p>
             <p>
               Designed & built with passion for event design by{' '}
               <a
