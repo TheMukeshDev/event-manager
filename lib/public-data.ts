@@ -8,6 +8,7 @@ import {
   mockTeam,
   mockSponsors,
   mockFAQs,
+  mockAmbassadors,
 } from './mock-data'
 
 export type PublicOverview = {
@@ -18,12 +19,26 @@ export type PublicOverview = {
   sponsors: typeof mockSponsors
   faqs: typeof mockFAQs
   team: typeof mockTeam
+  ambassadors: typeof mockAmbassadors
   contacts: typeof EVENT_DATA.contacts
   highlights: typeof EVENT_DATA.highlights
   adminSettings: {
-    sponsor_cta_visible: boolean
+    registration_link: string
+    whatsapp_community_link: string
+    is_whatsapp_join_mandatory: boolean
+    certificate_rules_text: string
+    certificate_id_prefix: string
     sponsor_cta_whatsapp_number: string
     sponsor_cta_default_message: string
+    sponsor_cta_visible: boolean
+    campus_ambassador_enabled: boolean
+    referral_threshold: number
+    reward_title: string
+    reward_description: string
+    use_external_proof_form: boolean
+    external_proof_form_link: string
+    leaderboard_visible: boolean
+    ambassador_share_message: string
   }
 }
 
@@ -36,11 +51,25 @@ const fallbackOverview: PublicOverview = {
   faqs: mockFAQs,
   team: mockTeam,
   contacts: EVENT_DATA.contacts,
+  ambassadors: mockAmbassadors,
   highlights: EVENT_DATA.highlights,
   adminSettings: {
-    sponsor_cta_visible: true,
+    registration_link: '',
+    whatsapp_community_link: 'https://chat.whatsapp.com/Hc1zaz52LdOAh6kM5NHREA',
+    is_whatsapp_join_mandatory: true,
+    certificate_rules_text: 'Certificates are issued only to valid registered participants who attend/attempt the event and follow all event rules.',
+    certificate_id_prefix: 'BBSCET-TQ-2026',
     sponsor_cta_whatsapp_number: '919771894062',
-    sponsor_cta_default_message: 'Hello Mukesh Kumar, I am interested in sponsoring your event. Please share the sponsorship details, audience reach, and collaboration opportunities.'
+    sponsor_cta_default_message: 'Hello Mukesh Kumar, I am interested in sponsoring your event. Please share the sponsorship details, audience reach, and collaboration opportunities.',
+    sponsor_cta_visible: true,
+    campus_ambassador_enabled: true,
+    referral_threshold: 10,
+    reward_title: 'Certificate of Appreciation + Google swag',
+    reward_description: 'Bring 10 valid referrals and unlock rewards, recognition and ambassador status.',
+    use_external_proof_form: true,
+    external_proof_form_link: 'https://forms.gle/your-campus-ambassador-proof-form',
+    leaderboard_visible: true,
+    ambassador_share_message: 'Hi! Join the Tech Hub BBS challenge using my referral link: ',
   }
 }
 
@@ -68,7 +97,7 @@ export async function getPublicOverview(): Promise<PublicOverview> {
       highlights: EVENT_DATA.highlights,
     }
 
-    const [tracksResponse, timelineResponse, prizesResponse, sponsorsResponse, faqsResponse, organizersResponse, teamResponse, adminSettingsResponse] = await Promise.all([
+    const [tracksResponse, timelineResponse, prizesResponse, sponsorsResponse, faqsResponse, organizersResponse, teamResponse, ambassadorsResponse, adminSettingsResponse] = await Promise.all([
       supabaseServer.from('event_tracks').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
       supabaseServer.from('timeline_items').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
       supabaseServer.from('prizes').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
@@ -76,6 +105,7 @@ export async function getPublicOverview(): Promise<PublicOverview> {
       supabaseServer.from('faqs').select('*').eq('event_id', event.id).order('sort_order', { ascending: true }),
       supabaseServer.from('organizers').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
       supabaseServer.from('team_members').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
+      supabaseServer.from('ambassadors').select('*').eq('event_id', event.id).order('total_referrals', { ascending: false }),
       supabaseServer.from('admin_settings').select('sponsor_cta_visible, sponsor_cta_whatsapp_number, sponsor_cta_default_message').single(),
     ])
 
@@ -87,6 +117,7 @@ export async function getPublicOverview(): Promise<PublicOverview> {
       sponsors: sponsorsResponse.data?.length ? sponsorsResponse.data : mockSponsors,
       faqs: faqsResponse.data?.length ? faqsResponse.data : mockFAQs,
       team: teamResponse.data?.length ? teamResponse.data : mockTeam,
+      ambassadors: ambassadorsResponse.data?.length ? ambassadorsResponse.data : mockAmbassadors,
       contacts: organizersResponse.data?.length
         ? organizersResponse.data.map((organizer: any) => ({
             name: organizer.name,
@@ -96,7 +127,10 @@ export async function getPublicOverview(): Promise<PublicOverview> {
           }))
         : EVENT_DATA.contacts,
       highlights: EVENT_DATA.highlights,
-      adminSettings: adminSettingsResponse.data ?? fallbackOverview.adminSettings,
+      adminSettings: {
+    ...fallbackOverview.adminSettings,
+    ...adminSettingsResponse.data,
+  },
     }
   } catch (error) {
     console.error('Public data fetch failed:', error)

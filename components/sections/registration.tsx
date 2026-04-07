@@ -171,13 +171,16 @@ export function RegistrationSection() {
               </label>
             </div>
 
-            <motion.button
+            <motion.a
+              href="https://unstop.com/o/EhGlUDp?lb=GUZITycG&utm_medium=Share&utm_source=quizzes&utm_campaign=Mukeskum10881"
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full mt-6 neon-button justify-center"
+              className="w-full mt-6 neon-button justify-center inline-flex items-center justify-center"
             >
               Complete Registration
-            </motion.button>
+            </motion.a>
 
             <p className="text-xs text-gray-500 text-center">
               By registering, you agree to our terms and conditions

@@ -6,13 +6,17 @@ export async function POST(request: Request) {
   const body = await request.json()
   const { email, password, fullName, phone, college, stream } = body
 
-  if (!email || !password || !fullName) {
-    return NextResponse.json({ success: false, error: 'Email, password, and full name are required.' }, { status: 400 })
+  if (!email || !fullName) {
+    return NextResponse.json({ success: false, error: 'Email and full name are required.' }, { status: 400 })
   }
+
+  const baseName = fullName.split(' ')[0].toLowerCase().replace(/[^a-z0-9]/g, '')
+  const defaultPassword = `${baseName}bbs`
+  const generatedPassword = password?.trim() || defaultPassword
 
   const signUpResult = await createAuthUserWithPassword({
     email,
-    password,
+    password: generatedPassword,
     fullName,
     phone,
     college,

@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Mail, MapPin, Phone, Github, Linkedin, Twitter } from 'lucide-react'
+import { Mail, MapPin, Phone, Linkedin, Instagram } from 'lucide-react'
 
 export function Footer() {
   const containerVariants = {
@@ -33,9 +33,8 @@ export function Footer() {
   ]
 
   const socials = [
-    { icon: Github, href: '#', label: 'GitHub' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: Twitter, href: '#', label: 'Twitter' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/themukeshdev', label: 'LinkedIn' },
+    { icon: Instagram, href: 'https://instagram.com/themukeshdev', label: 'Instagram' },
   ]
 
   return (
@@ -112,8 +111,8 @@ export function Footer() {
             <Mail className="w-5 h-5 text-cyan-400 shrink-0 mt-1" />
             <div>
               <p className="text-sm text-gray-400">Email</p>
-              <a href="mailto:contact@eventmanager.com" className="text-white hover:text-cyan-300 transition-colors">
-                contact@eventmanager.com
+              <a href="mailto:mukeshkumar916241@gmail.com" className="text-white hover:text-cyan-300 transition-colors">
+                mukeshkumar916241@gmail.com
               </a>
             </div>
           </motion.div>
@@ -132,7 +131,7 @@ export function Footer() {
             <MapPin className="w-5 h-5 text-cyan-400 shrink-0 mt-1" />
             <div>
               <p className="text-sm text-gray-400">Location</p>
-              <p className="text-white">College Campus, City, Country</p>
+              <p className="text-white">BBS Campus Santipuram, Prayagraj 210013</p>
             </div>
           </motion.div>
         </motion.div>
@@ -146,7 +145,17 @@ export function Footer() {
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
             <p>&copy; 2024 EventManager. All rights reserved.</p>
-            <p>Designed & Built with passion for events</p>
+            <p>
+              Designed & built with passion for event design by{' '}
+              <a
+                href="https://www.linkedin.com/in/themukeshdev"
+                target="_blank"
+                rel="noreferrer"
+                className="text-cyan-400 hover:text-white transition-colors"
+              >
+                themukeshdev
+              </a>
+            </p>
           </div>
         </motion.div>
       </div>

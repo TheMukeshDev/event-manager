@@ -8,7 +8,7 @@ export function ContactSection() {
     {
       icon: Mail,
       title: 'Email',
-      value: 'hello@eventmanager.com',
+      value: 'mukeshkumar916241@gmail.com',
       color: 'cyan',
     },
     {
@@ -20,7 +20,7 @@ export function ContactSection() {
     {
       icon: MapPin,
       title: 'Location',
-      value: 'Tech Hub, Silicon Valley',
+      value: 'BBS Campus Santipuram, Prayagraj 210013',
       color: 'blue',
     },
   ]

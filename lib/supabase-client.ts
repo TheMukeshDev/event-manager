@@ -226,12 +226,67 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Ambassador applications table
+CREATE TABLE IF NOT EXISTS ambassador_applications (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  event_id UUID REFERENCES events(id) ON DELETE CASCADE,
+  full_name VARCHAR(255) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  college_name VARCHAR(500) NOT NULL,
+  branch VARCHAR(255) NOT NULL,
+  section VARCHAR(100) NOT NULL,
+  year_or_semester VARCHAR(100) NOT NULL,
+  city VARCHAR(255),
+  state VARCHAR(255),
+  why_fit_for_role TEXT NOT NULL,
+  prior_experience TEXT,
+  social_profile_link VARCHAR(500),
+  whatsapp_number VARCHAR(50),
+  consent BOOLEAN DEFAULT FALSE,
+  status VARCHAR(50) DEFAULT 'pending',
+  admin_notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Ambassadors table
+CREATE TABLE IF NOT EXISTS ambassadors (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  event_id UUID REFERENCES events(id) ON DELETE CASCADE,
+  application_id UUID REFERENCES ambassador_applications(id) ON DELETE SET NULL,
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  full_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(50),
+  college_name VARCHAR(500) NOT NULL,
+  branch VARCHAR(255) NOT NULL,
+  section VARCHAR(100) NOT NULL,
+  year_or_semester VARCHAR(100) NOT NULL,
+  city VARCHAR(255),
+  state VARCHAR(255),
+  referral_code VARCHAR(255) UNIQUE,
+  referral_link VARCHAR(500),
+  total_referrals INTEGER DEFAULT 0,
+  valid_referral_count INTEGER DEFAULT 0,
+  reward_eligible BOOLEAN DEFAULT FALSE,
+  certificate_eligible BOOLEAN DEFAULT FALSE,
+  goodies_eligible BOOLEAN DEFAULT FALSE,
+  status VARCHAR(50) DEFAULT 'approved',
+  reward_status VARCHAR(255),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Registrations table
 CREATE TABLE IF NOT EXISTS registrations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   event_id UUID REFERENCES events(id) ON DELETE CASCADE,
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   track_ids TEXT[] DEFAULT '{}',
+  referral_code VARCHAR(255),
+  ambassador_id UUID REFERENCES ambassadors(id) ON DELETE SET NULL,
+  valid_referral BOOLEAN DEFAULT FALSE,
   status VARCHAR(50) DEFAULT 'registered',
   attendance_verified BOOLEAN DEFAULT FALSE,
   checkin_time TIMESTAMP WITH TIME ZONE,
@@ -250,6 +305,82 @@ CREATE TABLE IF NOT EXISTS certificates (
   issued_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   expires_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Ambassadors table
+CREATE TABLE IF NOT EXISTS ambassadors (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  event_id UUID REFERENCES events(id) ON DELETE CASCADE,
+  application_id UUID REFERENCES ambassador_applications(id) ON DELETE SET NULL,
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  full_name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(50),
+  college_name VARCHAR(500) NOT NULL,
+  branch VARCHAR(255) NOT NULL,
+  section VARCHAR(100) NOT NULL,
+  year_or_semester VARCHAR(100) NOT NULL,
+  city VARCHAR(255),
+  state VARCHAR(255),
+  referral_code VARCHAR(255) UNIQUE,
+  referral_link VARCHAR(500),
+  total_referrals INTEGER DEFAULT 0,
+  valid_referral_count INTEGER DEFAULT 0,
+  reward_eligible BOOLEAN DEFAULT FALSE,
+  certificate_eligible BOOLEAN DEFAULT FALSE,
+  goodies_eligible BOOLEAN DEFAULT FALSE,
+  status VARCHAR(50) DEFAULT 'approved',
+  reward_status VARCHAR(255),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Ambassador referrals table
+CREATE TABLE IF NOT EXISTS ambassador_referrals (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  ambassador_id UUID REFERENCES ambassadors(id) ON DELETE CASCADE,
+  referred_email VARCHAR(255),
+  referred_name VARCHAR(255),
+  registered_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  verified BOOLEAN DEFAULT FALSE,
+  proof_url VARCHAR(500),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Ambassador proof submissions table
+CREATE TABLE IF NOT EXISTS ambassador_proofs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  ambassador_id UUID REFERENCES ambassadors(id) ON DELETE CASCADE,
+  proof_file_url VARCHAR(500),
+  proof_description TEXT,
+  number_of_students_claimed INTEGER DEFAULT 0,
+  referred_student_emails TEXT[],
+  status VARCHAR(50) DEFAULT 'pending',
+  admin_notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Admin settings table
+CREATE TABLE IF NOT EXISTS admin_settings (
+  id INTEGER PRIMARY KEY,
+  registration_link VARCHAR(500),
+  whatsapp_community_link VARCHAR(500),
+  is_whatsapp_join_mandatory BOOLEAN DEFAULT TRUE,
+  certificate_rules_text TEXT,
+  certificate_id_prefix VARCHAR(255),
+  sponsor_cta_whatsapp_number VARCHAR(50),
+  sponsor_cta_default_message TEXT,
+  sponsor_cta_visible BOOLEAN DEFAULT TRUE,
+  campus_ambassador_enabled BOOLEAN DEFAULT TRUE,
+  referral_threshold INTEGER DEFAULT 10,
+  reward_title VARCHAR(255),
+  reward_description TEXT,
+  use_external_proof_form BOOLEAN DEFAULT TRUE,
+  external_proof_form_link VARCHAR(500),
+  leaderboard_visible BOOLEAN DEFAULT TRUE,
+  ambassador_share_message TEXT,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Enable Row Level Security (RLS)
@@ -278,4 +409,7 @@ CREATE INDEX idx_registrations_user_id ON registrations(user_id);
 CREATE INDEX idx_registrations_event_id ON registrations(event_id);
 CREATE INDEX idx_certificates_user_id ON certificates(user_id);
 CREATE INDEX idx_certificates_event_id ON certificates(event_id);
+CREATE INDEX idx_ambassadors_event_id ON ambassadors(event_id);
+CREATE INDEX idx_ambassador_referrals_ambassador_id ON ambassador_referrals(ambassador_id);
+CREATE INDEX idx_ambassador_proofs_ambassador_id ON ambassador_proofs(ambassador_id);
 `
