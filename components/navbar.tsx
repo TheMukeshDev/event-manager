@@ -126,8 +126,7 @@ export function Navbar() {
               Register Now
             </motion.a>
           </motion.div>
-        </div>
-      </motion.nav>
+
           {/* Mobile Backdrop */}
           {isOpen && (
             <motion.div 
