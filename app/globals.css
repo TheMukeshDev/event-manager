@@ -187,7 +187,12 @@
 }
 
 .particle-small {
-  @apply particle w-1 h-1 rounded-full bg-cyan-400;
+  position: fixed;
+  pointer-events: none;
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 9999px;
+  background-color: #22d3ee;
   animation: particle-float 10s ease-out forwards;
 }
 
