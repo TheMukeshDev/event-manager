@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
+import { EVENT_DATA } from '@/lib/event-data'
 
 const navItems = [
   { label: 'About', href: '#about' },
   { label: 'Highlights', href: '#highlights' },
-  { label: 'Tracks', href: '#tracks' },
   { label: 'Timeline', href: '#timeline' },
   { label: 'Prizes', href: '#prizes' },
+  { label: 'Certificates', href: '#certificates' },
   { label: 'Team', href: '#team' },
   { label: 'FAQ', href: '#faq' },
 ]
@@ -47,9 +48,9 @@ export function Navbar() {
               className="flex items-center gap-2 font-bold text-xl"
             >
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-                <span className="text-white font-bold">EM</span>
+                <span className="text-white font-bold text-xs">TQ</span>
               </div>
-              <span className="gradient-cyan-green">EventManager</span>
+              <span className="gradient-cyan-green text-sm">{EVENT_DATA.shortName}</span>
             </motion.div>
 
             {/* Desktop Menu */}
