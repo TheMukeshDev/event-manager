@@ -61,7 +61,7 @@ export function Navbar() {
                 <motion.a
                   key={idx}
                   href={item.href}
-                  className="px-4 py-2 rounded-lg text-gray-300 hover:text-white text-sm transition-colors duration-300 hover:bg-cyan-500/10"
+                  className="px-4 py-2 rounded-lg text-gray-300 hover:text-white text-sm transition-colors duration-300 hover:bg-cyan-500/10 pointer-events-auto cursor-pointer"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -86,7 +86,7 @@ export function Navbar() {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden"
+              className="md:hidden pointer-events-auto cursor-pointer"
               onClick={() => setIsOpen(!isOpen)}
             >
               {isOpen ? (
@@ -102,13 +102,13 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: isOpen ? 1 : 0, height: isOpen ? 'auto' : 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden mt-4 space-y-2 overflow-hidden"
+            className="md:hidden absolute top-full left-0 w-full mt-4 space-y-2 overflow-hidden bg-glass-dark/95 backdrop-blur-xl border-t border-cyan-500/30 z-[49] pointer-events-auto shadow-2xl max-h-[70vh] overflow-y-auto"
           >
             {navItems.map((item, idx) => (
               <a
                 key={idx}
                 href={item.href}
-                className="block px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-cyan-500/10 transition-colors duration-300 text-sm"
+                className="block w-full px-6 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-cyan-500/20 transition-all duration-300 text-base font-medium pointer-events-auto cursor-pointer"
                 onClick={() => setIsOpen(false)}
               >
                 {item.label}
@@ -120,12 +120,24 @@ export function Navbar() {
               rel="noopener noreferrer"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full mt-4 px-6 py-2 rounded-lg bg-cyan-500 text-white font-semibold text-sm inline-flex items-center justify-center"
+              className="w-full mt-6 px-6 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold text-base shadow-lg hover:shadow-[0_0_20px_rgba(0,217,255,0.5)] transition-all duration-300 pointer-events-auto inline-flex items-center justify-center"
               onClick={() => setIsOpen(false)}
             >
-              Register
+              Register Now
             </motion.a>
           </motion.div>
+        </div>
+      </motion.nav>
+          {/* Mobile Backdrop */}
+          {isOpen && (
+            <motion.div 
+              className="md:hidden fixed inset-0 z-[48] bg-black/50 backdrop-blur-sm pointer-events-auto" 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+            />
+          )}
         </div>
       </motion.nav>
     </>

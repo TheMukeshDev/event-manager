@@ -49,7 +49,7 @@ export function AboutSection({ event }: AboutSectionProps) {
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="heading-lg gradient-cyan-green mb-6">About {event.shortName}</h2>
+          <h2 className="heading-lg gradient-cyan-green mb-6 break-words px-2 sm:px-0">About {event.shortName}</h2>
           <p className="text-gray-300 text-lg mb-6 leading-relaxed">
             {event.title} is a premium college event experience built for ambitious participants looking to level up with quiz challenges, certificates, and neon-glow rewards.
           </p>
