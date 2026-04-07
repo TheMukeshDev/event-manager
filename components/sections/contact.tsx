@@ -193,7 +193,7 @@ export function ContactSection() {
         transition={{ duration: 0.6, delay: 0.3 }}
       >
         <p className="text-gray-500 text-sm mb-2">
-          &copy; 2024 EventManager. All rights reserved.
+          &copy; 2024 Tech Hub BBS. All rights reserved.
         </p>
         <p className="text-gray-600 text-xs">
           Built with innovation and passion for amazing events
