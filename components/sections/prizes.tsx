@@ -39,7 +39,7 @@ export function PrizesSection({ prizes }: PrizesSectionProps) {
       >
         <h2 className="heading-lg gradient-cyan-green mb-4">Rewards and Prizes</h2>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Top performers get Google swag and certificates, while every participant receives a participation certificate.
+          Win exclusive swags, premium dairy hamper, pens, stickers, and achievement certificates for top 3. All quiz completers get instant Participation Certificate on Unstop!
         </p>
       </motion.div>
 
