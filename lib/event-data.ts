@@ -1,6 +1,8 @@
 // TechQuiz Event Data
 export const EVENT_DATA = {
+  id: '1',
   name: 'TechQuiz: Computer Awareness & C Language Challenge',
+  title: 'TechQuiz: Computer Awareness & C Language Challenge',
   shortName: 'TechQuiz',
   description: 'Test your C programming and computer awareness skills in this exciting online quiz challenge',
   mode: 'Online',
@@ -9,11 +11,24 @@ export const EVENT_DATA = {
   registrationDeadline: '11 April 2026, 12:00 AM IST',
   duration: '20 minutes',
   questions: 20,
+  capacity: 50,
+  registeredCount: 29,
+  status: 'upcoming',
   
   organizer: {
     name: 'BBS College of Engineering and Technology (BBSCET)',
     location: 'Allahabad, Uttar Pradesh',
   },
+
+  eventType: 'Quiz Championship',
+  teamSize: 'Individual / Team of 2',
+  venue: 'Virtual + BBSCET Auditorium',
+  brochureUrl: 'https://example.com/event-brochure.pdf',
+  rules: [
+    'No external assistance is allowed.',
+    'All answers must be submitted within 20 minutes.',
+    'Participants should maintain academic honesty.',
+  ],
 
   contacts: [
     {
@@ -56,21 +71,33 @@ export const EVENT_DATA = {
 
   highlights: [
     {
+      id: 'h1',
+      eventId: '1',
+      order: 1,
       title: 'Online Quiz Challenge',
       description: '20 MCQs in 20 minutes covering computer awareness and C programming',
       icon: 'Zap',
     },
     {
+      id: 'h2',
+      eventId: '1',
+      order: 2,
       title: 'C Programming Focus',
       description: 'Test your knowledge of C language fundamentals and concepts',
       icon: 'Code',
     },
     {
+      id: 'h3',
+      eventId: '1',
+      order: 3,
       title: 'Certificates for All',
       description: 'Every participant receives a digital certificate',
       icon: 'Award',
     },
     {
+      id: 'h4',
+      eventId: '1',
+      order: 4,
       title: 'Google Swag Rewards',
       description: 'Top 3 winners get exclusive Google merchandise',
       icon: 'Gift',

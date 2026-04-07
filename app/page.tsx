@@ -1,5 +1,3 @@
-'use client'
-
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { FloatingParticles } from '@/components/floating-particles'
@@ -14,8 +12,11 @@ import { CertificateSection } from '@/components/sections/certificate'
 import { TeamSection } from '@/components/sections/team'
 import { SponsorsSection } from '@/components/sections/sponsors'
 import { FAQSection } from '@/components/sections/faq'
+import { getPublicOverview } from '@/lib/public-data'
 
-export default function Home() {
+export default async function Home() {
+  const { event, tracks, timeline, prizes, sponsors, faqs, team } = await getPublicOverview()
+
   return (
     <>
       <ScrollProgressBar />
@@ -25,32 +26,32 @@ export default function Home() {
       <main className="min-h-screen pt-16">
         {/* Hero Section */}
         <section id="hero">
-          <HeroSection />
+          <HeroSection event={event} />
         </section>
 
         {/* About Section */}
         <section id="about">
-          <AboutSection />
+          <AboutSection event={event} />
         </section>
 
         {/* Highlights Section */}
         <section id="highlights">
-          <HighlightsSection />
+          <HighlightsSection highlights={event.highlights} />
         </section>
 
         {/* Tracks Section */}
         <section id="tracks">
-          <TracksSection />
+          <TracksSection tracks={tracks} />
         </section>
 
         {/* Timeline Section */}
         <section id="timeline">
-          <TimelineSection />
+          <TimelineSection timeline={timeline} />
         </section>
 
         {/* Prizes Section */}
         <section id="prizes">
-          <PrizesSection />
+          <PrizesSection prizes={prizes} />
         </section>
 
         {/* Certificates Section */}
@@ -60,17 +61,17 @@ export default function Home() {
 
         {/* Team Section */}
         <section id="team">
-          <TeamSection />
+          <TeamSection team={team} />
         </section>
 
         {/* Sponsors Section */}
         <section id="sponsors">
-          <SponsorsSection />
+          <SponsorsSection sponsors={sponsors} />
         </section>
 
         {/* FAQ Section */}
         <section id="faq">
-          <FAQSection />
+          <FAQSection faqs={faqs} />
         </section>
       </main>
 

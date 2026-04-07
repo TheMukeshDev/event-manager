@@ -3,12 +3,14 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'
-import { EVENT_DATA } from '@/lib/event-data'
+import { FAQ } from '@/lib/types'
 
-export function FAQSection() {
+interface FAQSectionProps {
+  faqs: FAQ[]
+}
+
+export function FAQSection({ faqs }: FAQSectionProps) {
   const [openIndex, setOpenIndex] = useState(0)
-
-  const faqs = EVENT_DATA.faqs
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -40,7 +42,7 @@ export function FAQSection() {
         transition={{ duration: 0.6 }}
       >
         <h2 className="heading-lg gradient-cyan-green mb-4">Frequently Asked Questions</h2>
-        <p className="text-gray-400">Everything you need to know about EventManager</p>
+        <p className="text-gray-400">Everything you need to know about your next event experience.</p>
       </motion.div>
 
       <motion.div
@@ -52,7 +54,7 @@ export function FAQSection() {
       >
         {faqs.map((faq, index) => (
           <motion.div
-            key={index}
+            key={faq.id}
             variants={itemVariants}
             className="glass-dark rounded-lg overflow-hidden border border-cyan-500/20 hover:border-cyan-500/40 transition-colors"
           >
@@ -86,7 +88,6 @@ export function FAQSection() {
         ))}
       </motion.div>
 
-      {/* Contact CTA */}
       <motion.div
         className="mt-12 text-center"
         initial={{ opacity: 0, y: 20 }}
@@ -95,13 +96,14 @@ export function FAQSection() {
         transition={{ duration: 0.6, delay: 0.3 }}
       >
         <p className="text-gray-400 mb-4">Didn&apos;t find your answer?</p>
-        <motion.button
+        <motion.a
+          href="#contact"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="neon-button"
         >
           Contact Support
-        </motion.button>
+        </motion.a>
       </motion.div>
     </section>
   )

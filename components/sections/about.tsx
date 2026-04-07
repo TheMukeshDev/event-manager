@@ -2,17 +2,21 @@
 
 import { motion } from 'framer-motion'
 import { CheckCircle2, Target, Users, Award } from 'lucide-react'
-import { EVENT_DATA } from '@/lib/event-data'
+import { EventData } from '@/lib/event-data'
 
-export function AboutSection() {
+interface AboutSectionProps {
+  event: EventData
+}
+
+export function AboutSection({ event }: AboutSectionProps) {
   const stats = [
-    { icon: Target, label: 'Questions', value: EVENT_DATA.questions },
-    { icon: Users, label: 'Seats', value: EVENT_DATA.seats.total },
-    { icon: Award, label: 'Duration', value: `${EVENT_DATA.duration}` },
-    { icon: CheckCircle2, label: 'Difficulty', value: 'Easy-Moderate' },
+    { icon: Target, label: 'Questions', value: event.questions },
+    { icon: Users, label: 'Seats', value: event.capacity },
+    { icon: Award, label: 'Duration', value: `${event.duration}` },
+    { icon: CheckCircle2, label: 'Event Type', value: event.eventType ?? 'Quiz Championship' },
   ]
 
-  const features: string[] = EVENT_DATA.features ?? []
+  const features: string[] = event.features ?? []
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -44,9 +48,9 @@ export function AboutSection() {
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="heading-lg gradient-cyan-green mb-6">About {EVENT_DATA.shortName}</h2>
+          <h2 className="heading-lg gradient-cyan-green mb-6">About {event.shortName}</h2>
           <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-            {EVENT_DATA.name} is an exclusive online quiz challenge designed to test your knowledge of Computer Awareness and C Programming. Compete with students from across India and showcase your technical expertise!
+            {event.title} is a premium college event experience built for ambitious participants looking to level up with quiz challenges, certificates, and neon-glow rewards.
           </p>
 
           {/* Features grid */}
@@ -78,33 +82,20 @@ export function AboutSection() {
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
         >
-          {[
-            { title: 'Founded', value: '2024', color: 'cyan' },
-            { title: 'Global Reach', value: '150+ Countries', color: 'green' },
-            { title: 'Event Types', value: '50+', color: 'blue' },
-            { title: 'Support', value: '24/7', color: 'cyan' },
-          ].map((stat, index) => (
+          {stats.map((stat, index) => (
             <motion.div
               key={index}
               whileHover={{ scale: 1.02, y: -5 }}
               className={`glass-dark rounded-lg p-6 border-l-4 ${
-                stat.color === 'cyan'
+                index % 3 === 0
                   ? 'border-l-cyan-400 glow-cyan'
-                  : stat.color === 'green'
+                  : index % 3 === 1
                     ? 'border-l-green-400 glow-green'
                     : 'border-l-blue-400 glow-blue'
               } hover-glow-cyan`}
             >
-              <p className="text-gray-400 text-sm font-medium mb-2">{stat.title}</p>
-              <p
-                className={`text-2xl font-bold ${
-                  stat.color === 'cyan'
-                    ? 'text-cyan-300'
-                    : stat.color === 'green'
-                      ? 'text-green-300'
-                      : 'text-blue-300'
-                }`}
-              >
+              <p className="text-gray-400 text-sm font-medium mb-2">{stat.label}</p>
+              <p className={`text-2xl font-bold ${index % 3 === 0 ? 'text-cyan-300' : index % 3 === 1 ? 'text-green-300' : 'text-blue-300'}`}>
                 {stat.value}
               </p>
             </motion.div>

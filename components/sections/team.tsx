@@ -1,14 +1,17 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Mail, Phone } from 'lucide-react'
-import { EVENT_DATA } from '@/lib/event-data'
+import { TeamMember } from '@/lib/types'
 
-export function TeamSection() {
-  const team = EVENT_DATA.contacts.map((contact, i) => ({
-    ...contact,
-    initials: contact.name.split(' ').map(n => n[0]).join(''),
-    color: ['from-cyan-400', 'from-green-400'][i % 2],
+interface TeamSectionProps {
+  team: TeamMember[]
+}
+
+export function TeamSection({ team }: TeamSectionProps) {
+  const preparedTeam = team.map((member, i) => ({
+    ...member,
+    initials: member.name.split(' ').map((n) => n[0]).join(''),
+    color: ['from-cyan-400', 'from-green-400', 'from-blue-400'][i % 3],
   }))
 
   const containerVariants = {
@@ -42,7 +45,7 @@ export function TeamSection() {
       >
         <h2 className="heading-lg gradient-cyan-green mb-4">Meet Our Team</h2>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          A dedicated team working to make EventManager the best event platform
+          A dedicated team working to make EventManager feel polished, modern, and immediately impactful.
         </p>
       </motion.div>
 
@@ -53,9 +56,9 @@ export function TeamSection() {
         whileInView="visible"
         viewport={{ once: true, margin: '-100px' }}
       >
-        {team.map((member, index) => (
+        {preparedTeam.map((member) => (
           <motion.div
-            key={index}
+            key={member.id}
             variants={itemVariants}
             whileHover={{
               scale: 1.08,
@@ -64,7 +67,6 @@ export function TeamSection() {
             className="group"
           >
             <div className="glass-dark rounded-lg p-6 text-center glow-cyan hover-glow-cyan">
-              {/* Avatar */}
               <motion.div
                 whileHover={{ scale: 1.15 }}
                 className={`w-20 h-20 rounded-full bg-gradient-to-br ${member.color} to-blue-500 flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4`}
@@ -74,8 +76,8 @@ export function TeamSection() {
 
               <h3 className="text-lg font-bold text-white mb-1">{member.name}</h3>
               <p className="text-sm text-cyan-300 font-medium">{member.role}</p>
+              <p className="text-sm text-gray-400 mt-3 leading-relaxed">{member.bio}</p>
 
-              {/* Decorative line */}
               <div className="mt-4 h-1 w-12 bg-gradient-to-r from-cyan-400 to-green-400 mx-auto rounded-full" />
             </div>
           </motion.div>

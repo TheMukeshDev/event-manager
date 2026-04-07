@@ -2,9 +2,13 @@
 
 import { motion } from 'framer-motion'
 import { ArrowRight, Sparkles, Calendar, MapPin, Users } from 'lucide-react'
-import { EVENT_DATA } from '@/lib/event-data'
+import { EventData } from '@/lib/event-data'
 
-export function HeroSection() {
+interface HeroSectionProps {
+  event: EventData
+}
+
+export function HeroSection({ event }: HeroSectionProps) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -43,7 +47,7 @@ export function HeroSection() {
         <motion.div variants={itemVariants} className="mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-cyan-500/30">
             <Sparkles className="w-4 h-4 text-cyan-400" />
-            <span className="text-sm font-semibold text-cyan-300">{EVENT_DATA.mode} Event</span>
+            <span className="text-sm font-semibold text-cyan-300">{event.mode} Event</span>
           </div>
         </motion.div>
 
@@ -52,7 +56,7 @@ export function HeroSection() {
           variants={itemVariants}
           className="heading-xl gradient-cyan-green mb-6 leading-tight"
         >
-          {EVENT_DATA.name}
+          {event.title}
         </motion.h1>
 
         {/* Subtitle */}
@@ -60,7 +64,7 @@ export function HeroSection() {
           variants={itemVariants}
           className="text-lg md:text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed"
         >
-          {EVENT_DATA.description}
+          {event.description}
         </motion.p>
 
         {/* Event Info Cards */}
@@ -73,8 +77,8 @@ export function HeroSection() {
               <Calendar className="w-5 h-5" />
               <span className="font-semibold">Date</span>
             </div>
-            <p className="text-gray-300">{EVENT_DATA.date}</p>
-            <p className="text-sm text-gray-400">{EVENT_DATA.time}</p>
+            <p className="text-gray-300">{event.date}</p>
+            <p className="text-sm text-gray-400">{event.time}</p>
           </div>
 
           <div className="glass-dark rounded-lg p-4 border-green-500/20">
@@ -82,17 +86,17 @@ export function HeroSection() {
               <Users className="w-5 h-5" />
               <span className="font-semibold">Seats</span>
             </div>
-            <p className="text-gray-300">{EVENT_DATA.seats.available}/{EVENT_DATA.seats.total} Available</p>
-            <p className="text-sm text-gray-400">Limited spots</p>
+            <p className="text-gray-300">{event.registeredCount}/{event.capacity} Registered</p>
+            <p className="text-sm text-gray-400">Limited availability</p>
           </div>
 
           <div className="glass-dark rounded-lg p-4 border-blue-500/20">
             <div className="flex items-center gap-2 text-blue-300 mb-2">
               <MapPin className="w-5 h-5" />
-              <span className="font-semibold">Organizer</span>
+              <span className="font-semibold">Location</span>
             </div>
-            <p className="text-gray-300 text-sm">{EVENT_DATA.organizer.name}</p>
-            <p className="text-xs text-gray-400">{EVENT_DATA.organizer.location}</p>
+            <p className="text-gray-300 text-sm">{event.venue}</p>
+            <p className="text-xs text-gray-400">{event.mode}</p>
           </div>
         </motion.div>
 
@@ -101,45 +105,37 @@ export function HeroSection() {
           variants={itemVariants}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="neon-button group"
-          >
+          <a href="#registration" className="neon-button group inline-flex items-center justify-center">
             <span className="flex items-center gap-2">
               Register Now
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </span>
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 rounded-lg border border-gray-600 text-gray-300 font-semibold transition-all duration-300 hover:border-green-400 hover:text-green-300"
-          >
+          </a>
+          <a href="#certificate-verify" className="px-6 py-3 rounded-lg border border-gray-600 text-gray-300 font-semibold transition-all duration-300 hover:border-green-400 hover:text-green-300">
             Verify Certificate
-          </motion.button>
+          </a>
         </motion.div>
 
-        {/* Quiz Stats */}
+        {/* Event Stats */}
         <motion.div
           animate={{ y: [0, -20, 0] }}
           transition={{ duration: 4, repeat: Infinity }}
           className="mt-20"
         >
           <div className="inline-block glass-dark rounded-lg p-6 glow-cyan">
-            <p className="text-sm text-gray-300 mb-4">Quiz Challenge Details</p>
+            <p className="text-sm text-gray-300 mb-4">Event Challenge Specs</p>
             <div className="flex gap-8 justify-center text-center">
               <div>
-                <div className="text-2xl font-bold text-cyan-400">{EVENT_DATA.questions}</div>
+                <div className="text-2xl font-bold text-cyan-400">{event.questions}</div>
                 <div className="text-xs text-gray-400">Questions</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-green-400">{EVENT_DATA.duration}</div>
+                <div className="text-2xl font-bold text-green-400">{event.duration}</div>
                 <div className="text-xs text-gray-400">Duration</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-blue-400">Easy-Moderate</div>
-                <div className="text-xs text-gray-400">Difficulty</div>
+                <div className="text-2xl font-bold text-blue-400">{event.eventType}</div>
+                <div className="text-xs text-gray-400">Category</div>
               </div>
             </div>
           </div>

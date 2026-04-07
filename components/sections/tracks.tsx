@@ -2,35 +2,15 @@
 
 import { motion } from 'framer-motion'
 import { Code, Palette, Megaphone, TrendingUp } from 'lucide-react'
+import { EventTrack } from '@/lib/types'
 
-export function TracksSection() {
-  const tracks = [
-    {
-      icon: Code,
-      title: 'Development',
-      description: 'Technical workshops and coding competitions',
-      topics: ['Web Dev', 'Mobile', 'Cloud Computing'],
-    },
-    {
-      icon: Palette,
-      title: 'Design',
-      description: 'Creative sessions and design thinking workshops',
-      topics: ['UI/UX', 'Branding', 'Animation'],
-    },
-    {
-      icon: Megaphone,
-      title: 'Marketing',
-      description: 'Growth strategies and digital marketing insights',
-      topics: ['Social Media', 'SEO', 'Analytics'],
-    },
-    {
-      icon: TrendingUp,
-      title: 'Entrepreneurship',
-      description: 'Business and startup development guidance',
-      topics: ['Pitch Skills', 'Funding', 'Growth'],
-    },
-  ]
+interface TracksSectionProps {
+  tracks: EventTrack[]
+}
 
+const defaultIcons = [Code, Palette, Megaphone, TrendingUp]
+
+export function TracksSection({ tracks }: TracksSectionProps) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -74,17 +54,12 @@ export function TracksSection() {
         viewport={{ once: true, margin: '-100px' }}
       >
         {tracks.map((track, index) => {
-          const Icon = track.icon
-          const gradients = [
-            'gradient-cyan-green',
-            'gradient-cyan-blue',
-            'gradient-cyan-green',
-            'gradient-cyan-blue',
-          ]
+          const Icon = (track.icon && (track.icon as any)) || defaultIcons[index % defaultIcons.length]
+          const gradients = ['gradient-cyan-green', 'gradient-cyan-blue', 'gradient-cyan-green', 'gradient-cyan-blue']
 
           return (
             <motion.div
-              key={index}
+              key={track.id}
               variants={itemVariants}
               whileHover={{
                 scale: 1.08,
@@ -94,15 +69,15 @@ export function TracksSection() {
             >
               <div className="glass-dark rounded-lg p-6 h-full border-l-2 border-l-cyan-500 group-hover:border-l-green-400 group-hover:glow-cyan-lg transition-all duration-300">
                 <Icon className="w-10 h-10 text-cyan-400 mb-4 group-hover:text-green-400 transition-colors" />
-                <h3 className={`text-xl font-bold mb-3 ${gradients[index]}`}>{track.title}</h3>
+                <h3 className={`text-xl font-bold mb-3 ${gradients[index % gradients.length]}`}>{track.name}</h3>
                 <p className="text-gray-400 text-sm mb-4 leading-relaxed">{track.description}</p>
                 <div className="flex flex-wrap gap-2">
-                  {track.topics.map((topic, i) => (
+                  {['Beginner', 'Intermediate', 'Advanced'].map((label, i) => (
                     <span
-                      key={i}
+                      key={`${track.id}-${i}`}
                       className="text-xs px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
                     >
-                      {topic}
+                      {label}
                     </span>
                   ))}
                 </div>
