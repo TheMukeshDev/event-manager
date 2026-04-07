@@ -20,7 +20,7 @@ export function ContactSection() {
     {
       icon: MapPin,
       title: 'Location',
-      value: 'BBS Campus Santipuram, Prayagraj 210013',
+      value: 'BBS Campus Santipuram, Prayagraj 211013',
       color: 'blue',
     },
   ]

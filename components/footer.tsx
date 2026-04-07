@@ -131,7 +131,7 @@ export function Footer() {
             <MapPin className="w-5 h-5 text-cyan-400 shrink-0 mt-1" />
             <div>
               <p className="text-sm text-gray-400">Location</p>
-              <p className="text-white">BBS Campus Santipuram, Prayagraj 210013</p>
+              <p className="text-white">BBS Campus Santipuram, Prayagraj 211013</p>
             </div>
           </motion.div>
         </motion.div>
