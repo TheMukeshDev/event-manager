@@ -93,7 +93,7 @@ export function ContactSection() {
               >
                 <motion.div
                   whileHover={{ scale: 1.2 }}
-                  className={`flex-shrink-0 w-12 h-12 rounded-lg bg-cyan-500/10 flex items-center justify-center ${colorMap[info.color as keyof typeof colorMap]}`}
+                  className={`shrink-0 w-12 h-12 rounded-lg bg-cyan-500/10 flex items-center justify-center ${colorMap[info.color as keyof typeof colorMap]}`}
                 >
                   <Icon className="w-6 h-6" />
                 </motion.div>

@@ -67,7 +67,7 @@ export function AboutSection({ event }: AboutSectionProps) {
                 variants={itemVariants}
                 className="flex items-center gap-3"
               >
-                <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-green-400 shrink-0" />
                 <span className="text-gray-300 font-medium">{item}</span>
               </motion.div>
             ))}

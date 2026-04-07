@@ -14,12 +14,13 @@ A stunning, production-ready homepage for college events built with Next.js 16, 
 
 ## 📚 Documentation
 
-Start with the documentation for detailed information:
+### Quick Start Guides
+- **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** - Installation and customization
+- **[PROJECT_INDEX.md](./PROJECT_INDEX.md)** - Complete project overview
 
-- **[PROJECT_INDEX.md](./PROJECT_INDEX.md)** - Complete project overview and navigation
-- **[SETUP_GUIDE.md](./SETUP_GUIDE.md)** - Installation and customization guide
-- **[PREMIUM_HOMEPAGE_GUIDE.md](./PREMIUM_HOMEPAGE_GUIDE.md)** - Design philosophy and architecture
-- **[OPTIMIZATION_CHECKLIST.md](./OPTIMIZATION_CHECKLIST.md)** - Pre-launch and maintenance checklist
+### Advanced Documentation
+- **[PREMIUM_HOMEPAGE_GUIDE.md](./PREMIUM_HOMEPAGE_GUIDE.md)** - Design philosophy
+- **[OPTIMIZATION_CHECKLIST.md](./OPTIMIZATION_CHECKLIST.md)** - Pre-launch checklist
 
 ## 🚀 Quick Start
 
@@ -29,23 +30,23 @@ pnpm install
 # or npm install, yarn install
 ```
 
-### 2. Run Development Server
+### 3. Environment Setup
+Create `.env.local` with your Supabase credentials:
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+```
+
+### 4. Run Development Server
 ```bash
 pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the homepage.
 
-### 3. Customize
-- Edit event data in `lib/mock-data.ts`
-- Update colors in `app/globals.css`
-- Modify content in section components
-- See SETUP_GUIDE.md for detailed customization
-
-### 4. Deploy
-```bash
-vercel deploy
-```
+### 5. Access Admin Panel
+Navigate to [http://localhost:3000/admin/login](http://localhost:3000/admin/login) to access the admin panel.
 
 ## 🏗️ Project Structure
 
@@ -93,6 +94,27 @@ Plus ready-to-integrate sections for Speakers, Registration, and Contact
 - **Framer Motion** - Animations
 - **Lucide React** - Icons
 - **Radix UI** - Components
+- **Supabase** - Backend database & authentication
+
+## 🎯 Admin Panel Access
+
+### Authentication
+Access the admin panel at `/admin/login` with your Supabase credentials.
+
+### Admin Routes
+- `/admin` - Dashboard overview
+- `/admin/settings` - Global platform settings
+- `/admin/users` - User management
+- `/admin/sponsors` - Sponsor management
+- `/admin/certificates` - Certificate generation
+- `/admin/events` - Event configuration
+
+### Features
+- **User Management**: View and manage registered users
+- **Sponsor Management**: Add/edit sponsors with tiers and visibility
+- **Certificate Generation**: Generate certificates with custom rules
+- **Settings Management**: Configure platform-wide settings
+- **Event Configuration**: Manage event details and tracks
 
 ## 🎨 Design Highlights
 
@@ -182,23 +204,23 @@ export const mockEventTracks: EventTrack[] = [
 - ✅ Security hardened
 - ✅ Vercel deployment ready
 
-## 📚 Learning Resources
+## 📚 Resources
 
-- [Next.js Docs](https://nextjs.org/docs)
-- [Tailwind CSS](https://tailwindcss.com)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS Guide](https://tailwindcss.com)
 - [Framer Motion](https://www.framer.com/motion)
-- [TypeScript](https://www.typescriptlang.org)
+- [Supabase Docs](https://supabase.com/docs)
 
 ## 🤝 Integration Ready
 
-The project is structured for easy integration with:
-- **Supabase** - Backend database
-- **Authentication** - User login/signup
-- **Forms** - Contact and registration
-- **Payment** - Event registration fees
-- **Analytics** - User behavior tracking
+The project includes:
+- **Supabase Integration** - Database and authentication
+- **Admin Panel** - Content management system
+- **API Routes** - RESTful endpoints for data
+- **Type Safety** - Full TypeScript coverage
+- **Responsive Design** - Mobile-first approach
 
-See PREMIUM_HOMEPAGE_GUIDE.md for integration steps.
+See [SETUP_GUIDE.md](./SETUP_GUIDE.md) for integration steps.
 
 ## 📋 Commands
 
@@ -215,14 +237,12 @@ This project is ready for deployment and modification.
 
 ## 🎯 Next Steps
 
-1. Read [SETUP_GUIDE.md](./SETUP_GUIDE.md)
-2. Customize event data
-3. Add your images and content
-4. Test on mobile devices
-5. Deploy to Vercel
+1. **Setup**: Follow [SETUP_GUIDE.md](./SETUP_GUIDE.md) for installation
+2. **Customize**: Update event data in `lib/mock-data.ts`
+3. **Configure**: Set up Supabase environment variables
+4. **Admin Access**: Visit `/admin/login` to manage content
+5. **Deploy**: Use `vercel deploy` for production
 
 ---
 
 **Built with ❤️ for premium event experiences**
-
-[View Full Documentation](./PROJECT_INDEX.md)
