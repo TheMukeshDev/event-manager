@@ -181,20 +181,6 @@ export const mockFAQs: FAQ[] = [
   {
     id: '1',
     eventId: '1',
-    name: 'BBS Coding Club',
-    type: 'Official Sponsor',
-    tier: 'gold',
-    isVisible: true,
-    sortOrder: 1,
-    description: 'Official coding community partner supporting Tech Hub BBS initiatives.',
-    website: 'https://bbsodingclub.example.com',
-  },
-]
-
-export const mockFAQs: FAQ[] = [
-  {
-    id: '1',
-    eventId: '1',
     question: 'What is the registration deadline?',
     answer: 'The registration deadline is 7 April 2026 at 12:00 AM IST. Register before this date to participate in the quiz challenge.',
     category: 'Registration',
