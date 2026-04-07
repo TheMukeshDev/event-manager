@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS registrations (
   score INTEGER,
   time_taken INTEGER, -- in seconds
   rank INTEGER,
+  whatsapp_joined BOOLEAN DEFAULT false,
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now(),
   UNIQUE(user_id, event_id)
@@ -47,7 +48,60 @@ CREATE TABLE IF NOT EXISTS registrations (
 -- Certificates table
 CREATE TABLE IF NOT EXISTS certificates (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  certificate_id VARCHAR(50) UNIQUE NOT NULL,
+  certificate_id VARCHAR(50) UNIQUE NOT NULL, -- Format: BBSCET-TQ-2026-[TYPE]-[SERIAL]
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  event_name VARCHAR(255) NOT NULL,
+  issue_date TIMESTAMP DEFAULT now(),
+  certificate_type VARCHAR(50), -- 'P' for participation, 'W1' for winner 1st, 'W2' for winner 2nd, 'W3' for winner 3rd
+  certificate_url VARCHAR(500),
+  status VARCHAR(50) DEFAULT 'issued', -- 'issued', 'verified', 'revoked'
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+-- Admin Settings table
+CREATE TABLE IF NOT EXISTS admin_settings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  registration_link VARCHAR(500),
+  whatsapp_community_link VARCHAR(500) DEFAULT 'https://chat.whatsapp.com/Hc1zaz52LdOAh6kM5NHREA',
+  is_whatsapp_join_mandatory BOOLEAN DEFAULT true,
+  certificate_rules_text TEXT DEFAULT 'Certificates are issued only to valid registered participants who attend/attempt the event and follow all event rules.',
+  certificate_id_prefix VARCHAR(50) DEFAULT 'BBSCET-TQ-2026',
+  sponsor_cta_whatsapp_number VARCHAR(20) DEFAULT '919771894062',
+  sponsor_cta_default_message TEXT DEFAULT 'Hello Mukesh Kumar, I am interested in sponsoring your event. Please share the sponsorship details, audience reach, and collaboration opportunities.',
+  sponsor_cta_visible BOOLEAN DEFAULT true,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+-- Sponsors table
+CREATE TABLE IF NOT EXISTS sponsors (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  name VARCHAR(255) NOT NULL,
+  type VARCHAR(100) DEFAULT 'Partner',
+  logo_url VARCHAR(500),
+  website VARCHAR(500),
+  description TEXT,
+  tier VARCHAR(50) DEFAULT 'silver',
+  is_visible BOOLEAN DEFAULT true,
+  sort_order INTEGER DEFAULT 0,
+  contact_info TEXT,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+-- Insert default admin settings
+INSERT INTO admin_settings (registration_link, whatsapp_community_link, is_whatsapp_join_mandatory, certificate_rules_text, certificate_id_prefix, sponsor_cta_whatsapp_number, sponsor_cta_default_message, sponsor_cta_visible)
+VALUES ('', 'https://chat.whatsapp.com/Hc1zaz52LdOAh6kM5NHREA', true, 'Certificates are issued only to valid registered participants who attend/attempt the event and follow all event rules.', 'BBSCET-TQ-2026', '919771894062', 'Hello Mukesh Kumar, I am interested in sponsoring your event. Please share the sponsorship details, audience reach, and collaboration opportunities.', true)
+ON CONFLICT DO NOTHING;
+
+-- Insert default sponsor (BBS Coding Club)
+INSERT INTO sponsors (event_id, name, type, tier, is_visible, sort_order, description)
+SELECT id, 'BBS Coding Club', 'Community Partner', 'gold', true, 1, 'Official coding community partner supporting Tech Hub BBS initiatives'
+FROM events WHERE name LIKE '%Tech Hub BBS%' LIMIT 1
+ON CONFLICT DO NOTHING;
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
   event_name VARCHAR(255) NOT NULL,

@@ -54,7 +54,7 @@ export function Footer() {
           {/* Brand */}
           <motion.div variants={itemVariants} className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-linear-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
                 <span className="text-white font-bold text-sm">EM</span>
               </div>
               <span className="gradient-cyan-green font-bold text-lg">EventManager</span>
@@ -109,7 +109,7 @@ export function Footer() {
           className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12"
         >
           <motion.div variants={itemVariants} className="flex gap-3">
-            <Mail className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-1" />
+            <Mail className="w-5 h-5 text-cyan-400 shrink-0 mt-1" />
             <div>
               <p className="text-sm text-gray-400">Email</p>
               <a href="mailto:contact@eventmanager.com" className="text-white hover:text-cyan-300 transition-colors">
@@ -119,7 +119,7 @@ export function Footer() {
           </motion.div>
 
           <motion.div variants={itemVariants} className="flex gap-3">
-            <Phone className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-1" />
+            <Phone className="w-5 h-5 text-cyan-400 shrink-0 mt-1" />
             <div>
               <p className="text-sm text-gray-400">Phone</p>
               <a href="tel:+919876543210" className="text-white hover:text-cyan-300 transition-colors">
@@ -129,7 +129,7 @@ export function Footer() {
           </motion.div>
 
           <motion.div variants={itemVariants} className="flex gap-3">
-            <MapPin className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-1" />
+            <MapPin className="w-5 h-5 text-cyan-400 shrink-0 mt-1" />
             <div>
               <p className="text-sm text-gray-400">Location</p>
               <p className="text-white">College Campus, City, Country</p>

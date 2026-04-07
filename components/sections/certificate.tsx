@@ -20,7 +20,7 @@ export function CertificateSection() {
             className="glass-dark rounded-lg p-8 glow-cyan-lg border-2 border-cyan-500/30 max-w-sm"
             style={{ perspective: '1000px' }}
           >
-            <div className="bg-gradient-to-br from-yellow-100 to-amber-50 rounded-lg p-8 text-center shadow-2xl">
+            <div className="bg-linear-to-br from-yellow-100 to-amber-50 rounded-lg p-8 text-center shadow-2xl">
               <FileCheck className="w-12 h-12 text-amber-700 mx-auto mb-4" />
               <p className="text-sm text-gray-600 font-serif mb-2">This is to certify that</p>
               <p className="text-xl font-bold text-gray-800 mb-2">Your Name</p>

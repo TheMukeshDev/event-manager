@@ -20,6 +20,11 @@ export type PublicOverview = {
   team: typeof mockTeam
   contacts: typeof EVENT_DATA.contacts
   highlights: typeof EVENT_DATA.highlights
+  adminSettings: {
+    sponsor_cta_visible: boolean
+    sponsor_cta_whatsapp_number: string
+    sponsor_cta_default_message: string
+  }
 }
 
 const fallbackOverview: PublicOverview = {
@@ -32,6 +37,11 @@ const fallbackOverview: PublicOverview = {
   team: mockTeam,
   contacts: EVENT_DATA.contacts,
   highlights: EVENT_DATA.highlights,
+  adminSettings: {
+    sponsor_cta_visible: true,
+    sponsor_cta_whatsapp_number: '919771894062',
+    sponsor_cta_default_message: 'Hello Mukesh Kumar, I am interested in sponsoring your event. Please share the sponsorship details, audience reach, and collaboration opportunities.'
+  }
 }
 
 export async function getPublicOverview(): Promise<PublicOverview> {
@@ -58,14 +68,15 @@ export async function getPublicOverview(): Promise<PublicOverview> {
       highlights: EVENT_DATA.highlights,
     }
 
-    const [tracksResponse, timelineResponse, prizesResponse, sponsorsResponse, faqsResponse, organizersResponse, teamResponse] = await Promise.all([
+    const [tracksResponse, timelineResponse, prizesResponse, sponsorsResponse, faqsResponse, organizersResponse, teamResponse, adminSettingsResponse] = await Promise.all([
       supabaseServer.from('event_tracks').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
       supabaseServer.from('timeline_items').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
       supabaseServer.from('prizes').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
-      supabaseServer.from('sponsors').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
-      supabaseServer.from('faqs').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
+      supabaseServer.from('sponsors').select('*').eq('event_id', event.id).order('sort_order', { ascending: true }),
+      supabaseServer.from('faqs').select('*').eq('event_id', event.id).order('sort_order', { ascending: true }),
       supabaseServer.from('organizers').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
       supabaseServer.from('team_members').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
+      supabaseServer.from('admin_settings').select('sponsor_cta_visible, sponsor_cta_whatsapp_number, sponsor_cta_default_message').single(),
     ])
 
     return {
@@ -85,6 +96,7 @@ export async function getPublicOverview(): Promise<PublicOverview> {
           }))
         : EVENT_DATA.contacts,
       highlights: EVENT_DATA.highlights,
+      adminSettings: adminSettingsResponse.data ?? fallbackOverview.adminSettings,
     }
   } catch (error) {
     console.error('Public data fetch failed:', error)

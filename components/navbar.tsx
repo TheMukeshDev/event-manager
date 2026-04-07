@@ -47,7 +47,7 @@ export function Navbar() {
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-2 font-bold text-xl"
             >
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-linear-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
                 <span className="text-white font-bold text-xs">TQ</span>
               </div>
               <span className="gradient-cyan-green text-sm">{EVENT_DATA.shortName}</span>

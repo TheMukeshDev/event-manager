@@ -77,6 +77,8 @@ export interface TeamMember {
   avatar?: string
   bio?: string
   email?: string
+  linkedin?: string
+  instagram?: string
   socialLinks?: {
     twitter?: string
     linkedin?: string
@@ -89,10 +91,13 @@ export interface Sponsor {
   id: string
   eventId: string
   name: string
+  type?: string
   logo?: string
   website?: string
   description?: string
   tier: 'platinum' | 'gold' | 'silver' | 'bronze'
+  isVisible?: boolean
+  sortOrder?: number
   contact?: string
 }
 
