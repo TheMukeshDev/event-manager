@@ -67,7 +67,7 @@ export function FAQSection({ faqs }: FAQSectionProps) {
                 animate={{ rotate: openIndex === index ? 180 : 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <ChevronDown className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+                <ChevronDown className="w-5 h-5 text-cyan-400 shrink-0" />
               </motion.div>
             </motion.button>
 

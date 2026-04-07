@@ -15,7 +15,7 @@ import { FAQSection } from '@/components/sections/faq'
 import { getPublicOverview } from '@/lib/public-data'
 
 export default async function Home() {
-  const { event, tracks, timeline, prizes, sponsors, faqs, team } = await getPublicOverview()
+  const { event, tracks, timeline, prizes, sponsors, faqs, team, adminSettings } = await getPublicOverview()
 
   return (
     <>
@@ -66,7 +66,12 @@ export default async function Home() {
 
         {/* Sponsors Section */}
         <section id="sponsors">
-          <SponsorsSection sponsors={sponsors} />
+          <SponsorsSection
+            sponsors={sponsors}
+            sponsorCtaVisible={adminSettings.sponsor_cta_visible}
+            sponsorCtaMessage={adminSettings.sponsor_cta_default_message}
+            sponsorCtaWhatsappNumber={adminSettings.sponsor_cta_whatsapp_number}
+          />
         </section>
 
         {/* FAQ Section */}

@@ -1,0 +1,217 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { Save, Link as LinkIcon, MessageCircle, FileText, Hash } from 'lucide-react'
+
+interface AdminSettings {
+  registration_link: string
+  whatsapp_community_link: string
+  is_whatsapp_join_mandatory: boolean
+  certificate_rules_text: string
+  certificate_id_prefix: string
+  sponsor_cta_whatsapp_number: string
+  sponsor_cta_default_message: string
+  sponsor_cta_visible: boolean
+}
+
+export default function AdminSettings() {
+  const [settings, setSettings] = useState<AdminSettings>({
+    registration_link: '',
+    whatsapp_community_link: 'https://chat.whatsapp.com/Hc1zaz52LdOAh6kM5NHREA',
+    is_whatsapp_join_mandatory: true,
+    certificate_rules_text: 'Certificates are issued only to valid registered participants who attend/attempt the event and follow all event rules.',
+    certificate_id_prefix: 'BBSCET-TQ-2026',
+    sponsor_cta_whatsapp_number: '919771894062',
+    sponsor_cta_default_message: 'Hello Mukesh Kumar, I am interested in sponsoring your event. Please share the sponsorship details, audience reach, and collaboration opportunities.',
+    sponsor_cta_visible: true
+  })
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage('')
+
+    try {
+      const response = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings)
+      })
+
+      if (response.ok) {
+        setMessage('Settings updated successfully!')
+      } else {
+        setMessage('Failed to update settings')
+      }
+    } catch (error) {
+      setMessage('Error updating settings')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleChange = (field: keyof AdminSettings, value: string | boolean) => {
+    setSettings(prev => ({ ...prev, [field]: value }))
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-8"
+      >
+        <h1 className="text-3xl font-bold gradient-cyan-green mb-2">Admin Settings</h1>
+        <p className="text-gray-400">Configure event settings and links</p>
+      </motion.div>
+
+      <motion.form
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        onSubmit={handleSubmit}
+        className="glass-dark rounded-lg p-6 space-y-6"
+      >
+        {/* Registration Link */}
+        <div>
+          <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+            <LinkIcon className="w-4 h-4" />
+            Registration Link
+          </label>
+          <input
+            type="url"
+            value={settings.registration_link}
+            onChange={(e) => handleChange('registration_link', e.target.value)}
+            placeholder="https://example.com/register"
+            className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
+          />
+        </div>
+
+        {/* WhatsApp Community Link */}
+        <div>
+          <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+            <MessageCircle className="w-4 h-4" />
+            WhatsApp Community Link
+          </label>
+          <input
+            type="url"
+            value={settings.whatsapp_community_link}
+            onChange={(e) => handleChange('whatsapp_community_link', e.target.value)}
+            className="w-full px-4 py-3 rounded-lg bg-black/50 border border-green-500/30 text-white placeholder-gray-500 focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400 transition-colors"
+          />
+        </div>
+
+        {/* WhatsApp Mandatory */}
+        <div>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={settings.is_whatsapp_join_mandatory}
+              onChange={(e) => handleChange('is_whatsapp_join_mandatory', e.target.checked)}
+              className="w-4 h-4 cursor-pointer"
+            />
+            <span className="text-gray-300">WhatsApp community join is mandatory</span>
+          </label>
+        </div>
+
+        {/* Certificate Rules */}
+        <div>
+          <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+            <FileText className="w-4 h-4" />
+            Certificate Rules Text
+          </label>
+          <textarea
+            value={settings.certificate_rules_text}
+            onChange={(e) => handleChange('certificate_rules_text', e.target.value)}
+            rows={3}
+            className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors resize-none"
+          />
+        </div>
+
+        {/* Certificate ID Prefix */}
+        <div>
+          <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+            <Hash className="w-4 h-4" />
+            Certificate ID Prefix
+          </label>
+          <input
+            type="text"
+            value={settings.certificate_id_prefix}
+            onChange={(e) => handleChange('certificate_id_prefix', e.target.value)}
+            placeholder="BBSCET-TQ-2026"
+            className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
+          />
+          <p className="text-xs text-gray-500 mt-1">Format: PREFIX-TYPE-SERIAL (e.g., BBSCET-TQ-2026-P-001)</p>
+        </div>
+
+        {/* Sponsor CTA WhatsApp Number */}
+        <div>
+          <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+            <MessageCircle className="w-4 h-4" />
+            Sponsor CTA WhatsApp Number
+          </label>
+          <input
+            type="text"
+            value={settings.sponsor_cta_whatsapp_number}
+            onChange={(e) => handleChange('sponsor_cta_whatsapp_number', e.target.value)}
+            placeholder="919771894062"
+            className="w-full px-4 py-3 rounded-lg bg-black/50 border border-green-500/30 text-white placeholder-gray-500 focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400 transition-colors"
+          />
+          <p className="text-xs text-gray-500 mt-1">WhatsApp number for sponsor inquiries (without +)</p>
+        </div>
+
+        {/* Sponsor CTA Message */}
+        <div>
+          <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
+            <MessageCircle className="w-4 h-4" />
+            Sponsor CTA Default Message
+          </label>
+          <textarea
+            value={settings.sponsor_cta_default_message}
+            onChange={(e) => handleChange('sponsor_cta_default_message', e.target.value)}
+            rows={3}
+            className="w-full px-4 py-3 rounded-lg bg-black/50 border border-green-500/30 text-white placeholder-gray-500 focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400 transition-colors resize-none"
+          />
+          <p className="text-xs text-gray-500 mt-1">Default message sent when sponsor CTA button is clicked</p>
+        </div>
+
+        {/* Sponsor CTA Visible */}
+        <div>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={settings.sponsor_cta_visible}
+              onChange={(e) => handleChange('sponsor_cta_visible', e.target.checked)}
+              className="w-4 h-4 cursor-pointer"
+            />
+            <span className="text-gray-300">Show "Become a Sponsor" CTA button</span>
+          </label>
+        </div>
+
+        {/* Message */}
+        {message && (
+          <div className={`p-4 rounded-lg ${message.includes('success') ? 'bg-green-500/10 border border-green-500/30 text-green-300' : 'bg-red-500/10 border border-red-500/30 text-red-300'}`}>
+            {message}
+          </div>
+        )}
+
+        {/* Submit Button */}
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          disabled={loading}
+          type="submit"
+          className="w-full neon-button justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span className="flex items-center gap-2">
+            <Save className="w-4 h-4" />
+            {loading ? 'Saving...' : 'Save Settings'}
+          </span>
+        </motion.button>
+      </motion.form>
+    </div>
+  )
+}

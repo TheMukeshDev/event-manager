@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { TeamMember } from '@/lib/types'
+import { Linkedin, Instagram } from 'lucide-react'
 
 interface TeamSectionProps {
   team: TeamMember[]
@@ -45,7 +46,7 @@ export function TeamSection({ team }: TeamSectionProps) {
       >
         <h2 className="heading-lg gradient-cyan-green mb-4">Meet Our Team</h2>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          A dedicated team working to make EventManager feel polished, modern, and immediately impactful.
+          A dedicated team working to make Tech Hub BBS feel polished, modern, and immediately impactful.
         </p>
       </motion.div>
 
@@ -69,7 +70,7 @@ export function TeamSection({ team }: TeamSectionProps) {
             <div className="glass-dark rounded-lg p-6 text-center glow-cyan hover-glow-cyan">
               <motion.div
                 whileHover={{ scale: 1.15 }}
-                className={`w-20 h-20 rounded-full bg-gradient-to-br ${member.color} to-blue-500 flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4`}
+                className={`w-20 h-20 rounded-full bg-linear-to-br ${member.color} to-blue-500 flex items-center justify-center text-2xl font-bold text-white mx-auto mb-4`}
               >
                 {member.initials}
               </motion.div>
@@ -78,7 +79,35 @@ export function TeamSection({ team }: TeamSectionProps) {
               <p className="text-sm text-cyan-300 font-medium">{member.role}</p>
               <p className="text-sm text-gray-400 mt-3 leading-relaxed">{member.bio}</p>
 
-              <div className="mt-4 h-1 w-12 bg-gradient-to-r from-cyan-400 to-green-400 mx-auto rounded-full" />
+              {/* Social Links */}
+              {(member.linkedin || member.instagram) && (
+                <div className="flex justify-center gap-3 mt-4">
+                  {member.linkedin && (
+                    <motion.a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.2 }}
+                      className="w-8 h-8 rounded-full bg-blue-600/20 flex items-center justify-center text-blue-400 hover:bg-blue-600/40 transition-colors"
+                    >
+                      <Linkedin className="w-4 h-4" />
+                    </motion.a>
+                  )}
+                  {member.instagram && (
+                    <motion.a
+                      href={member.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.2 }}
+                      className="w-8 h-8 rounded-full bg-pink-600/20 flex items-center justify-center text-pink-400 hover:bg-pink-600/40 transition-colors"
+                    >
+                      <Instagram className="w-4 h-4" />
+                    </motion.a>
+                  )}
+                </div>
+              )}
+
+              <div className="mt-4 h-1 w-12 bg-linear-to-r from-cyan-400 to-green-400 mx-auto rounded-full" />
             </div>
           </motion.div>
         ))}

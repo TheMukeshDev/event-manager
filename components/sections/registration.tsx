@@ -75,7 +75,7 @@ export function RegistrationSection() {
                   {/* Step circle */}
                   <motion.div
                     whileHover={{ scale: 1.1 }}
-                    className="flex-shrink-0 w-16 h-16 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center"
+                    className="shrink-0 w-16 h-16 rounded-full bg-linear-to-br from-cyan-400 to-blue-500 flex items-center justify-center"
                   >
                     <span className="text-xl font-bold text-white">{step.number}</span>
                   </motion.div>
@@ -121,12 +121,25 @@ export function RegistrationSection() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">College Name</label>
-              <input
-                type="text"
-                placeholder="Your college/organization"
-                className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
-              />
+              <label className="block text-sm font-medium text-gray-300 mb-2">Stream/Branch</label>
+              <select
+                className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
+              >
+                <option value="">Select your stream</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Mechanical">Mechanical</option>
+                <option value="Civil">Civil</option>
+                <option value="Electrical">Electrical</option>
+                <option value="Management">Management</option>
+                <option value="Medical">Medical</option>
+                <option value="Law">Law</option>
+                <option value="Arts">Arts</option>
+                <option value="Commerce">Commerce</option>
+                <option value="Science">Science</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
 
             <div>
@@ -139,6 +152,23 @@ export function RegistrationSection() {
                   </label>
                 ))}
               </div>
+            </div>
+
+            <div>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" className="w-4 h-4 mt-1 cursor-pointer" />
+                <span className="text-sm text-gray-300">
+                  I confirm that I have joined or will join the official WhatsApp community:{' '}
+                  <a
+                    href="https://chat.whatsapp.com/Hc1zaz52LdOAh6kM5NHREA"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-cyan-400 hover:text-cyan-300 underline"
+                  >
+                    Join WhatsApp Community
+                  </a>
+                </span>
+              </label>
             </div>
 
             <motion.button

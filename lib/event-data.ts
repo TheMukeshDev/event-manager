@@ -1,9 +1,9 @@
-// TechQuiz Event Data
+// Tech Hub BBS Event Data
 export const EVENT_DATA = {
   id: '1',
-  name: 'TechQuiz: Computer Awareness & C Language Challenge',
-  title: 'TechQuiz: Computer Awareness & C Language Challenge',
-  shortName: 'TechQuiz',
+  name: 'Tech Hub BBS: Computer Awareness & C Language Challenge',
+  title: 'Tech Hub BBS: Computer Awareness & C Language Challenge',
+  shortName: 'Tech Hub BBS',
   description: 'Test your C programming and computer awareness skills in this exciting online quiz challenge',
   mode: 'Online',
   date: '12 April 2026',
@@ -28,6 +28,7 @@ export const EVENT_DATA = {
     'No external assistance is allowed.',
     'All answers must be submitted within 20 minutes.',
     'Participants should maintain academic honesty.',
+    'Join the official WhatsApp community: https://chat.whatsapp.com/Hc1zaz52LdOAh6kM5NHREA',
   ],
 
   contacts: [
@@ -138,7 +139,7 @@ export const EVENT_DATA = {
     },
     {
       question: 'When will I receive my certificate?',
-      answer: 'Certificates will be released within 3 days of the event completion.',
+      answer: 'Certificates will be released within 3 days of the event completion. Certificates are issued only to valid registered participants who attend/attempt the event and follow all event rules.',
     },
     {
       question: 'Is this event limited to engineering students?',
@@ -151,6 +152,10 @@ export const EVENT_DATA = {
     {
       question: 'What topics are covered in the quiz?',
       answer: 'The quiz covers Computer Awareness and C Programming. Topics include basic computer concepts and C language fundamentals.',
+    },
+    {
+      question: 'Do I need to join the WhatsApp community?',
+      answer: 'Yes, joining the official WhatsApp community is mandatory for all participants. Join here: https://chat.whatsapp.com/Hc1zaz52LdOAh6kM5NHREA',
     },
   ],
 

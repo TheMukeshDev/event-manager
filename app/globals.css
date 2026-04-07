@@ -114,7 +114,9 @@
   transition: all 0.3s duration-300;
 }
 
-.hover-glow-cyan:hover {
+.hover-glow-cyan:hover,
+.hover-glow-cyan:active,
+.hover-glow-cyan:focus {
   box-shadow: 0 0 40px rgba(0, 217, 255, 0.6);
 }
 
@@ -122,7 +124,9 @@
   transition: all 0.3s;
 }
 
-.hover-glow-green:hover {
+.hover-glow-green:hover,
+.hover-glow-green:active,
+.hover-glow-green:focus {
   box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
 }
 
@@ -221,6 +225,6 @@
   }
 
   .neon-button {
-    @apply px-6 py-3 rounded-lg border border-cyan-500 text-cyan-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,217,255,0.5)] hover:text-white;
+    @apply px-6 py-3 rounded-lg border border-cyan-500 text-cyan-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,217,255,0.5)] hover:text-white active:shadow-[0_0_20px_rgba(0,217,255,0.5)] active:text-white focus:shadow-[0_0_20px_rgba(0,217,255,0.5)] focus:text-white;
   }
 }

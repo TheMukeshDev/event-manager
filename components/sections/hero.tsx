@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowRight, Sparkles, Calendar, MapPin, Users } from 'lucide-react'
+import { ArrowRight, Sparkles, Calendar, MapPin, Users, MessageCircle } from 'lucide-react'
 import { EventData } from '@/lib/event-data'
 
 interface HeroSectionProps {
@@ -111,7 +111,16 @@ export function HeroSection({ event }: HeroSectionProps) {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </span>
           </a>
-          <a href="#certificate-verify" className="px-6 py-3 rounded-lg border border-gray-600 text-gray-300 font-semibold transition-all duration-300 hover:border-green-400 hover:text-green-300">
+          <a
+            href="https://chat.whatsapp.com/Hc1zaz52LdOAh6kM5NHREA"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-6 py-3 rounded-lg border border-green-600 text-green-300 font-semibold transition-all duration-300 hover:border-green-400 hover:text-green-200 inline-flex items-center gap-2"
+          >
+            <MessageCircle className="w-4 h-4" />
+            Join WhatsApp Community
+          </a>
+          <a href="#certificate-verify" className="px-6 py-3 rounded-lg border border-gray-600 text-gray-300 font-semibold transition-all duration-300 hover:border-cyan-400 hover:text-cyan-300">
             Verify Certificate
           </a>
         </motion.div>
