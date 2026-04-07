@@ -54,6 +54,7 @@ export interface Prize {
   title: string
   amount: number
   currency: string
+  label?: string
   description?: string
   image?: string
 }
@@ -84,6 +85,90 @@ export interface TeamMember {
     linkedin?: string
     github?: string
   }
+}
+
+export interface AmbassadorApplication {
+  id: string
+  eventId: string
+  fullName: string
+  phone: string
+  email: string
+  collegeName: string
+  branch: string
+  section: string
+  yearOrSemester: string
+  city?: string
+  state?: string
+  whyFitForRole: string
+  priorExperience?: string
+  socialProfileLink?: string
+  whatsappNumber?: string
+  consent: boolean
+  status: 'pending' | 'approved' | 'rejected'
+  adminNotes?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Ambassador {
+  id: string
+  eventId: string
+  userId?: string
+  fullName: string
+  email: string
+  phone?: string
+  collegeName: string
+  branch: string
+  section: string
+  yearOrSemester: string
+  city?: string
+  state?: string
+  referralCode: string
+  referralLink: string
+  totalReferrals: number
+  validReferralCount: number
+  rewardEligible: boolean
+  certificateEligible: boolean
+  goodiesEligible: boolean
+  status: 'pending' | 'approved' | 'rejected'
+  rewardStatus?: string
+  createdAt: string
+  updatedAt: string
+  name?: string
+  college?: string
+  reward?: string
+}
+
+export interface AmbassadorProof {
+  id: string
+  ambassadorId: string
+  proofFileUrl?: string
+  proofDescription: string
+  numberOfStudentsClaimed: number
+  referredStudentEmails?: string[]
+  status: 'pending' | 'approved' | 'rejected'
+  adminNotes?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface AdminSettings {
+  registrationLink: string
+  whatsappCommunityLink: string
+  isWhatsappJoinMandatory: boolean
+  certificateRulesText: string
+  certificateIdPrefix: string
+  sponsorCtaWhatsappNumber: string
+  sponsorCtaDefaultMessage: string
+  sponsorCtaVisible: boolean
+  campusAmbassadorEnabled: boolean
+  referralThreshold: number
+  rewardTitle: string
+  rewardDescription: string
+  useExternalProofForm: boolean
+  externalProofFormLink: string
+  leaderboardVisible: boolean
+  ambassadorShareMessage: string
 }
 
 // Sponsor
@@ -123,6 +208,9 @@ export interface Registration {
   status: 'registered' | 'attended' | 'cancelled'
   attendanceVerified: boolean
   checkInTime?: string
+  referralCode?: string
+  ambassadorId?: string
+  validReferral?: boolean
 }
 
 // FAQ

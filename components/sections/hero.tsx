@@ -30,7 +30,7 @@ export function HeroSection({ event }: HeroSectionProps) {
   }
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       {/* Background effects */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500 rounded-full filter blur-3xl opacity-20" />
@@ -105,7 +105,12 @@ export function HeroSection({ event }: HeroSectionProps) {
           variants={itemVariants}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
-          <a href="#registration" className="neon-button group inline-flex items-center justify-center">
+          <a
+            href="https://unstop.com/o/EhGlUDp?lb=GUZITycG&utm_medium=Share&utm_source=quizzes&utm_campaign=Mukeskum10881"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="neon-button group inline-flex items-center justify-center"
+          >
             <span className="flex items-center gap-2">
               Register Now
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

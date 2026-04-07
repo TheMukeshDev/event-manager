@@ -37,9 +37,9 @@ export function PrizesSection({ prizes }: PrizesSectionProps) {
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="heading-lg gradient-cyan-green mb-4">Prizes & Awards</h2>
+        <h2 className="heading-lg gradient-cyan-green mb-4">Rewards and Prizes</h2>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Exciting rewards waiting for winners across all categories.
+          Top performers get Google swag and certificates, while every participant receives a participation certificate.
         </p>
       </motion.div>
 
@@ -69,7 +69,7 @@ export function PrizesSection({ prizes }: PrizesSectionProps) {
               <div className="text-4xl mb-4">{index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🎖️'}</div>
               <h3 className="text-xl font-bold text-white mb-2">{prize.title}</h3>
               <div className="text-sm text-cyan-300 mb-2">
-                {prize.currency && prize.amount ? `${prize.currency} ${prize.amount}` : prize.rank ? `Rank ${prize.rank}` : 'Premium reward'}
+                {prize.label ? prize.label : prize.currency && prize.amount ? `${prize.currency} ${prize.amount}` : prize.rank ? `Rank ${prize.rank}` : 'Premium reward'}
               </div>
               <p className="text-gray-400 text-xs leading-relaxed">{prize.description || 'Certificates released within 3 days.'}</p>
             </div>

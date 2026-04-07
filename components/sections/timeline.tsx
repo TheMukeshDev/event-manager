@@ -38,7 +38,7 @@ export function TimelineSection({ timeline }: TimelineSectionProps) {
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="heading-lg gradient-cyan-blue mb-4">Stages & Timeline</h2>
+        <h2 className="heading-lg gradient-cyan-blue mb-4">Tech HUB BBS Stages & Timeline</h2>
         <p className="text-gray-400 max-w-2xl mx-auto">
           Key event milestones, eligibility, and assessment details for the TechQuiz challenge.
         </p>

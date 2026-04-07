@@ -17,7 +17,7 @@ export const EVENT_DATA = {
   
   organizer: {
     name: 'BBS College of Engineering and Technology (BBSCET)',
-    location: 'Allahabad, Uttar Pradesh',
+    location: 'BBS Campus Santipuram, Prayagraj 210013',
   },
 
   eventType: 'Quiz Championship',
@@ -126,23 +126,13 @@ export const EVENT_DATA = {
 
   prizes: [
     {
-      position: '1st',
-      reward: 'Google Swag + Certificate',
+      position: 'Top 3',
+      reward: 'Google swag & certificate',
       icon: '🥇',
     },
     {
-      position: '2nd',
-      reward: 'Google Swag + Certificate',
-      icon: '🥈',
-    },
-    {
-      position: '3rd',
-      reward: 'Google Swag + Certificate',
-      icon: '🥉',
-    },
-    {
-      position: 'Participation',
-      reward: 'Certificate',
+      position: 'All Participants',
+      reward: 'Digital participation certificate within 3 days',
       icon: '⭐',
     },
   ],
@@ -222,10 +212,7 @@ export const EVENT_DATA = {
   ],
 
   sponsors: [
-    { name: 'Google', tier: 'Platinum' },
-    { name: 'Microsoft', tier: 'Gold' },
-    { name: 'Amazon', tier: 'Gold' },
-    { name: 'IBM', tier: 'Silver' },
+    { name: 'BBS Coding Club', tier: 'Gold' },
   ],
 }
 

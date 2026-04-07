@@ -13,6 +13,14 @@ interface AdminSettings {
   sponsor_cta_whatsapp_number: string
   sponsor_cta_default_message: string
   sponsor_cta_visible: boolean
+  campus_ambassador_enabled: boolean
+  referral_threshold: number
+  reward_title: string
+  reward_description: string
+  use_external_proof_form: boolean
+  external_proof_form_link: string
+  leaderboard_visible: boolean
+  ambassador_share_message: string
 }
 
 export default function AdminSettings() {
@@ -24,10 +32,35 @@ export default function AdminSettings() {
     certificate_id_prefix: 'BBSCET-TQ-2026',
     sponsor_cta_whatsapp_number: '919771894062',
     sponsor_cta_default_message: 'Hello Mukesh Kumar, I am interested in sponsoring your event. Please share the sponsorship details, audience reach, and collaboration opportunities.',
-    sponsor_cta_visible: true
+    sponsor_cta_visible: true,
+    campus_ambassador_enabled: true,
+    referral_threshold: 10,
+    reward_title: 'Certificate of Appreciation + Google swag',
+    reward_description: 'Bring 10 valid referrals and unlock rewards, recognition and ambassador status.',
+    use_external_proof_form: true,
+    external_proof_form_link: 'https://forms.gle/your-campus-ambassador-proof-form',
+    leaderboard_visible: true,
+    ambassador_share_message: 'Hi! Join the Tech Hub BBS challenge using my referral link: ',
   })
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const response = await fetch('/api/admin/settings')
+        const data = await response.json()
+
+        if (response.ok && data) {
+          setSettings((prev) => ({ ...prev, ...data }))
+        }
+      } catch (error) {
+        console.error('Failed to load admin settings', error)
+      }
+    }
+
+    loadSettings()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,7 +86,7 @@ export default function AdminSettings() {
     }
   }
 
-  const handleChange = (field: keyof AdminSettings, value: string | boolean) => {
+  const handleChange = (field: keyof AdminSettings, value: string | number | boolean) => {
     setSettings(prev => ({ ...prev, [field]: value }))
   }
 
@@ -189,6 +222,103 @@ export default function AdminSettings() {
             />
             <span className="text-gray-300">Show "Become a Sponsor" CTA button</span>
           </label>
+        </div>
+
+        <div className="border-t border-slate-800 pt-6">
+          <h2 className="text-xl font-semibold text-white mb-4">Campus Ambassador Settings</h2>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Enable Ambassador Program</label>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={settings.campus_ambassador_enabled}
+                  onChange={(e) => handleChange('campus_ambassador_enabled', e.target.checked)}
+                  className="w-4 h-4 cursor-pointer"
+                />
+                <span className="text-gray-300">Campus ambassador program enabled</span>
+              </label>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Referral Threshold</label>
+              <input
+                type="number"
+                min={1}
+                value={settings.referral_threshold}
+                onChange={(e) => handleChange('referral_threshold', Number(e.target.value))}
+                className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Reward Title</label>
+            <input
+              type="text"
+              value={settings.reward_title}
+              onChange={(e) => handleChange('reward_title', e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Reward Description</label>
+            <textarea
+              value={settings.reward_description}
+              onChange={(e) => handleChange('reward_description', e.target.value)}
+              rows={3}
+              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors resize-none"
+            />
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={settings.use_external_proof_form}
+                  onChange={(e) => handleChange('use_external_proof_form', e.target.checked)}
+                  className="w-4 h-4 cursor-pointer"
+                />
+                <span className="text-gray-300">Use external proof submission form</span>
+              </label>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Leaderboard Visible</label>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={settings.leaderboard_visible}
+                  onChange={(e) => handleChange('leaderboard_visible', e.target.checked)}
+                  className="w-4 h-4 cursor-pointer"
+                />
+                <span className="text-gray-300">Show ambassador leaderboard publicly</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Proof Form Link</label>
+            <input
+              type="url"
+              value={settings.external_proof_form_link}
+              onChange={(e) => handleChange('external_proof_form_link', e.target.value)}
+              placeholder="https://forms.gle/..."
+              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Ambassador Share Message</label>
+            <textarea
+              value={settings.ambassador_share_message}
+              onChange={(e) => handleChange('ambassador_share_message', e.target.value)}
+              rows={3}
+              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors resize-none"
+            />
+          </div>
         </div>
 
         {/* Message */}

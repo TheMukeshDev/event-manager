@@ -6,12 +6,14 @@ import { Menu, X } from 'lucide-react'
 import { EVENT_DATA } from '@/lib/event-data'
 
 const navItems = [
+  { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
   { label: 'Highlights', href: '#highlights' },
   { label: 'Timeline', href: '#timeline' },
   { label: 'Prizes', href: '#prizes' },
   { label: 'Certificates', href: '#certificates' },
   { label: 'Team', href: '#team' },
+  { label: 'Ambassador', href: '#ambassador' },
   { label: 'FAQ', href: '#faq' },
 ]
 
@@ -70,13 +72,16 @@ export function Navbar() {
 
             {/* CTA Button */}
             <div className="hidden md:flex items-center gap-4">
-              <motion.button
+              <motion.a
+                href="https://unstop.com/o/EhGlUDp?lb=GUZITycG&utm_medium=Share&utm_source=quizzes&utm_campaign=Mukeskum10881"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-6 py-2 rounded-lg bg-cyan-500 text-white font-semibold text-sm hover:shadow-[0_0_20px_rgba(0,217,255,0.5)] transition-all duration-300"
+                className="px-6 py-2 rounded-lg bg-cyan-500 text-white font-semibold text-sm hover:shadow-[0_0_20px_rgba(0,217,255,0.5)] transition-all duration-300 inline-flex items-center justify-center"
               >
                 Register
-              </motion.button>
+              </motion.a>
             </div>
 
             {/* Mobile Menu Button */}
@@ -109,14 +114,17 @@ export function Navbar() {
                 {item.label}
               </a>
             ))}
-            <motion.button
+            <motion.a
+              href="https://unstop.com/o/EhGlUDp?lb=GUZITycG&utm_medium=Share&utm_source=quizzes&utm_campaign=Mukeskum10881"
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full mt-4 px-6 py-2 rounded-lg bg-cyan-500 text-white font-semibold text-sm"
+              className="w-full mt-4 px-6 py-2 rounded-lg bg-cyan-500 text-white font-semibold text-sm inline-flex items-center justify-center"
               onClick={() => setIsOpen(false)}
             >
               Register
-            </motion.button>
+            </motion.a>
           </motion.div>
         </div>
       </motion.nav>
