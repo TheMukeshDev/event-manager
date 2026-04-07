@@ -2,17 +2,10 @@
 
 import { motion } from 'framer-motion'
 import { Clock } from 'lucide-react'
+import { EVENT_DATA } from '@/lib/event-data'
 
 export function TimelineSection() {
-  const timeline = [
-    { time: '9:00 AM', event: 'Registration & Breakfast', duration: '1 hour' },
-    { time: '10:00 AM', event: 'Opening Keynote', duration: '1 hour' },
-    { time: '11:15 AM', event: 'Track Sessions Begin', duration: '2 hours' },
-    { time: '1:30 PM', event: 'Lunch Break', duration: '1 hour' },
-    { time: '2:30 PM', event: 'Workshops & Hands-on Labs', duration: '2 hours' },
-    { time: '4:45 PM', event: 'Networking Session', duration: '1.5 hours' },
-    { time: '6:15 PM', event: 'Awards & Closing Ceremony', duration: '1 hour' },
-  ]
+  const timeline = EVENT_DATA.timeline
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -80,10 +73,10 @@ export function TimelineSection() {
                 <div className="glass-dark rounded-lg p-6 glow-cyan hover-glow-cyan border-l-2 border-l-green-400">
                   <div className="flex items-center gap-2 mb-2">
                     <Clock className="w-4 h-4 text-cyan-400" />
-                    <span className="text-sm font-semibold text-cyan-300">{item.time}</span>
+                    <span className="text-sm font-semibold text-cyan-300">{item.date} {item.time && `@ ${item.time}`}</span>
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-1">{item.event}</h3>
-                  <p className="text-sm text-gray-400">{item.duration}</p>
+                  <h3 className="text-lg font-bold text-white mb-1">{item.phase}</h3>
+                  <p className="text-sm text-gray-400">{item.description}</p>
                 </div>
               </motion.div>
             </motion.div>

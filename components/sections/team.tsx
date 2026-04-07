@@ -1,16 +1,15 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { Mail, Phone } from 'lucide-react'
+import { EVENT_DATA } from '@/lib/event-data'
 
 export function TeamSection() {
-  const team = [
-    { name: 'Alice Johnson', role: 'Event Director', initials: 'AJ', color: 'from-cyan-400' },
-    { name: 'Bob Smith', role: 'Technical Lead', initials: 'BS', color: 'from-green-400' },
-    { name: 'Carol White', role: 'Marketing Head', initials: 'CW', color: 'from-blue-400' },
-    { name: 'David Lee', role: 'Operations Manager', initials: 'DL', color: 'from-cyan-400' },
-    { name: 'Emma Brown', role: 'Designer', initials: 'EB', color: 'from-green-400' },
-    { name: 'Frank Wilson', role: 'Community Manager', initials: 'FW', color: 'from-blue-400' },
-  ]
+  const team = EVENT_DATA.contacts.map((contact, i) => ({
+    ...contact,
+    initials: contact.name.split(' ').map(n => n[0]).join(''),
+    color: ['from-cyan-400', 'from-green-400'][i % 2],
+  }))
 
   const containerVariants = {
     hidden: { opacity: 0 },

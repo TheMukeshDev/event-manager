@@ -3,42 +3,12 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { useState } from 'react'
+import { EVENT_DATA } from '@/lib/event-data'
 
 export function FAQSection() {
   const [openIndex, setOpenIndex] = useState(0)
 
-  const faqs = [
-    {
-      question: 'Who can participate in the event?',
-      answer:
-        'The event is open to students, professionals, and enthusiasts from all backgrounds. You just need to register on our platform and select your preferred tracks.',
-    },
-    {
-      question: 'What is the registration fee?',
-      answer:
-        'Registration is completely free! We want to make this event accessible to everyone. Just sign up on our platform and confirm your participation.',
-    },
-    {
-      question: 'Can I change my tracks after registration?',
-      answer:
-        'Yes, you can update your track selection up to 48 hours before the event. After that, modifications can be made with special permission by contacting our support team.',
-    },
-    {
-      question: 'Will the event be recorded?',
-      answer:
-        'Selected sessions and keynotes will be recorded and made available to registered participants within 7 days of the event.',
-    },
-    {
-      question: 'How will I receive my certificate?',
-      answer:
-        'Your digital certificate will be issued immediately after the event concludes. You can download it from your dashboard or verify it on our online portal.',
-    },
-    {
-      question: 'What should I bring to the event?',
-      answer:
-        'Please bring a valid ID and your registration confirmation. For technical workshops, bring a laptop if you plan to participate actively.',
-    },
-  ]
+  const faqs = EVENT_DATA.faqs
 
   const containerVariants = {
     hidden: { opacity: 0 },

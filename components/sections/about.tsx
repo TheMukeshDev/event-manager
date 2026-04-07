@@ -1,16 +1,15 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { CheckCircle2 } from 'lucide-react'
+import { CheckCircle2, Target, Users, Award } from 'lucide-react'
+import { EVENT_DATA } from '@/lib/event-data'
 
 export function AboutSection() {
-  const features = [
-    'Advanced Event Management',
-    'Real-time Registration',
-    'Attendee Analytics',
-    'Automated Notifications',
-    'Secure Ticketing',
-    'Social Integration',
+  const stats = [
+    { icon: Target, label: 'Questions', value: EVENT_DATA.questions },
+    { icon: Users, label: 'Seats', value: EVENT_DATA.seats.total },
+    { icon: Award, label: 'Duration', value: `${EVENT_DATA.duration}` },
+    { icon: CheckCircle2, label: 'Difficulty', value: 'Easy-Moderate' },
   ]
 
   const containerVariants = {
@@ -43,9 +42,9 @@ export function AboutSection() {
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="heading-lg gradient-cyan-green mb-6">About EventManager</h2>
+          <h2 className="heading-lg gradient-cyan-green mb-6">About {EVENT_DATA.shortName}</h2>
           <p className="text-gray-300 text-lg mb-8 leading-relaxed">
-            EventManager is the all-in-one platform for organizing and participating in premium events. We combine cutting-edge technology with intuitive design to make event management effortless and enjoyable.
+            {EVENT_DATA.name} is an exclusive online quiz challenge designed to test your knowledge of Computer Awareness and C Programming. Compete with students from across India and showcase your technical expertise!
           </p>
 
           {/* Features grid */}

@@ -1,35 +1,22 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Zap, Users, Rocket, Shield } from 'lucide-react'
+import { Zap, Code, Award, Gift } from 'lucide-react'
+import { EVENT_DATA } from '@/lib/event-data'
+
+const iconMap = {
+  Zap,
+  Code,
+  Award,
+  Gift,
+}
 
 export function HighlightsSection() {
-  const highlights = [
-    {
-      icon: Rocket,
-      title: 'Lightning Fast',
-      description: 'Experience blazing fast performance with our optimized infrastructure',
-      color: 'cyan',
-    },
-    {
-      icon: Users,
-      title: 'Community Driven',
-      description: 'Connect with thousands of event enthusiasts and organizers worldwide',
-      color: 'green',
-    },
-    {
-      icon: Zap,
-      title: 'Real-time Updates',
-      description: 'Stay informed with instant notifications and live event updates',
-      color: 'blue',
-    },
-    {
-      icon: Shield,
-      title: 'Secure & Trusted',
-      description: 'Your data is protected with enterprise-grade security measures',
-      color: 'cyan',
-    },
-  ]
+  const highlights = EVENT_DATA.highlights.map((h, i) => ({
+    ...h,
+    icon: iconMap[h.icon as keyof typeof iconMap] || Zap,
+    color: ['cyan', 'green', 'blue', 'cyan'][i % 4],
+  }))
 
   const containerVariants = {
     hidden: { opacity: 0 },

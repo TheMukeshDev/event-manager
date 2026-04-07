@@ -1,7 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ArrowRight, Sparkles, Calendar, MapPin, Users } from 'lucide-react'
+import { EVENT_DATA } from '@/lib/event-data'
 
 export function HeroSection() {
   const containerVariants = {
@@ -42,7 +43,7 @@ export function HeroSection() {
         <motion.div variants={itemVariants} className="mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-cyan-500/30">
             <Sparkles className="w-4 h-4 text-cyan-400" />
-            <span className="text-sm font-semibold text-cyan-300">Welcome to EventManager</span>
+            <span className="text-sm font-semibold text-cyan-300">{EVENT_DATA.mode} Event</span>
           </div>
         </motion.div>
 
@@ -51,7 +52,7 @@ export function HeroSection() {
           variants={itemVariants}
           className="heading-xl gradient-cyan-green mb-6 leading-tight"
         >
-          Experience the Future of Events
+          {EVENT_DATA.name}
         </motion.h1>
 
         {/* Subtitle */}
@@ -59,8 +60,41 @@ export function HeroSection() {
           variants={itemVariants}
           className="text-lg md:text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed"
         >
-          Discover a revolutionary platform for managing, discovering, and participating in premium events with cutting-edge technology and seamless experiences.
+          {EVENT_DATA.description}
         </motion.p>
+
+        {/* Event Info Cards */}
+        <motion.div
+          variants={itemVariants}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12"
+        >
+          <div className="glass-dark rounded-lg p-4 border-cyan-500/20">
+            <div className="flex items-center gap-2 text-cyan-300 mb-2">
+              <Calendar className="w-5 h-5" />
+              <span className="font-semibold">Date</span>
+            </div>
+            <p className="text-gray-300">{EVENT_DATA.date}</p>
+            <p className="text-sm text-gray-400">{EVENT_DATA.time}</p>
+          </div>
+
+          <div className="glass-dark rounded-lg p-4 border-green-500/20">
+            <div className="flex items-center gap-2 text-green-300 mb-2">
+              <Users className="w-5 h-5" />
+              <span className="font-semibold">Seats</span>
+            </div>
+            <p className="text-gray-300">{EVENT_DATA.seats.available}/{EVENT_DATA.seats.total} Available</p>
+            <p className="text-sm text-gray-400">Limited spots</p>
+          </div>
+
+          <div className="glass-dark rounded-lg p-4 border-blue-500/20">
+            <div className="flex items-center gap-2 text-blue-300 mb-2">
+              <MapPin className="w-5 h-5" />
+              <span className="font-semibold">Organizer</span>
+            </div>
+            <p className="text-gray-300 text-sm">{EVENT_DATA.organizer.name}</p>
+            <p className="text-xs text-gray-400">{EVENT_DATA.organizer.location}</p>
+          </div>
+        </motion.div>
 
         {/* CTA Buttons */}
         <motion.div
@@ -73,7 +107,7 @@ export function HeroSection() {
             className="neon-button group"
           >
             <span className="flex items-center gap-2">
-              Get Started
+              Register Now
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </span>
           </motion.button>
@@ -82,30 +116,30 @@ export function HeroSection() {
             whileTap={{ scale: 0.95 }}
             className="px-6 py-3 rounded-lg border border-gray-600 text-gray-300 font-semibold transition-all duration-300 hover:border-green-400 hover:text-green-300"
           >
-            Learn More
+            Verify Certificate
           </motion.button>
         </motion.div>
 
-        {/* Floating elements */}
+        {/* Quiz Stats */}
         <motion.div
           animate={{ y: [0, -20, 0] }}
           transition={{ duration: 4, repeat: Infinity }}
           className="mt-20"
         >
           <div className="inline-block glass-dark rounded-lg p-6 glow-cyan">
-            <p className="text-sm text-gray-300 mb-4">Trusted by thousands of event organizers</p>
+            <p className="text-sm text-gray-300 mb-4">Quiz Challenge Details</p>
             <div className="flex gap-8 justify-center text-center">
               <div>
-                <div className="text-2xl font-bold text-cyan-400">10K+</div>
-                <div className="text-xs text-gray-400">Active Users</div>
+                <div className="text-2xl font-bold text-cyan-400">{EVENT_DATA.questions}</div>
+                <div className="text-xs text-gray-400">Questions</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-green-400">500+</div>
-                <div className="text-xs text-gray-400">Events Hosted</div>
+                <div className="text-2xl font-bold text-green-400">{EVENT_DATA.duration}</div>
+                <div className="text-xs text-gray-400">Duration</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-blue-400">50K+</div>
-                <div className="text-xs text-gray-400">Attendees</div>
+                <div className="text-2xl font-bold text-blue-400">Easy-Moderate</div>
+                <div className="text-xs text-gray-400">Difficulty</div>
               </div>
             </div>
           </div>

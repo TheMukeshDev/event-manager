@@ -1,41 +1,36 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Trophy, Medal, Award } from 'lucide-react'
+import { Trophy } from 'lucide-react'
+import { EVENT_DATA } from '@/lib/event-data'
 
 export function PrizesSection() {
   const prizes = [
     {
-      rank: '🥇 1st Prize',
-      amount: '$5,000',
-      description: 'Plus mentorship and investment opportunity',
+      position: '🥇 1st Prize',
+      reward: 'Google Swag + Certificate',
       icon: Trophy,
       color: 'from-yellow-400 to-orange-500',
       highlight: true,
     },
     {
-      rank: '🥈 2nd Prize',
-      amount: '$3,000',
-      description: 'Plus 6 months free premium access',
-      icon: Medal,
+      position: '🥈 2nd Prize',
+      reward: 'Google Swag + Certificate',
+      icon: Trophy,
       color: 'from-gray-300 to-gray-400',
       highlight: false,
     },
     {
-      rank: '🥉 3rd Prize',
-      amount: '$1,500',
-      description: 'Plus featured project showcase',
-      icon: Award,
+      position: '🥉 3rd Prize',
+      reward: 'Google Swag + Certificate',
+      icon: Trophy,
       color: 'from-amber-600 to-amber-700',
       highlight: false,
     },
   ]
 
   const specialAwards = [
-    { title: 'Innovation Award', reward: '₹2,000 + Trophy' },
-    { title: 'Best Presentation', reward: '₹1,500 + Badge' },
-    { title: 'Community Choice', reward: '₹1,500 + Certificate' },
-    { title: 'Best Collaboration', reward: '₹1,000 + Feature' },
+    { title: 'Participation', reward: 'Certificate' },
   ]
 
   const containerVariants = {
@@ -111,13 +106,9 @@ export function PrizesSection() {
                     prize.highlight ? 'text-yellow-400' : 'text-gray-400'
                   }`}
                 />
-                <h3 className="text-xl font-bold text-white mb-2">{prize.rank}</h3>
-                <div
-                  className={`text-3xl font-bold mb-4 bg-gradient-to-r ${prize.color} bg-clip-text text-transparent`}
-                >
-                  {prize.amount}
-                </div>
-                <p className="text-gray-400 text-sm leading-relaxed">{prize.description}</p>
+                <h3 className="text-xl font-bold text-white mb-2">{prize.position}</h3>
+                <div className="text-sm text-cyan-300 mb-2">{prize.reward}</div>
+                <p className="text-gray-400 text-xs">Certificates released within 3 days</p>
               </div>
             </motion.div>
           )
