@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Zap, Code, Award, Gift } from 'lucide-react'
-import { EVENT_DATA } from '@/lib/event-data'
+import { Highlight } from '@/lib/types'
 
 const iconMap = {
   Zap,
@@ -11,8 +11,12 @@ const iconMap = {
   Gift,
 }
 
-export function HighlightsSection() {
-  const highlights = EVENT_DATA.highlights.map((h, i) => ({
+interface HighlightsSectionProps {
+  highlights: Highlight[]
+}
+
+export function HighlightsSection({ highlights }: HighlightsSectionProps) {
+  const mappedHighlights = highlights.map((h, i) => ({
     ...h,
     icon: iconMap[h.icon as keyof typeof iconMap] || Zap,
     color: ['cyan', 'green', 'blue', 'cyan'][i % 4],
@@ -60,7 +64,7 @@ export function HighlightsSection() {
         whileInView="visible"
         viewport={{ once: true, margin: '-100px' }}
       >
-        {highlights.map((highlight, index) => {
+        {mappedHighlights.map((highlight, index) => {
           const Icon = highlight.icon
           const glowClass =
             highlight.color === 'cyan'

@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
   phone VARCHAR(20),
   college VARCHAR(255),
   stream VARCHAR(100),
+  role VARCHAR(50) NOT NULL DEFAULT 'participant',
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
@@ -112,6 +113,15 @@ CREATE INDEX idx_registrations_status ON registrations(status);
 CREATE INDEX idx_certificates_user_id ON certificates(user_id);
 CREATE INDEX idx_certificates_certificate_id ON certificates(certificate_id);
 CREATE INDEX idx_quiz_responses_registration_id ON quiz_responses(registration_id);
+
+-- Seed admin users by default
+INSERT INTO users (email, full_name, role)
+VALUES
+  ('Mukeshkumar916241@gmail.com', 'Mukesh Kumar', 'admin'),
+  ('shwetatiwari.8060@gmail.com', 'Shweta Tiwari', 'admin'),
+  ('techwitharyan2211@gmail.com', 'Aryaman Patel', 'admin'),
+  ('deepatiwari221503@gmail.com', 'Deepa Tiwari', 'admin')
+ON CONFLICT (email) DO UPDATE SET role = EXCLUDED.role, full_name = EXCLUDED.full_name;
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;

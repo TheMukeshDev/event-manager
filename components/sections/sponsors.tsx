@@ -1,26 +1,21 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { Sponsor } from '@/lib/types'
 
-export function SponsorsSection() {
-  const sponsors = {
-    platinum: [
-      { name: 'TechCorp Industries', logo: 'TCI' },
-      { name: 'Digital Innovations Inc', logo: 'DII' },
-    ],
-    gold: [
-      { name: 'Cloud Solutions Ltd', logo: 'CSL' },
-      { name: 'Data Systems Pro', logo: 'DSP' },
-      { name: 'Innovation Labs', logo: 'IL' },
-      { name: 'Future Tech Group', logo: 'FTG' },
-    ],
-    silver: [
-      { name: 'Smart Dev Co', logo: 'SDC' },
-      { name: 'Web Innovations', logo: 'WI' },
-      { name: 'Code Creators', logo: 'CC' },
-      { name: 'Digital Dreams', logo: 'DD' },
-    ],
-  }
+interface SponsorsSectionProps {
+  sponsors: Sponsor[]
+}
+
+export function SponsorsSection({ sponsors }: SponsorsSectionProps) {
+  const grouped = sponsors.reduce(
+    (acc, sponsor) => {
+      const tier = (sponsor.tier ?? 'silver') as 'platinum' | 'gold' | 'silver'
+      acc[tier] = [...acc[tier], sponsor]
+      return acc
+    },
+    { platinum: [] as Sponsor[], gold: [] as Sponsor[], silver: [] as Sponsor[] }
+  )
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -42,45 +37,23 @@ export function SponsorsSection() {
     },
   }
 
-  const renderSponsors = (sponsorList: typeof sponsors.platinum, color: string) => (
-    <motion.div
-      className="grid grid-cols-1 md:grid-cols-2 gap-6"
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: '-100px' }}
-    >
-      {sponsorList.map((sponsor, index) => (
-        <motion.div
-          key={index}
-          variants={itemVariants}
-          whileHover={{ scale: 1.08 }}
-          className={`glass-dark rounded-lg p-8 flex items-center justify-center text-center glow-${color === 'platinum' ? 'cyan' : color === 'gold' ? 'green' : 'cyan'} hover-glow-cyan border-t-2 ${
-            color === 'platinum'
-              ? 'border-t-yellow-400'
-              : color === 'gold'
-                ? 'border-t-green-400'
-                : 'border-t-gray-500'
-          }`}
-        >
-          <div>
-            <div
-              className={`text-4xl font-bold mb-2 ${
-                color === 'platinum'
-                  ? 'text-yellow-400'
-                  : color === 'gold'
-                    ? 'text-green-400'
-                    : 'text-gray-400'
-              }`}
-            >
-              {sponsor.logo}
-            </div>
-            <p className="text-gray-300 font-semibold">{sponsor.name}</p>
-          </div>
-        </motion.div>
-      ))}
-    </motion.div>
-  )
+  const vendorCard = (sponsor: Sponsor, tier: 'platinum' | 'gold' | 'silver') => {
+    const colorClass = tier === 'platinum' ? 'text-yellow-400 border-t-yellow-400' : tier === 'gold' ? 'text-green-400 border-t-green-400' : 'text-gray-400 border-t-gray-500'
+    return (
+      <motion.div
+        key={sponsor.id}
+        variants={itemVariants}
+        whileHover={{ scale: 1.08 }}
+        className={`glass-dark rounded-lg p-8 flex items-center justify-center text-center hover-glow-cyan border-t-2 ${colorClass}`}
+      >
+        <div>
+          <div className="text-4xl font-bold mb-2 text-white">{sponsor.name.slice(0, 2).toUpperCase()}</div>
+          <p className="text-gray-300 font-semibold text-sm">{sponsor.name}</p>
+          <p className="text-xs text-gray-500 mt-2">{sponsor.website ?? tier}</p>
+        </div>
+      </motion.div>
+    )
+  }
 
   return (
     <section className="section-spacing px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -93,67 +66,26 @@ export function SponsorsSection() {
       >
         <h2 className="heading-lg gradient-cyan-blue mb-4">Our Sponsors</h2>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Proud partners making this event possible
+          Trusted partners making this event experience feel premium and purposeful.
         </p>
       </motion.div>
 
-      {/* Platinum Sponsors */}
-      <div className="mb-16">
-        <h3 className="text-2xl font-bold text-yellow-400 text-center mb-8">Platinum Sponsors</h3>
-        {renderSponsors(sponsors.platinum, 'platinum')}
-      </div>
-
-      {/* Gold Sponsors */}
-      <div className="mb-16">
-        <h3 className="text-2xl font-bold text-green-400 text-center mb-8">Gold Sponsors</h3>
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-        >
-          {sponsors.gold.map((sponsor, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              whileHover={{ scale: 1.08 }}
-              className="glass-dark rounded-lg p-8 flex items-center justify-center text-center glow-green hover-glow-cyan border-t-2 border-t-green-400"
-            >
-              <div>
-                <div className="text-3xl font-bold text-green-400 mb-2">{sponsor.logo}</div>
-                <p className="text-gray-300 font-semibold text-sm">{sponsor.name}</p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-
-      {/* Silver Sponsors */}
-      <div>
-        <h3 className="text-2xl font-bold text-gray-400 text-center mb-8">Silver Sponsors</h3>
-        <motion.div
-          className="grid grid-cols-2 md:grid-cols-4 gap-4"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-        >
-          {sponsors.silver.map((sponsor, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              whileHover={{ scale: 1.08 }}
-              className="glass-dark rounded-lg p-6 flex items-center justify-center text-center glow-cyan hover-glow-cyan border-t border-t-gray-500"
-            >
-              <div>
-                <div className="text-2xl font-bold text-gray-400 mb-1">{sponsor.logo}</div>
-                <p className="text-gray-400 font-semibold text-xs">{sponsor.name}</p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
+      {(['platinum', 'gold', 'silver'] as const).map((tier) => (
+        <div key={tier} className="mb-16">
+          <h3 className={`text-2xl font-bold ${tier === 'platinum' ? 'text-yellow-400' : tier === 'gold' ? 'text-green-400' : 'text-gray-400'} text-center mb-8`}>
+            {tier === 'platinum' ? 'Platinum Sponsors' : tier === 'gold' ? 'Gold Sponsors' : 'Silver Sponsors'}
+          </h3>
+          <motion.div
+            className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6`}
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-100px' }}
+          >
+            {grouped[tier].map((sponsor) => vendorCard(sponsor, tier))}
+          </motion.div>
+        </div>
+      ))}
     </section>
   )
 }

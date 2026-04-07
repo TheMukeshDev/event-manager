@@ -2,11 +2,13 @@
 
 import { motion } from 'framer-motion'
 import { Clock } from 'lucide-react'
-import { EVENT_DATA } from '@/lib/event-data'
+import { TimelineItem } from '@/lib/types'
 
-export function TimelineSection() {
-  const timeline = EVENT_DATA.timeline
+interface TimelineSectionProps {
+  timeline: TimelineItem[]
+}
 
+export function TimelineSection({ timeline }: TimelineSectionProps) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -36,9 +38,9 @@ export function TimelineSection() {
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="heading-lg gradient-cyan-blue mb-4">Event Schedule</h2>
+        <h2 className="heading-lg gradient-cyan-blue mb-4">Event Timeline</h2>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          A comprehensive timeline of all sessions and activities
+          Animated stage flow with registration, shortlist, event rounds, results, and certificate release.
         </p>
       </motion.div>
 
@@ -55,7 +57,7 @@ export function TimelineSection() {
         <div className="space-y-8">
           {timeline.map((item, index) => (
             <motion.div
-              key={index}
+              key={item.id}
               variants={itemVariants}
               className={`flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
             >
@@ -73,9 +75,9 @@ export function TimelineSection() {
                 <div className="glass-dark rounded-lg p-6 glow-cyan hover-glow-cyan border-l-2 border-l-green-400">
                   <div className="flex items-center gap-2 mb-2">
                     <Clock className="w-4 h-4 text-cyan-400" />
-                    <span className="text-sm font-semibold text-cyan-300">{item.date} {item.time && `@ ${item.time}`}</span>
+                    <span className="text-sm font-semibold text-cyan-300">{item.time}</span>
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-1">{item.phase}</h3>
+                  <h3 className="text-lg font-bold text-white mb-1">{item.title}</h3>
                   <p className="text-sm text-gray-400">{item.description}</p>
                 </div>
               </motion.div>

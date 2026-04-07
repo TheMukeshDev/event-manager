@@ -17,9 +17,18 @@ export async function registerUser(data: {
   stream: string
 }) {
   try {
+    const adminEmails = [
+      'mukeshkumar916241@gmail.com',
+      'shwetatiwari.8060@gmail.com',
+      'techwitharyan2211@gmail.com',
+      'deepatiwari221503@gmail.com',
+    ]
+
+    const role = adminEmails.includes(data.email.toLowerCase()) ? 'admin' : 'participant'
+
     const { data: user, error } = await supabase
       .from('users')
-      .insert([data])
+      .insert([{ ...data, role }])
       .select()
 
     if (error) throw error
