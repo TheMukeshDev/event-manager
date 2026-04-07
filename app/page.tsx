@@ -5,7 +5,6 @@ import { ScrollProgressBar } from '@/components/scroll-progress'
 import { HeroSection } from '@/components/sections/hero'
 import { AboutSection } from '@/components/sections/about'
 import { HighlightsSection } from '@/components/sections/highlights'
-import { TracksSection } from '@/components/sections/tracks'
 import { TimelineSection } from '@/components/sections/timeline'
 import { PrizesSection } from '@/components/sections/prizes'
 import { CertificateSection } from '@/components/sections/certificate'
@@ -15,7 +14,7 @@ import { FAQSection } from '@/components/sections/faq'
 import { getPublicOverview } from '@/lib/public-data'
 
 export default async function Home() {
-  const { event, tracks, timeline, prizes, sponsors, faqs, team, adminSettings } = await getPublicOverview()
+  const { event, timeline, prizes, sponsors, faqs, team, adminSettings } = await getPublicOverview()
 
   return (
     <>
@@ -37,11 +36,6 @@ export default async function Home() {
         {/* Highlights Section */}
         <section id="highlights">
           <HighlightsSection highlights={event.highlights} />
-        </section>
-
-        {/* Tracks Section */}
-        <section id="tracks">
-          <TracksSection tracks={tracks} />
         </section>
 
         {/* Timeline Section */}

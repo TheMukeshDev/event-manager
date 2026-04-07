@@ -38,9 +38,9 @@ export function TimelineSection({ timeline }: TimelineSectionProps) {
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="heading-lg gradient-cyan-blue mb-4">Event Timeline</h2>
+        <h2 className="heading-lg gradient-cyan-blue mb-4">Stages & Timeline</h2>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Animated stage flow with registration, shortlist, event rounds, results, and certificate release.
+          Key event milestones, eligibility, and assessment details for the TechQuiz challenge.
         </p>
       </motion.div>
 
@@ -78,7 +78,7 @@ export function TimelineSection({ timeline }: TimelineSectionProps) {
                     <span className="text-sm font-semibold text-cyan-300">{item.time}</span>
                   </div>
                   <h3 className="text-lg font-bold text-white mb-1">{item.title}</h3>
-                  <p className="text-sm text-gray-400">{item.description}</p>
+                  <p className="text-sm text-gray-400 whitespace-pre-line">{item.description}</p>
                 </div>
               </motion.div>
             </motion.div>
