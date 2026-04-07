@@ -94,19 +94,19 @@
 
 /* Neon glow effects */
 .glow-cyan {
-  @apply shadow-[0_0_20px_rgba(0,217,255,0.5)];
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
 }
 
 .glow-cyan-lg {
-  @apply shadow-[0_0_40px_rgba(0,217,255,0.6)];
+  box-shadow: 0 0 40px rgba(0, 217, 255, 0.6);
 }
 
 .glow-green {
-  @apply shadow-[0_0_20px_rgba(0,255,136,0.4)];
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
 }
 
 .glow-blue {
-  @apply shadow-[0_0_20px_rgba(0,136,255,0.4)];
+  box-shadow: 0 0 20px rgba(0, 136, 255, 0.4);
 }
 
 /* Hover glow effects */
@@ -143,7 +143,8 @@
 
 /* Border glow */
 .border-glow {
-  @apply border border-cyan-500/50 shadow-[inset_0_0_20px_rgba(0,217,255,0.1)];
+  border: 1px solid rgba(0, 217, 255, 0.5);
+  box-shadow: inset 0 0 20px rgba(0, 217, 255, 0.1);
 }
 
 .border-glow-hover {
