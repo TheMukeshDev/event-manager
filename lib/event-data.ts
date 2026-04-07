@@ -161,6 +161,15 @@ export const EVENT_DATA = {
     available: 29,
   },
 
+  features: [
+    'Free to participate',
+    'Certificates for all participants',
+    'No prior registration needed',
+    'Compete with students nationwide',
+    'Earn valuable certificates',
+    'Win Google swag prizes',
+  ],
+
   sponsors: [
     { name: 'Google', tier: 'Platinum' },
     { name: 'Microsoft', tier: 'Gold' },

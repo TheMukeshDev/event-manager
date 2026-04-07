@@ -12,6 +12,8 @@ export function AboutSection() {
     { icon: CheckCircle2, label: 'Difficulty', value: 'Easy-Moderate' },
   ]
 
+  const features: string[] = EVENT_DATA.features ?? []
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -55,14 +57,14 @@ export function AboutSection() {
             whileInView="visible"
             viewport={{ once: true, margin: '-100px' }}
           >
-            {features.map((feature, index) => (
+            {features.map((item, index) => (
               <motion.div
                 key={index}
                 variants={itemVariants}
                 className="flex items-center gap-3"
               >
                 <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
-                <span className="text-gray-300 font-medium">{feature}</span>
+                <span className="text-gray-300 font-medium">{item}</span>
               </motion.div>
             ))}
           </motion.div>
