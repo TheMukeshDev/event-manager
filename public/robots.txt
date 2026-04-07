@@ -1,0 +1,21 @@
+# Robots.txt - SEO Configuration for Tech Hub BBS
+# Allow all crawlers to index the site for better search visibility
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Crawl-delay: 1
+
+# Specific rules for Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Specific rules for Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://techhub-bbs.vercel.app/sitemap.xml
