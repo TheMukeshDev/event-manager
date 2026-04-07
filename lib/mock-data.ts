@@ -98,10 +98,7 @@ export const mockTimeline: TimelineItem[] = [
     eventId: '1',
     time: 'Within 3 days after quiz',
     title: 'Certificate Time',
-    type: 'award',
-    description: 'Digital certificates issued to all participants after the quiz.',
-  },
-]
+
     type: 'award',
     description: 'Digital certificates issued to all participants after the quiz.',
   },
