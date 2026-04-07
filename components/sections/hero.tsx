@@ -55,7 +55,7 @@ export function HeroSection({ event }: HeroSectionProps) {
         {/* Main heading */}
         <motion.h1
           variants={itemVariants}
-          className="heading-xl gradient-cyan-green mb-6 leading-tight"
+          className="heading-xl gradient-cyan-green mb-6 leading-tight break-words px-2 sm:px-0"
         >
           {event.title}
         </motion.h1>
@@ -107,7 +107,7 @@ export function HeroSection({ event }: HeroSectionProps) {
         {/* CTA Buttons */}
         <motion.div
           variants={itemVariants}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center [&>a]:w-full sm:[&>a]:w-auto"
         >
           <a
             href="https://unstop.com/o/EhGlUDp?lb=GUZITycG&utm_medium=Share&utm_source=quizzes&utm_campaign=Mukeskum10881"

@@ -33,14 +33,14 @@ export default async function Home() {
       <FloatingParticles />
       <Navbar />
       
-      <main className="min-h-screen pt-16">
+      <main className="relative z-40 pointer-events-auto min-h-screen pt-24 md:pt-20 container mx-auto px-4 md:px-8 lg:px-0 pb-20 max-w-7xl mx-auto">
         {/* Hero Section */}
-        <section id="hero">
+        <section id="hero" className="snap-start w-full">
           <HeroSection event={event} />
         </section>
 
         {/* About Section */}
-        <section id="about">
+        <section id="about" className="snap-start w-full">
           <AboutSection event={event} />
         </section>
 

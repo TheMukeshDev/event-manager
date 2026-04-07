@@ -51,7 +51,7 @@ export function HighlightsSection({ highlights }: HighlightsSectionProps) {
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.6 }}
       >
-        <h2 className="heading-lg gradient-cyan-blue mb-4">Why Choose Tech Hub BBS</h2>
+        <h2 className="heading-lg gradient-cyan-blue mb-4 break-words px-2 sm:px-0">Why Choose Tech Hub BBS</h2>
         <p className="text-gray-400 max-w-2xl mx-auto">
           Powerful features designed to make event management simple, efficient, and enjoyable
         </p>
