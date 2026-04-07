@@ -70,6 +70,25 @@ export const EVENT_DATA = {
     },
   ],
 
+  quizFormat: [
+    {
+      title: '5 Basic Computer Awareness',
+      description: 'Fundamentals of computers, digital literacy, basic OS concepts and hardware awareness.',
+    },
+    {
+      title: '5 Basic C Programming',
+      description: 'Core C concepts including syntax, data types, operators, and control flow.',
+    },
+    {
+      title: 'Moderate C Questions',
+      description: 'Topics from functions, pointers, arrays, and simple memory handling.',
+    },
+    {
+      title: 'Hard C Questions',
+      description: 'Advanced C challenges around pointers, file management, and problem-solving.',
+    },
+  ],
+
   highlights: [
     {
       id: 'h1',

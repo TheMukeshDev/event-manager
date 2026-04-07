@@ -16,6 +16,7 @@ export function AboutSection({ event }: AboutSectionProps) {
     { icon: CheckCircle2, label: 'Event Type', value: event.eventType ?? 'Quiz Championship' },
   ]
 
+  const quizFormat = event.quizFormat ?? []
   const features: string[] = event.features ?? []
 
   const containerVariants = {
@@ -40,7 +41,7 @@ export function AboutSection({ event }: AboutSectionProps) {
 
   return (
     <section className="section-spacing px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         {/* Left content */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -49,9 +50,26 @@ export function AboutSection({ event }: AboutSectionProps) {
           transition={{ duration: 0.8 }}
         >
           <h2 className="heading-lg gradient-cyan-green mb-6">About {event.shortName}</h2>
-          <p className="text-gray-300 text-lg mb-8 leading-relaxed">
+          <p className="text-gray-300 text-lg mb-6 leading-relaxed">
             {event.title} is a premium college event experience built for ambitious participants looking to level up with quiz challenges, certificates, and neon-glow rewards.
           </p>
+          <p className="text-gray-400 mb-8 leading-relaxed">
+            The quiz is designed with a clear learning path: basic Computer Awareness, beginner C fundamentals, followed by moderate and hard C programming questions based on functions, pointers, and file management.
+          </p>
+
+          {/* Quiz format cards */}
+          <div className="grid grid-cols-1 gap-4 mb-8">
+            {event.quizFormat?.map((item, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                className="glass-dark rounded-xl p-5 border border-cyan-500/20"
+              >
+                <h3 className="text-white font-semibold mb-2">{item.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{item.description}</p>
+              </motion.div>
+            ))}
+          </div>
 
           {/* Features grid */}
           <motion.div

@@ -83,13 +83,40 @@ export const mockEventTracks: EventTrack[] = [
 ]
 
 export const mockTimeline: TimelineItem[] = [
-  { id: '1', eventId: '1', time: '9:00 AM', title: 'Registration & Breakfast', type: 'registration', duration: '1 hour' },
-  { id: '2', eventId: '1', time: '10:00 AM', title: 'Opening Keynote', type: 'session', duration: '1 hour' },
-  { id: '3', eventId: '1', time: '11:15 AM', title: 'Track Sessions Begin', type: 'session', duration: '2 hours' },
-  { id: '4', eventId: '1', time: '1:30 PM', title: 'Lunch Break', type: 'break', duration: '1 hour' },
-  { id: '5', eventId: '1', time: '2:30 PM', title: 'Workshops & Hands-on Labs', type: 'session', duration: '2 hours' },
-  { id: '6', eventId: '1', time: '4:45 PM', title: 'Networking Session', type: 'session', duration: '1.5 hours' },
-  { id: '7', eventId: '1', time: '6:15 PM', title: 'Awards & Closing Ceremony', type: 'award', duration: '1 hour' },
+  {
+    id: '1',
+    eventId: '1',
+    time: '11 Apr 26, 12:00 AM IST',
+    title: 'Registration Deadline',
+    type: 'registration',
+    description: 'Team Size: Individual Participation\nRegistration Deadline: 11 Apr 26, 12:00 AM IST',
+  },
+  {
+    id: '2',
+    eventId: '1',
+    time: 'TechQuiz & Treasure Hunt',
+    title: 'Quiz Challenge Overview',
+    type: 'session',
+    description: 'TechQuiz: Computer Awareness & C Language Challenge / quizzes',
+  },
+  {
+    id: '3',
+    eventId: '1',
+    time: 'Eligibility',
+    title: 'Who Can Participate',
+    type: 'session',
+    description:
+      'Engineering Students\nPostgraduate\nUndergraduate\nManagement\nMedical\nLaw\nArts, Commerce, Sciences & Others',
+  },
+  {
+    id: '4',
+    eventId: '1',
+    time: '12 Apr 26, 06:00 PM IST → 12 Apr 26, 06:30 PM IST',
+    title: 'Assessment Round (Tech Quiz)',
+    type: 'session',
+    description:
+      'In this round, participants will take an online quiz consisting of multiple-choice questions based on Computer Awareness and C Programming fundamentals.\n\nThe assessment aims to evaluate basic technical knowledge, logical thinking, and problem-solving ability.\n\n📌 Details:\n• Total Questions: 20 MCQs\n• Duration: 20 minutes\n• Difficulty Level: Easy to Moderate\n• Mode: Online\n\n🏆 Participants will be ranked based on their score and time taken. Top performers will be rewarded based on their performance. Result announcement within 3 days after the quiz.',
+  },
 ]
 
 export const mockPrizes: Prize[] = [
