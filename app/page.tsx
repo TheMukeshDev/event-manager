@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { FloatingParticles } from '@/components/floating-particles'
@@ -13,6 +14,15 @@ import { AmbassadorSection } from '@/components/sections/ambassador'
 import { SponsorsSection } from '@/components/sections/sponsors'
 import { FAQSection } from '@/components/sections/faq'
 import { getPublicOverview } from '@/lib/public-data'
+
+export const metadata: Metadata = {
+  title: 'Tech Hub BBS Events - Innovate. Connect. Elevate.',
+  description: 'Discover and participate in exciting tech events organized by Tech Hub BBS, a premier group of institutions in Prayagraj, U.P. India. Join us for competitions, learning opportunities, and awards.',
+  keywords: ['tech events', 'Prayagraj', 'competitions', 'learning', 'innovation', 'Tech Hub BBS'],
+  alternates: {
+    canonical: 'https://techhub-bbs.vercel.app',
+  },
+}
 
 export default async function Home() {
   const { event, timeline, prizes, sponsors, faqs, team, ambassadors, adminSettings } = await getPublicOverview()
