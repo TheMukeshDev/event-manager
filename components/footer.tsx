@@ -56,7 +56,7 @@ export function Footer() {
               <div className="w-10 h-10 rounded-lg bg-linear-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
                 <span className="text-white font-bold text-sm">EM</span>
               </div>
-              <span className="gradient-cyan-green font-bold text-lg">EventManager</span>
+              <span className="gradient-cyan-green font-bold text-lg">Tech Hub BBS</span>
             </div>
             <p className="text-gray-400 text-sm mb-6">
               Premium event platform for college events, competitions, and conferences.

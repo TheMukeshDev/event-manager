@@ -25,7 +25,7 @@ export function CertificateSection() {
               <p className="text-sm text-gray-600 font-serif mb-2">This is to certify that</p>
               <p className="text-xl font-bold text-gray-800 mb-2">Your Name</p>
               <p className="text-sm text-gray-600 mb-4">has successfully completed and participated in</p>
-              <p className="text-lg font-bold text-gray-800 mb-4">EventManager 2024</p>
+              <p className="text-lg font-bold text-gray-800 mb-4">Tech Hub BBS 2024</p>
               <div className="flex justify-between px-4 pt-4 border-t border-gray-300 text-xs text-gray-600">
                 <span>Date: April 2024</span>
                 <span>Signature</span>
