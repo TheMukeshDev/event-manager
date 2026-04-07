@@ -112,8 +112,8 @@ export const mockPrizes: Prize[] = [
     rank: 1,
     amount: 0,
     currency: '',
-    label: 'Dairy + Swags + Stickers + Pen',
-    description: 'Premium dairy hamper, exclusive Google swag pack, premium stickers, quality pen + Certificate of Achievement.',
+    label: 'Dairy  + Stickers + Pen',
+    description: 'Premium dairy hamper, exclusive Google premium stickers, quality pen + Certificate of Achievement.',
   },
   {
     id: '2',
@@ -123,7 +123,7 @@ export const mockPrizes: Prize[] = [
     amount: 0,
     currency: '',
     label: 'Pen + Stickers',
-    description: 'High-quality pen, premium sticker collection + Certificate of Achievement.',
+    description: 'High-quality pen,Google premium sticker collection + Certificate of Achievement.',
   },
   {
     id: '3',
@@ -299,11 +299,7 @@ export const mockHighlights: Highlight[] = [
   },
 ]
 
-/**
- * API Service Functions
- * These are placeholder functions that return mock data
- * Replace these with actual API calls when integrating with Supabase
- */
+
 
 export async function getEventTracks(): Promise<EventTrack[]> {
   // TODO: Replace with: const { data } = await supabase.from('event_tracks').select()

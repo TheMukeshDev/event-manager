@@ -20,7 +20,7 @@ export const EVENT_DATA = {
     location: 'BBS Campus Santipuram, Prayagraj 210013',
   },
 
-  eventType: 'Quiz Championship',
+  eventType: 'Quiz Challenge',
   teamSize: 'Individual / Team of 2',
   venue: 'Virtual + BBSCET Auditorium',
   brochureUrl: 'https://example.com/event-brochure.pdf',
