@@ -3,21 +3,7 @@
  * Replace these functions with actual API calls when Supabase is integrated
  */
 
-import { Event, EventTrack, TimelineItem, Prize, TeamMember, Sponsor, FAQ, Highlight, Ambassador } from './types'
-
-export const mockEvent: Event = {
-  id: '1',
-  title: 'TechFest 2024',
-  description: 'Experience the future of technology with cutting-edge innovations',
-  date: '2024-06-15',
-  time: '09:00',
-  location: 'College Campus, City',
-  capacity: 500,
-  registeredCount: 342,
-  status: 'upcoming',
-  createdAt: '2024-01-15',
-  updatedAt: '2024-03-01',
-}
+import { EventTrack, TimelineItem, Prize, TeamMember, Sponsor, FAQ, Highlight } from './types'
 
 export const mockEventTracks: EventTrack[] = [
   {
@@ -86,7 +72,7 @@ export const mockTimeline: TimelineItem[] = [
   {
     id: '1',
     eventId: '1',
-    time: '11 Apr 26, 12:00 AM IST',
+    time: '7 Apr 26, 12:00 AM IST',
     title: 'Registration Deadline',
     type: 'registration',
     description: 'Team Size: Individual Participation',
@@ -94,7 +80,7 @@ export const mockTimeline: TimelineItem[] = [
   {
     id: '2',
     eventId: '1',
-    time: 'Saturday 11 April 2026, 7:00 PM IST',
+    time: 'Saturday 7 April 2026, 7:00 PM IST',
     title: 'Technical Session',
     type: 'session',
     description: 'Google Meet session for event briefing and rules.',
@@ -102,7 +88,7 @@ export const mockTimeline: TimelineItem[] = [
   {
     id: '3',
     eventId: '1',
-    time: '12 Apr 26, 06:00 PM IST',
+    time: '8 Apr 26, 06:00 PM IST',
     title: 'Quiz Time',
     type: 'session',
     description: 'Live TechQuiz challenge begins on time.',
@@ -177,109 +163,6 @@ export const mockTeam: TeamMember[] = [
   },
 ]
 
-export const mockAmbassadors: Ambassador[] = [
-  {
-    id: 'a1',
-    eventId: '1',
-    userId: 'u1',
-    fullName: 'Priya Sharma',
-    name: 'Priya Sharma',
-    email: 'priya.sharma@example.com',
-    phone: '9876543210',
-    collegeName: 'BBS College of Engineering and Technology',
-    college: 'BBS College of Engineering and Technology',
-    branch: 'Computer Science',
-    section: 'A3',
-    yearOrSemester: 'Year 3',
-    referralCode: 'CA-PRIYA-001',
-    referralLink: 'https://event.com/register?ref=CA-PRIYA-001',
-    totalReferrals: 12,
-    validReferralCount: 12,
-    rewardEligible: true,
-    certificateEligible: true,
-    goodiesEligible: true,
-    status: 'approved',
-    reward: 'Google swag + certificate',
-    createdAt: '2024-03-10T10:00:00Z',
-    updatedAt: '2024-03-20T12:00:00Z',
-  },
-  {
-    id: 'a2',
-    eventId: '1',
-    userId: 'u2',
-    fullName: 'Aman Verma',
-    name: 'Aman Verma',
-    email: 'aman.verma@example.com',
-    phone: '9876501234',
-    collegeName: 'Tech University',
-    college: 'Tech University',
-    branch: 'Information Technology',
-    section: 'B2',
-    yearOrSemester: 'Year 2',
-    referralCode: 'CA-AMAN-001',
-    referralLink: 'https://event.com/register?ref=CA-AMAN-001',
-    totalReferrals: 9,
-    validReferralCount: 9,
-    rewardEligible: false,
-    certificateEligible: false,
-    goodiesEligible: false,
-    status: 'approved',
-    reward: 'Leadership recognition',
-    createdAt: '2024-03-08T10:00:00Z',
-    updatedAt: '2024-03-18T12:00:00Z',
-  },
-  {
-    id: 'a3',
-    eventId: '1',
-    userId: 'u3',
-    fullName: 'Riya Singh',
-    name: 'Riya Singh',
-    email: 'riya.singh@example.com',
-    phone: '9876509876',
-    collegeName: 'Innovation Institute',
-    college: 'Innovation Institute',
-    branch: 'Electronics',
-    section: 'C1',
-    yearOrSemester: 'Year 3',
-    referralCode: 'CA-RIYA-001',
-    referralLink: 'https://event.com/register?ref=CA-RIYA-001',
-    totalReferrals: 7,
-    validReferralCount: 7,
-    rewardEligible: false,
-    certificateEligible: false,
-    goodiesEligible: false,
-    status: 'approved',
-    reward: 'Ambassador badge',
-    createdAt: '2024-03-05T10:00:00Z',
-    updatedAt: '2024-03-16T12:00:00Z',
-  },
-  {
-    id: 'a4',
-    eventId: '1',
-    userId: 'u4',
-    fullName: 'Sahil Gupta',
-    name: 'Sahil Gupta',
-    email: 'sahil.gupta@example.com',
-    phone: '9876512345',
-    collegeName: 'Global Tech Campus',
-    college: 'Global Tech Campus',
-    branch: 'Mechanical',
-    section: 'D4',
-    yearOrSemester: 'Year 2',
-    referralCode: 'CA-SAHIL-001',
-    referralLink: 'https://event.com/register?ref=CA-SAHIL-001',
-    totalReferrals: 5,
-    validReferralCount: 5,
-    rewardEligible: false,
-    certificateEligible: false,
-    goodiesEligible: false,
-    status: 'approved',
-    reward: 'Early access recognition',
-    createdAt: '2024-03-02T10:00:00Z',
-    updatedAt: '2024-03-15T12:00:00Z',
-  },
-]
-
 export const mockSponsors: Sponsor[] = [
   {
     id: '1',
@@ -299,7 +182,7 @@ export const mockFAQs: FAQ[] = [
     id: '1',
     eventId: '1',
     question: 'What is the registration deadline?',
-    answer: 'The registration deadline is 11 April 2026 at 12:00 AM IST. Register before this date to participate in the quiz challenge.',
+    answer: 'The registration deadline is 7 April 2026 at 12:00 AM IST. Register before this date to participate in the quiz challenge.',
     category: 'Registration',
     order: 1,
     createdAt: '2026-04-01',
@@ -400,11 +283,6 @@ export const mockHighlights: Highlight[] = [
  * These are placeholder functions that return mock data
  * Replace these with actual API calls when integrating with Supabase
  */
-
-export async function getEvent(): Promise<Event> {
-  // TODO: Replace with: const { data } = await supabase.from('events').select().single()
-  return mockEvent
-}
 
 export async function getEventTracks(): Promise<EventTrack[]> {
   // TODO: Replace with: const { data } = await supabase.from('event_tracks').select()

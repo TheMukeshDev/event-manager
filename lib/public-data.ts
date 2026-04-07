@@ -1,14 +1,13 @@
 import { supabaseServer } from './supabase-server'
 import { EVENT_DATA } from './event-data'
+import { Ambassador } from './types'
 import {
-  mockEvent,
   mockEventTracks,
   mockTimeline,
   mockPrizes,
   mockTeam,
   mockSponsors,
   mockFAQs,
-  mockAmbassadors,
 } from './mock-data'
 
 export type PublicOverview = {
@@ -19,7 +18,7 @@ export type PublicOverview = {
   sponsors: typeof mockSponsors
   faqs: typeof mockFAQs
   team: typeof mockTeam
-  ambassadors: typeof mockAmbassadors
+  ambassadors: Ambassador[]
   contacts: typeof EVENT_DATA.contacts
   highlights: typeof EVENT_DATA.highlights
   adminSettings: {
@@ -51,7 +50,7 @@ const fallbackOverview: PublicOverview = {
   faqs: mockFAQs,
   team: mockTeam,
   contacts: EVENT_DATA.contacts,
-  ambassadors: mockAmbassadors,
+  ambassadors: [],
   highlights: EVENT_DATA.highlights,
   adminSettings: {
     registration_link: '',
@@ -117,7 +116,7 @@ export async function getPublicOverview(): Promise<PublicOverview> {
       sponsors: sponsorsResponse.data?.length ? sponsorsResponse.data : mockSponsors,
       faqs: faqsResponse.data?.length ? faqsResponse.data : mockFAQs,
       team: teamResponse.data?.length ? teamResponse.data : mockTeam,
-      ambassadors: ambassadorsResponse.data?.length ? ambassadorsResponse.data : mockAmbassadors,
+      ambassadors: ambassadorsResponse.data?.length ? ambassadorsResponse.data : [],
       contacts: organizersResponse.data?.length
         ? organizersResponse.data.map((organizer: any) => ({
             name: organizer.name,

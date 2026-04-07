@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { ArrowRight, Sparkles, Calendar, MapPin, Users, MessageCircle } from 'lucide-react'
 import { EventData } from '@/lib/event-data'
+import { CountdownTimer } from '@/components/ui/countdown-timer'
 
 interface HeroSectionProps {
   event: EventData
@@ -99,6 +100,9 @@ export function HeroSection({ event }: HeroSectionProps) {
             <p className="text-xs text-gray-400">{event.mode}</p>
           </div>
         </motion.div>
+
+        {/* Countdown Timer */}
+        <CountdownTimer targetDate={`${event.date}, ${event.time.split(' – ')[0]} IST`} />
 
         {/* CTA Buttons */}
         <motion.div
