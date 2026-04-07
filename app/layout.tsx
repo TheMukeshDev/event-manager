@@ -7,8 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'EventManager - Premium Event Platform',
+  description: 'Experience the future of events with EventManager. Discover, manage, and participate in premium events with cutting-edge technology.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -35,8 +35,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className="font-sans antialiased">
+    <html lang="en" className="dark scroll-smooth">
+      <head>
+        <meta name="theme-color" content="#000000" />
+        <meta name="color-scheme" content="dark" />
+      </head>
+      <body className="font-sans antialiased bg-black text-white">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

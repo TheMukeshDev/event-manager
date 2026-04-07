@@ -4,74 +4,26 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --background: #000000;
+  --foreground: #e0e7ff;
+  --card: #0f172a;
+  --card-foreground: #e0e7ff;
+  --popover: #0f172a;
+  --popover-foreground: #e0e7ff;
+  --primary: #00d9ff;
+  --primary-foreground: #000000;
+  --secondary: #00ff88;
+  --secondary-foreground: #000000;
+  --muted: #475569;
+  --muted-foreground: #94a3b8;
+  --accent: #0088ff;
+  --accent-foreground: #ffffff;
+  --destructive: #ff4444;
+  --destructive-foreground: #ffffff;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #00d9ff;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
 }
 
 @theme inline {
@@ -119,7 +71,135 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground;
+    background-image: 
+      linear-gradient(to right, rgba(0, 217, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 217, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+}
+
+/* Glassmorphism card effect */
+.glass {
+  @apply bg-white/10 backdrop-blur-md border border-white/20;
+}
+
+.glass-dark {
+  @apply bg-black/30 backdrop-blur-md border border-cyan-500/20;
+}
+
+/* Neon glow effects */
+.glow-cyan {
+  @apply shadow-[0_0_20px_rgba(0,217,255,0.5)];
+}
+
+.glow-cyan-lg {
+  @apply shadow-[0_0_40px_rgba(0,217,255,0.6)];
+}
+
+.glow-green {
+  @apply shadow-[0_0_20px_rgba(0,255,136,0.4)];
+}
+
+.glow-blue {
+  @apply shadow-[0_0_20px_rgba(0,136,255,0.4)];
+}
+
+/* Hover glow effects */
+.hover-glow-cyan {
+  @apply transition-all duration-300 hover:glow-cyan-lg;
+}
+
+.hover-glow-green {
+  @apply transition-all duration-300 hover:glow-green;
+}
+
+/* Gradient text */
+.gradient-cyan-green {
+  background: linear-gradient(135deg, #00d9ff, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-cyan-blue {
+  background: linear-gradient(135deg, #00d9ff, #0088ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Border glow */
+.border-glow {
+  @apply border border-cyan-500/50 shadow-[inset_0_0_20px_rgba(0,217,255,0.1)];
+}
+
+.border-glow-hover {
+  @apply border-glow transition-all duration-300 hover:border-cyan-400 hover:shadow-[inset_0_0_30px_rgba(0,217,255,0.2),0_0_30px_rgba(0,217,255,0.3)];
+}
+
+/* Scroll progress bar */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #00d9ff, #00ff88, #0088ff, #00d9ff);
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+  z-index: 100;
+}
+
+/* Particle animation */
+@keyframes particle-float {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(100px);
+    opacity: 0;
+  }
+}
+
+.particle {
+  position: fixed;
+  pointer-events: none;
+}
+
+.particle-small {
+  @apply particle w-1 h-1 rounded-full bg-cyan-400;
+  animation: particle-float 10s ease-out forwards;
+}
+
+/* Section spacing */
+.section-spacing {
+  @apply py-20 md:py-32;
+}
+
+/* Responsive text sizes */
+@layer components {
+  .heading-xl {
+    @apply text-3xl md:text-5xl lg:text-6xl font-bold;
+  }
+
+  .heading-lg {
+    @apply text-2xl md:text-4xl font-bold;
+  }
+
+  .heading-md {
+    @apply text-xl md:text-2xl font-semibold;
+  }
+
+  .text-muted {
+    @apply text-gray-400;
+  }
+
+  .neon-button {
+    @apply px-6 py-3 rounded-lg border border-cyan-500 text-cyan-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,217,255,0.5)] hover:text-white;
   }
 }
