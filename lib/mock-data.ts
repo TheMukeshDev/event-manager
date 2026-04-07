@@ -72,7 +72,7 @@ export const mockTimeline: TimelineItem[] = [
   {
     id: '1',
     eventId: '1',
-    time: '7 Apr 26, 12:00 AM IST',
+    time: '11 Apr 26, 12:00 AM IST',
     title: 'Registration Deadline',
     type: 'registration',
     description: 'Team Size: Individual Participation',
@@ -80,7 +80,7 @@ export const mockTimeline: TimelineItem[] = [
   {
     id: '2',
     eventId: '1',
-    time: 'Saturday 7 April 2026, 7:00 PM IST',
+    time: 'Saturday 11 April 2026, 7:00 PM IST',
     title: 'Technical Session',
     type: 'session',
     description: 'Google Meet session for event briefing and rules.',
@@ -88,7 +88,7 @@ export const mockTimeline: TimelineItem[] = [
   {
     id: '3',
     eventId: '1',
-    time: '8 Apr 26, 06:00 PM IST',
+    time: '12 Apr 26, 06:00 PM IST',
     title: 'Quiz Time',
     type: 'session',
     description: 'Live TechQuiz challenge begins on time.',
@@ -98,6 +98,10 @@ export const mockTimeline: TimelineItem[] = [
     eventId: '1',
     time: 'Within 3 days after quiz',
     title: 'Certificate Time',
+    type: 'award',
+    description: 'Digital certificates issued to all participants after the quiz.',
+  },
+]
     type: 'award',
     description: 'Digital certificates issued to all participants after the quiz.',
   },
@@ -182,7 +186,7 @@ export const mockFAQs: FAQ[] = [
     id: '1',
     eventId: '1',
     question: 'What is the registration deadline?',
-    answer: 'The registration deadline is 7 April 2026 at 12:00 AM IST. Register before this date to participate in the quiz challenge.',
+    answer: 'The registration deadline is 11 April 2026 at 12:00 AM IST. Register before this date to participate in the quiz challenge.',
     category: 'Registration',
     order: 1,
     createdAt: '2026-04-01',

@@ -6,9 +6,9 @@ export const EVENT_DATA = {
   shortName: 'Tech Hub BBS',
   description: 'Test your C programming and computer awareness skills in this exciting online quiz challenge',
   mode: 'Online',
-  date: '8 April 2026',
+  date: '12 April 2026',
   time: '6:00 PM – 6:30 PM IST',
-  registrationDeadline: '7 April 2026, 12:00 AM IST',
+  registrationDeadline: '11 April 2026, 12:00 AM IST',
   duration: '20 minutes',
   questions: 20,
   capacity: 50,
@@ -140,7 +140,7 @@ export const EVENT_DATA = {
   faqs: [
     {
       question: 'What is the registration deadline?',
-      answer: 'The registration deadline is 7 April 2026 at 12:00 AM IST. Make sure to register before this date to participate.',
+      answer: 'The registration deadline is 11 April 2026 at 12:00 AM IST. Make sure to register before this date to participate.',
     },
     {
       question: 'How long is the quiz?',
@@ -176,24 +176,23 @@ export const EVENT_DATA = {
     },
     {
       phase: 'Registration Deadline',
-      date: '7 April 2026, 12:00 AM IST',
+      date: '11 April 2026, 12:00 AM IST',
       description: 'Last day to register for the quiz challenge',
     },
     {
-      phase: 'Quiz Challenge',
-      date: '8 April 2026',
-      time: '6:00 PM - 6:30 PM IST',
-      description: 'Take the 20-minute online quiz',
+      phase: 'Technical Session',
+      date: 'Saturday 11 April 2026, 7:00 PM IST',
+      description: 'Google Meet session for event briefing and rules.',
     },
     {
-      phase: 'Result Announcement',
-      date: '8 April 2026 (Evening)',
-      description: 'Winners and results announced',
+      phase: 'Quiz Time',
+      date: '12 April 2026, 6:00 PM IST',
+      description: 'Live TechQuiz challenge begins on time.',
     },
     {
-      phase: 'Certificate Release',
-      date: 'Within 3 days',
-      description: 'Digital certificates issued to all participants',
+      phase: 'Certificate Time',
+      date: 'Within 3 days after quiz',
+      description: 'Digital certificates issued to all participants after the quiz.',
     },
   ],
 
