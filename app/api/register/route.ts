@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase-server'
 
-const MAX_SEAT_CAPACITY = 50 // Hard limit for event capacity
+const MAX_SEAT_CAPACITY = 300 // Hard limit for event capacity
 
 async function generateReferralStats(ambassadorId: string) {
   const [{ count: totalCount }, { count: validCount }, settingsResponse] = await Promise.all([
