@@ -42,17 +42,17 @@ export function Navbar() {
             : 'bg-transparent'
         }`}
       >
-        <div className="container mx-auto px-4 md:px-6 py-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-2 font-bold text-xl"
+              className="flex items-center gap-2 font-bold"
             >
-              <div className="w-8 h-8 rounded-lg bg-linear-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-linear-to-br from-cyan-400 to-blue-500 flex items-center justify-center shrink-0">
                 <span className="text-white font-bold text-xs">TQ</span>
               </div>
-              <span className="gradient-cyan-green text-sm">{EVENT_DATA.shortName}</span>
+              <span className="gradient-cyan-green text-xs sm:text-sm">{EVENT_DATA.shortName}</span>
             </motion.div>
 
             {/* Desktop Menu */}
@@ -102,7 +102,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: isOpen ? 1 : 0, height: isOpen ? 'auto' : 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden absolute top-full left-0 w-full mt-4 space-y-2 overflow-hidden bg-glass-dark/95 backdrop-blur-xl border-t border-cyan-500/30 z-[49] pointer-events-auto shadow-2xl max-h-[70vh] overflow-y-auto"
+            className="md:hidden overflow-hidden bg-glass-dark/95 backdrop-blur-xl border-t border-cyan-500/30 z-[49] pointer-events-auto shadow-2xl max-h-[70vh] overflow-y-auto -mx-3 sm:-mx-4"
           >
             {navItems.map((item, idx) => (
               <a
