@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase-server'
 
+const MAX_SEAT_CAPACITY = 50 // Hard limit for event capacity
+
 async function generateReferralStats(ambassadorId: string) {
   const [{ count: totalCount }, { count: validCount }, settingsResponse] = await Promise.all([
     supabaseServer
@@ -46,6 +48,29 @@ export async function POST(request: Request) {
   }
 
   try {
+    // Check event capacity before registration
+    const { data: eventData, error: eventError } = await supabaseServer
+      .from('events')
+      .select('capacity, registered_count')
+      .eq('id', eventId)
+      .single()
+
+    if (eventError || !eventData) {
+      console.error('Event not found:', eventError)
+      return NextResponse.json({ success: false, error: 'Event not found.' }, { status: 404 })
+    }
+
+    const currentRegistered = eventData.registered_count || 0
+    const capacity = eventData.capacity || MAX_SEAT_CAPACITY
+
+    // Check if seats are full (use capacity from event, default to MAX_SEAT_CAPACITY)
+    if (currentRegistered >= capacity) {
+      return NextResponse.json({ 
+        success: false, 
+        error: `Registration closed. All ${capacity} seats have been filled.` 
+      }, { status: 400 })
+    }
+
     // Check if admin settings require WhatsApp join
     const { data: settings } = await supabaseServer
       .from('admin_settings')
@@ -125,6 +150,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: error?.message || 'Unable to register for the event.' }, { status: 500 })
     }
 
+    // Update event's registered_count
+    const newRegisteredCount = currentRegistered + 1
+    await supabaseServer
+      .from('events')
+      .update({ registered_count: newRegisteredCount })
+      .eq('id', eventId)
+
     if (ambassadorId) {
       await supabaseServer
         .from('ambassador_referrals')
@@ -140,7 +172,14 @@ export async function POST(request: Request) {
       await generateReferralStats(ambassadorId)
     }
 
-    return NextResponse.json({ success: true, data })
+    return NextResponse.json({ 
+      success: true, 
+      data: {
+        ...data,
+        registeredCount: newRegisteredCount,
+        seatsRemaining: capacity - newRegisteredCount,
+      }
+    })
   } catch (error) {
     console.error('Registration error:', error)
     return NextResponse.json({ success: false, error: 'Internal server error.' }, { status: 500 })
