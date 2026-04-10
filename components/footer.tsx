@@ -111,8 +111,8 @@ export function Footer() {
             <Mail className="w-5 h-5 text-cyan-400 shrink-0 mt-1" />
             <div>
               <p className="text-sm text-gray-400">Email</p>
-              <a href="mailto:mukeshkumar916241@gmail.com" className="text-white hover:text-cyan-300 transition-colors">
-                mukeshkumar916241@gmail.com
+              <a href="mailto:TechHubBBS@gmail.com" className="text-white hover:text-cyan-300 transition-colors">
+                TechHubBBS@gmail.com
               </a>
             </div>
           </motion.div>

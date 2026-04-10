@@ -8,7 +8,7 @@ export function ContactSection() {
     {
       icon: Mail,
       title: 'Email',
-      value: 'mukeshkumar916241@gmail.com',
+      value: 'TechHubBBS@gmail.com',
       color: 'cyan',
     },
     {
