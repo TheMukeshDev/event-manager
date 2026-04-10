@@ -52,7 +52,7 @@ export function ContactSection() {
   }
 
   return (
-    <section className="section-spacing px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section id="contact" className="section-spacing px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* Header */}
       <motion.div
         className="text-center mb-16"

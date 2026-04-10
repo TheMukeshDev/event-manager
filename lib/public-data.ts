@@ -87,7 +87,7 @@ export async function getPublicOverview(): Promise<PublicOverview> {
       ...(eventResponse.data ?? {}),
       title: eventResponse.data?.title ?? eventResponse.data?.name ?? EVENT_DATA.title,
       capacity: eventResponse.data?.capacity ?? EVENT_DATA.capacity,
-      registeredCount: eventResponse.data?.registeredCount ?? EVENT_DATA.registeredCount,
+      registeredCount: eventResponse.data?.registered_count ?? EVENT_DATA.registeredCount,
       venue: eventResponse.data?.venue ?? EVENT_DATA.venue,
       mode: eventResponse.data?.mode ?? EVENT_DATA.mode,
       eventType: eventResponse.data?.eventType ?? EVENT_DATA.eventType,

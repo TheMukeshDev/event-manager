@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { EVENT_DATA } from '@/lib/event-data'
 
@@ -30,13 +30,29 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
+
+  const handleNavClick = () => {
+    setIsOpen(false)
+  }
+
   return (
     <>
       {/* Desktop Navbar */}
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
           isScrolled
             ? 'glass-dark backdrop-blur-xl border-b border-cyan-500/20'
             : 'bg-transparent'
@@ -48,7 +64,8 @@ export function Navbar() {
             <motion.a
               href="#home"
               whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-2 font-bold"
+              className="flex items-center gap-2 font-bold z-[101]"
+              onClick={handleNavClick}
             >
               <img 
                 src="/icon.svg" 
@@ -89,59 +106,87 @@ export function Navbar() {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden pointer-events-auto cursor-pointer"
+              className="md:hidden relative z-[101] flex items-center justify-center w-10 h-10 rounded-lg bg-black/40 border border-cyan-500/30 text-white hover:bg-black/60 hover:border-cyan-400 transition-all duration-300 cursor-pointer"
               onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isOpen ? 'true' : 'false'}
+              type="button"
             >
               {isOpen ? (
-                <X className="w-6 h-6 text-gray-300" />
+                <X className="w-5 h-5" />
               ) : (
-                <Menu className="w-6 h-6 text-gray-300" />
+                <Menu className="w-5 h-5" />
               )}
             </button>
           </div>
-
-          {/* Mobile Menu */}
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: isOpen ? 1 : 0, height: isOpen ? 'auto' : 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden overflow-hidden bg-glass-dark/95 backdrop-blur-xl border-t border-cyan-500/30 z-[49] pointer-events-auto shadow-2xl max-h-[70vh] overflow-y-auto -mx-3 sm:-mx-4"
-          >
-            {navItems.map((item, idx) => (
-              <a
-                key={idx}
-                href={item.href}
-                className="block w-full px-6 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-cyan-500/20 transition-all duration-300 text-base font-medium pointer-events-auto cursor-pointer"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.label}
-              </a>
-            ))}
-            <motion.a
-              href="https://unstop.com/o/EhGlUDp?lb=GUZITycG&utm_medium=Share&utm_source=quizzes&utm_campaign=Mukeskum10881"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full mt-6 px-6 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold text-base shadow-lg hover:shadow-[0_0_20px_rgba(0,217,255,0.5)] transition-all duration-300 pointer-events-auto inline-flex items-center justify-center"
-              onClick={() => setIsOpen(false)}
-            >
-              Register Now
-            </motion.a>
-          </motion.div>
-
-          {/* Mobile Backdrop */}
-          {isOpen && (
-            <motion.div 
-              className="md:hidden fixed inset-0 z-[48] bg-black/50 backdrop-blur-sm pointer-events-auto" 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
-              exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-            />
-          )}
         </div>
       </motion.nav>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 z-[90] bg-black/60 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              aria-hidden="true"
+            />
+            
+            {/* Mobile Menu Drawer */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 bottom-0 z-[95] w-[280px] sm:w-[320px] bg-black/95 backdrop-blur-xl border-l border-cyan-500/30 shadow-2xl overflow-y-auto"
+            >
+              {/* Menu Header */}
+              <div className="flex items-center justify-between p-4 border-b border-cyan-500/20">
+                <span className="gradient-cyan-green font-semibold text-sm">Menu</span>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center justify-center w-8 h-8 rounded-lg text-gray-300 hover:text-white hover:bg-cyan-500/20 transition-colors"
+                  aria-label="Close menu"
+                  type="button"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Nav Items */}
+              <div className="p-4 space-y-2">
+                {navItems.map((item, idx) => (
+                  <a
+                    key={idx}
+                    href={item.href}
+                    className="block w-full px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-cyan-500/20 transition-all duration-300 text-sm font-medium"
+                    onClick={handleNavClick}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+
+              {/* Register Button */}
+              <div className="p-4 pt-0">
+                <a
+                  href="https://unstop.com/o/EhGlUDp?lb=GUZITycG&utm_medium=Share&utm_source=quizzes&utm_campaign=Mukeskum10881"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full block text-center px-4 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold text-sm shadow-lg hover:shadow-[0_0_20px_rgba(0,217,255,0.5)] transition-all duration-300"
+                  onClick={handleNavClick}
+                >
+                  Register Now
+                </a>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   )
 }

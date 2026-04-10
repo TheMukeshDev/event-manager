@@ -82,10 +82,22 @@
     width: 100%;
     margin: 0;
     padding: 0;
+    -webkit-overflow-scrolling: touch;
     background-image: 
       linear-gradient(to right, rgba(0, 217, 255, 0.05) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(0, 217, 255, 0.05) 1px, transparent 1px);
     background-size: 50px 50px;
+  }
+
+  /* Prevent horizontal scroll on mobile */
+  html, body {
+    overflow-x: hidden;
+  }
+
+  /* Ensure tap targets are minimum 44px on mobile */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
 
