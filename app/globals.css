@@ -231,6 +231,6 @@
   }
 
   .neon-button {
-    @apply px-6 py-3 rounded-lg border border-cyan-500 text-cyan-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,217,255,0.5)] hover:text-white active:shadow-[0_0_20px_rgba(0,217,255,0.5)] active:text-white focus:shadow-[0_0_20px_rgba(0,217,255,0.5)] focus:text-white;
+    @apply px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-cyan-500 text-cyan-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,217,255,0.5)] hover:text-white active:shadow-[0_0_20px_rgba(0,217,255,0.5)] active:text-white focus:shadow-[0_0_20px_rgba(0,217,255,0.5)] focus:text-white;
   }
 }

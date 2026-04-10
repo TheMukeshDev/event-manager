@@ -33,7 +33,7 @@ export default async function Home() {
       <FloatingParticles />
       <Navbar />
       
-      <main className="relative z-40 pointer-events-auto min-h-screen pt-24 md:pt-20 px-4 md:px-6 lg:px-8 pb-20 max-w-7xl mx-auto w-full overflow-x-hidden">
+      <main className="relative z-40 pointer-events-auto min-h-screen pt-24 md:pt-20 px-3 sm:px-4 md:px-6 pb-20 w-full overflow-x-hidden">
         {/* Hero Section */}
         <section id="hero" className="snap-start w-full">
           <HeroSection event={event} />

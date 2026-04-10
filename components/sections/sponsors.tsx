@@ -48,9 +48,19 @@ export function SponsorsSection({
     },
   }
 
+  const getInitials = (name: string) => {
+    const words = name.trim().split(/\s+/)
+    if (words.length >= 2) {
+      return (words[0][0] + words[words.length - 1][0]).toUpperCase()
+    }
+    return name.slice(0, 2).toUpperCase()
+  }
+
   const sponsorCard = (sponsor: Sponsor, tier: 'platinum' | 'gold' | 'silver') => {
     const colorClass = tier === 'platinum' ? 'text-yellow-400 border-t-yellow-400' : tier === 'gold' ? 'text-green-400 border-t-green-400' : 'text-gray-400 border-t-gray-500'
     const glowClass = tier === 'platinum' ? 'hover-glow-cyan' : tier === 'gold' ? 'hover-glow-green' : ''
+    const gradientClass = tier === 'platinum' ? 'from-yellow-500/20 to-orange-500/20 border-yellow-500/30' : tier === 'gold' ? 'from-green-500/20 to-emerald-500/20 border-green-500/30' : 'from-cyan-500/20 to-blue-500/20 border-cyan-500/30'
+    const textColorClass = tier === 'platinum' ? 'text-yellow-300' : tier === 'gold' ? 'text-green-300' : 'text-cyan-300'
 
     return (
       <motion.div
@@ -66,9 +76,9 @@ export function SponsorsSection({
             className="w-16 h-16 object-contain mb-4 rounded-lg"
           />
         ) : (
-          <div className="w-16 h-16 rounded-lg bg-linear-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mb-4 border border-cyan-500/30">
-            <span className="text-2xl font-bold text-cyan-300">
-              {sponsor.name.slice(0, 2).toUpperCase()}
+          <div className={`w-16 h-16 rounded-lg bg-linear-to-br ${gradientClass} flex items-center justify-center mb-4 border`}>
+            <span className={`text-2xl font-bold ${textColorClass}`}>
+              {getInitials(sponsor.name)}
             </span>
           </div>
         )}

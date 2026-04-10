@@ -54,11 +54,11 @@ export function CountdownTimer({ targetDate }: CountdownTimerProps) {
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="mb-8"
+        className="mb-6 sm:mb-8 w-full px-2"
       >
-        <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-center">
-          <X className="w-5 h-5 text-red-400" />
-          <span className="text-lg font-semibold text-red-300">Event Has Started</span>
+        <div className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-red-500/10 border border-red-500/30 text-center">
+          <X className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" />
+          <span className="text-sm sm:text-base sm:text-lg font-semibold text-red-300">Event Has Started</span>
         </div>
       </motion.div>
     )
@@ -68,27 +68,29 @@ export function CountdownTimer({ targetDate }: CountdownTimerProps) {
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="mb-8"
+      className="mb-6 sm:mb-8 w-full px-2"
     >
-      <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl glass border-cyan-500/30">
-        <Clock className="w-5 h-5 text-cyan-400" />
-        <span className="text-sm font-semibold text-cyan-300 mr-4">Event Starts In:</span>
-        <div className="flex gap-3 text-center">
-          <div className="bg-slate-800/80 px-3 py-2 rounded-lg min-w-15">
-            <div className="text-xl font-bold text-white">{timeLeft.days}</div>
-            <div className="text-xs text-gray-400">Days</div>
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 px-3 sm:px-4 py-3 sm:py-4 rounded-xl sm:rounded-2xl glass border-cyan-500/30 w-full max-w-full">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400 shrink-0" />
+          <span className="text-xs sm:text-sm font-semibold text-cyan-300 whitespace-nowrap">Event Starts In:</span>
+        </div>
+        <div className="flex gap-1.5 sm:gap-2 sm:gap-3 text-center">
+          <div className="bg-slate-800/80 px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg min-w-12 sm:min-w-14">
+            <div className="text-base sm:text-xl font-bold text-white">{String(timeLeft.days).padStart(2, '0')}</div>
+            <div className="text-[10px] sm:text-xs text-gray-400">Days</div>
           </div>
-          <div className="bg-slate-800/80 px-3 py-2 rounded-lg min-w-15">
-            <div className="text-xl font-bold text-white">{timeLeft.hours}</div>
-            <div className="text-xs text-gray-400">Hours</div>
+          <div className="bg-slate-800/80 px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg min-w-12 sm:min-w-14">
+            <div className="text-base sm:text-xl font-bold text-white">{String(timeLeft.hours).padStart(2, '0')}</div>
+            <div className="text-[10px] sm:text-xs text-gray-400">Hours</div>
           </div>
-          <div className="bg-slate-800/80 px-3 py-2 rounded-lg min-w-15">
-            <div className="text-xl font-bold text-white">{timeLeft.minutes}</div>
-            <div className="text-xs text-gray-400">Min</div>
+          <div className="bg-slate-800/80 px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg min-w-12 sm:min-w-14">
+            <div className="text-base sm:text-xl font-bold text-white">{String(timeLeft.minutes).padStart(2, '0')}</div>
+            <div className="text-[10px] sm:text-xs text-gray-400">Min</div>
           </div>
-          <div className="bg-slate-800/80 px-3 py-2 rounded-lg min-w-15">
-            <div className="text-xl font-bold text-white">{timeLeft.seconds}</div>
-            <div className="text-xs text-gray-400">Sec</div>
+          <div className="bg-slate-800/80 px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg min-w-12 sm:min-w-14">
+            <div className="text-base sm:text-xl font-bold text-white">{String(timeLeft.seconds).padStart(2, '0')}</div>
+            <div className="text-[10px] sm:text-xs text-gray-400">Sec</div>
           </div>
         </div>
       </div>
