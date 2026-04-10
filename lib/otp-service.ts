@@ -4,6 +4,24 @@ import { supabaseServer } from './supabase-server'
 const OTP_EXPIRY_MINUTES = 5
 const otpStore = new Map<string, { otp: string; expiresAt: number }>()
 
+async function ensureOtpTable() {
+  try {
+    const { error } = await supabaseServer
+      .from('admin_otps')
+      .select('id')
+      .limit(1)
+    
+    if (error && error.code === '42P01') {
+      console.log('Creating admin_otps table...')
+      await supabaseServer.rpc('create_admin_otps_table', {})
+    }
+  } catch (e) {
+    console.log('OTP table check failed, using in-memory only')
+  }
+}
+
+ensureOtpTable().catch(() => {})
+
 export function generateOTP(): string {
   return Math.floor(100000 + Math.random() * 900000).toString()
 }
@@ -67,30 +85,53 @@ export async function sendOTPEmail(email: string, otp: string): Promise<{ succes
 
 export async function storeOTP(email: string, otp: string): Promise<void> {
   const expiresAt = Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000
-  otpStore.set(email.toLowerCase(), { otp, expiresAt })
+  const emailLower = email.toLowerCase()
+  otpStore.set(emailLower, { otp, expiresAt })
   
-  await supabaseServer
-    .from('admin_otps')
-    .upsert([{
-      email: email.toLowerCase(),
-      otp,
-      expires_at: new Date(expiresAt).toISOString(),
-      created_at: new Date().toISOString(),
-    }], { onConflict: 'email' })
+  try {
+    const { error } = await supabaseServer
+      .from('admin_otps')
+      .upsert([{
+        email: emailLower,
+        otp,
+        expires_at: new Date(expiresAt).toISOString(),
+        created_at: new Date().toISOString(),
+      }], { onConflict: 'email' })
+    
+    if (error) {
+      console.error('Failed to store OTP in DB:', error.message)
+    }
+  } catch (e) {
+    console.error('OTP DB storage error:', e)
+  }
 }
 
 export async function verifyOTP(email: string, inputOTP: string): Promise<{ valid: boolean; error?: string }> {
   const emailLower = email.toLowerCase()
   const stored = otpStore.get(emailLower)
   
-  if (!stored) {
-    const { data } = await supabaseServer
+  if (stored) {
+    if (stored.expiresAt < Date.now()) {
+      otpStore.delete(emailLower)
+      return { valid: false, error: 'OTP expired. Please request a new OTP.' }
+    }
+    
+    if (stored.otp !== inputOTP) {
+      return { valid: false, error: 'Invalid OTP. Please try again.' }
+    }
+    
+    otpStore.delete(emailLower)
+    return { valid: true }
+  }
+  
+  try {
+    const { data, error } = await supabaseServer
       .from('admin_otps')
       .select('*')
       .eq('email', emailLower)
       .single()
     
-    if (!data) {
+    if (error || !data) {
       return { valid: false, error: 'No OTP found. Please request a new OTP.' }
     }
     
@@ -102,26 +143,13 @@ export async function verifyOTP(email: string, inputOTP: string): Promise<{ vali
       return { valid: false, error: 'Invalid OTP. Please try again.' }
     }
     
-    otpStore.set(emailLower, { otp: data.otp, expiresAt: new Date(data.expires_at).getTime() })
-    otpStore.delete(emailLower)
     await supabaseServer.from('admin_otps').delete().eq('email', emailLower)
     
     return { valid: true }
+  } catch (e) {
+    console.error('OTP verification error:', e)
+    return { valid: false, error: 'No OTP found. Please request a new OTP.' }
   }
-  
-  if (stored.expiresAt < Date.now()) {
-    otpStore.delete(emailLower)
-    return { valid: false, error: 'OTP expired. Please request a new OTP.' }
-  }
-  
-  if (stored.otp !== inputOTP) {
-    return { valid: false, error: 'Invalid OTP. Please try again.' }
-  }
-  
-  otpStore.delete(emailLower)
-  await supabaseServer.from('admin_otps').delete().eq('email', emailLower)
-  
-  return { valid: true }
 }
 
 export async function isAdminEmail(email: string): Promise<boolean> {

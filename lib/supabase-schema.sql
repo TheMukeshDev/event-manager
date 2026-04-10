@@ -92,6 +92,19 @@ CREATE TABLE IF NOT EXISTS sponsors (
   updated_at TIMESTAMP DEFAULT now()
 );
 
+-- Admin OTP table
+CREATE TABLE IF NOT EXISTS admin_otps (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email VARCHAR(255) NOT NULL,
+  otp VARCHAR(6) NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP DEFAULT now(),
+  UNIQUE(email)
+);
+
+-- Make email case-insensitive unique
+CREATE UNIQUE INDEX IF NOT EXISTS idx_admin_otps_email_unique ON admin_otps (LOWER(email));
+
 -- Insert default admin settings
 INSERT INTO admin_settings (registration_link, whatsapp_community_link, is_whatsapp_join_mandatory, certificate_rules_text, certificate_id_prefix, sponsor_cta_whatsapp_number, sponsor_cta_default_message, sponsor_cta_visible)
 VALUES ('', 'https://chat.whatsapp.com/Hc1zaz52LdOAh6kM5NHREA', true, 'Certificates are issued only to valid registered participants who attend/attempt the event and follow all event rules.', 'BBSCET-TQ-2026', '919771894062', 'Hello Mukesh Kumar, I am interested in sponsoring your event. Please share the sponsorship details, audience reach, and collaboration opportunities.', true)
