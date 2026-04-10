@@ -132,6 +132,9 @@ export async function verifyOTP(email: string, inputOTP: string): Promise<{ vali
       .single()
     
     if (error || !data) {
+      if (error?.code === '42P01') {
+        return { valid: false, error: 'No OTP found. Please request a new OTP.' }
+      }
       return { valid: false, error: 'No OTP found. Please request a new OTP.' }
     }
     
