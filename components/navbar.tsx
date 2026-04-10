@@ -45,15 +45,18 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <motion.div
+            <motion.a
+              href="#home"
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-2 font-bold"
             >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-linear-to-br from-cyan-400 to-blue-500 flex items-center justify-center shrink-0">
-                <span className="text-white font-bold text-xs">TQ</span>
-              </div>
+              <img 
+                src="/icon.svg" 
+                alt="Tech Hub BBS Logo" 
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg shrink-0" 
+              />
               <span className="gradient-cyan-green text-xs sm:text-sm">{EVENT_DATA.shortName}</span>
-            </motion.div>
+            </motion.a>
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-1">

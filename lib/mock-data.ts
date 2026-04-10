@@ -188,13 +188,13 @@ export const mockSponsors: Sponsor[] = [
   {
     id: '1',
     eventId: '1',
-    name: 'BBS Coding Club',
-    type: 'Official Sponsor',
+    name: 'Default Computer Society of BBSCET',
+    type: 'Official Community Partner',
     tier: 'gold',
     isVisible: true,
     sortOrder: 1,
-    description: 'Official coding community partner supporting Tech Hub BBS initiatives.',
-    website: 'https://bbsodingclub.example.com',
+    description: 'DCS BBSCET - The official computer society of BBS College of Engineering and Technology',
+    website: 'https://linkedin.com/company/tech-hub-bbs',
   },
 ]
 

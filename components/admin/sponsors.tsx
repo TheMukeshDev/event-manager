@@ -241,14 +241,15 @@ export default function AdminSponsors() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Logo URL</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Logo URL <span className="text-gray-500 text-xs">(Recommended: 256x256px PNG/SVG)</span></label>
               <input
                 type="url"
                 value={formData.logo_url}
                 onChange={(e) => setFormData(prev => ({ ...prev, logo_url: e.target.value }))}
-                placeholder="https://example.com/logo.png"
+                placeholder="https://example.com/logo.png or upload to /public/sponsors/"
                 className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors"
               />
+              <p className="text-xs text-gray-500 mt-1">If no logo provided, initials from sponsor name will be displayed</p>
             </div>
 
             <div>
