@@ -72,7 +72,9 @@
     @apply border-border outline-ring/50;
     box-sizing: border-box;
   }
-  html,
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground;
     overflow-x: hidden;
@@ -80,13 +82,6 @@
     width: 100%;
     margin: 0;
     padding: 0;
-  }
-}
-  html {
-    scroll-behavior: smooth;
-  }
-  body {
-    @apply bg-background text-foreground;
     background-image: 
       linear-gradient(to right, rgba(0, 217, 255, 0.05) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(0, 217, 255, 0.05) 1px, transparent 1px);
