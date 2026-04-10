@@ -61,7 +61,7 @@ export function Footer() {
               <span className="gradient-cyan-green font-bold text-sm sm:text-base md:text-lg">Tech Hub BBS</span>
             </div>
             <p className="text-gray-400 text-xs sm:text-sm mb-2">
-              Default Computer Society of BBSCET
+              Computer Society of India
             </p>
             <p className="text-gray-400 text-xs sm:text-sm mb-4 sm:mb-6">
               BBS College of Engineering and Technology
