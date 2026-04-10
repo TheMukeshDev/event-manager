@@ -11,8 +11,8 @@ export const EVENT_DATA = {
   registrationDeadline: '11 April 2026, 12:00 AM IST',
   duration: '20 minutes',
   questions: 20,
-  capacity: 50,
-  registeredCount: 29,
+  capacity: 300,
+  registeredCount: 100,
   status: 'upcoming',
   
   organizer: {
