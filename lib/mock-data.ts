@@ -98,7 +98,6 @@ export const mockTimeline: TimelineItem[] = [
     eventId: '1',
     time: 'Within 3 days after quiz',
     title: 'Certificate Time',
-
     type: 'award',
     description: 'Digital certificates issued to all participants after the quiz.',
   },
@@ -195,6 +194,17 @@ export const mockSponsors: Sponsor[] = [
     sortOrder: 1,
     description: 'DCS BBSCET - The official computer society of BBS College of Engineering and Technology',
     website: 'https://linkedin.com/company/tech-hub-bbs',
+  },
+  {
+    id: '2',
+    eventId: '1',
+    name: 'BBS Coding Club',
+    type: 'Coding Club',
+    tier: 'gold',
+    isVisible: true,
+    sortOrder: 2,
+    description: 'Official coding club of BBS College of Engineering and Technology',
+    website: 'https://linkedin.com/company/bbs-coding-club',
   },
 ]
 
@@ -298,8 +308,6 @@ export const mockHighlights: Highlight[] = [
     order: 4,
   },
 ]
-
-
 
 export async function getEventTracks(): Promise<EventTrack[]> {
   // TODO: Replace with: const { data } = await supabase.from('event_tracks').select()
