@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { generateOTP, sendOTPEmail, storeOTP, isAdminEmail } from '../../../../lib/otp-service'
+import { generateOTP, sendOTPEmail, storeOTP, isAdminEmail } from '@/lib/otp-service'
 
 export async function POST(request: Request) {
   const body = await request.json()

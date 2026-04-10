@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { verifyOTP, isAdminEmail } from '../../../../lib/otp-service'
-import { supabaseServer } from '../../../../lib/supabase-server'
+import { verifyOTP, isAdminEmail } from '@/lib/otp-service'
+import { supabaseServer } from '@/lib/supabase-server'
 
 export async function POST(request: Request) {
   const body = await request.json()
