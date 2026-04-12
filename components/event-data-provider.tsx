@@ -107,6 +107,7 @@ export function EventDataProvider({ children, apiData, fallbackData }: EventData
       displayText: r.displayText,
       date: r.date,
       time: r.time,
+      endTime: r.endTime,
       duration: r.durationDisplay,
       questions: r.questions,
       difficulty: r.difficulty,
