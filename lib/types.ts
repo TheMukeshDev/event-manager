@@ -39,6 +39,8 @@ export interface EventTrack {
 export interface TimelineItem {
   id: string
   eventId: string
+  phase?: string
+  date?: string
   time: string
   title: string
   description?: string
