@@ -6,10 +6,10 @@ export const EVENT_DATA = {
   shortName: 'TechQuiz 2026',
   description: 'Test your C programming and computer awareness skills in this exciting online quiz challenge',
   mode: 'Online',
-  date: '15 April 2026',
-  time: '6:00 PM IST',
-  registrationDeadline: '14 April 2026, 11:59 PM IST',
-  registrationOpens: '01 April 2026',
+  date: '14 April 2026',
+  time: '6:00 PM – 6:10 PM IST',
+  registrationDeadline: '14 April 2026, 6:00 PM IST',
+  registrationOpens: '05 April 2026',
   duration: '20 minutes',
   questions: 20,
   capacity: null as number | null,
@@ -61,10 +61,11 @@ export const EVENT_DATA = {
   rounds: [
     {
       id: 'tech-quiz-round',
-      name: 'Tech Quiz Round',
+      name: 'Assessment Round (Tech Quiz)',
       displayText: '20 MCQs in 20 Minutes',
-      date: '15 April 2026',
+      date: '14 April 2026',
       time: '6:00 PM IST',
+      endTime: '6:10 PM IST',
       duration: '20 minutes',
       questions: 20,
       difficulty: 'Easy to Moderate',
@@ -144,7 +145,7 @@ export const EVENT_DATA = {
   faqs: [
     {
       question: 'What is the registration deadline?',
-      answer: 'The registration deadline is 14 April 2026 at 11:59 PM IST. Make sure to register before this date to participate.',
+      answer: 'The registration deadline is 14 April 2026 at 6:00 PM IST (same time as quiz start). Make sure to register before this date to participate.',
     },
     {
       question: 'How long is the quiz?',
@@ -175,31 +176,31 @@ export const EVENT_DATA = {
   timeline: [
     {
       phase: 'Registration Opens',
-      date: '01 April 2026',
+      date: '05 April 2026',
       time: '12:00 AM IST',
       description: 'Registration window opens for all eligible students',
     },
     {
       phase: 'Registration Closes',
       date: '14 April 2026',
-      time: '11:59 PM IST',
-      description: 'Last day to register for the quiz challenge',
+      time: '6:00 PM IST',
+      description: 'Last day to register - Quiz starts at 6:00 PM!',
     },
     {
       phase: 'Quiz Starts',
-      date: '15 April 2026',
+      date: '14 April 2026',
       time: '6:00 PM IST',
-      description: 'Live TechQuiz challenge begins on Unstop platform',
+      description: 'Live TechQuiz challenge begins - 20 MCQs in 20 Minutes',
     },
     {
       phase: 'Quiz Ends',
-      date: '15 April 2026',
-      time: '6:20 PM IST',
+      date: '14 April 2026',
+      time: '6:10 PM IST',
       description: 'Submission window closes',
     },
     {
       phase: 'Results',
-      date: 'Within 3 days after quiz',
+      date: 'Within 3 days',
       time: '',
       description: 'Rankings announced based on score. Time as tie-breaker.',
     },

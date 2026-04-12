@@ -145,9 +145,9 @@ export async function GET() {
       registration: {
         opens: regnStart.date,
         opensTime: regnStart.time,
-        closes: regnEnd.date,
-        closesTime: regnEnd.time,
-        deadline: `${regnEnd.date}, ${regnEnd.time}`,
+        closes: roundStart?.date || '14 April 2026',
+        closesTime: roundStart?.time || '6:00 PM IST',
+        deadline: `14 April 2026, 6:00 PM IST`,
       },
       
       rounds: competition.rounds.map((round, index) => ({
