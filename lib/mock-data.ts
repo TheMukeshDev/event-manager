@@ -205,13 +205,13 @@ export const mockSponsors: Sponsor[] = [
   {
     id: '1',
     eventId: '1',
-    name: 'Default Computer Society of BBSCET',
+    name: 'Computer Society OF India',
     type: 'Official Community Partner',
     tier: 'gold',
     isVisible: true,
     sortOrder: 1,
-    description: 'DCS BBSCET - The official computer society of BBS College of Engineering and Technology',
-    website: 'https://linkedin.com/company/tech-hub-bbs',
+    description: 'Official tech society of BBSCET focused on innovation, coding, and learning.',
+    website: 'https://csiindia.org/',
   },
   {
     id: '2',
@@ -221,8 +221,8 @@ export const mockSponsors: Sponsor[] = [
     tier: 'gold',
     isVisible: true,
     sortOrder: 2,
-    description: 'Official coding club of BBS College of Engineering and Technology',
-    website: 'https://linkedin.com/company/bbs-coding-club',
+    description: 'Official coding club of BBS CET',
+    website: 'https://www.instagram.com/bbscodinghub/',
   },
 ]
 
