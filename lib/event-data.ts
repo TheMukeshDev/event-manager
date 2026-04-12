@@ -1,28 +1,30 @@
-// Tech Hub BBS Event Data
+// Tech Hub BBS Event Data - Updated from Unstop Competition JSON
 export const EVENT_DATA = {
   id: '1',
-  name: 'Tech Hub BBS: Computer Awareness & C Language Challenge',
-  title: 'Tech Hub BBS: Computer Awareness & C Language Challenge',
-  shortName: 'Tech Hub BBS',
+  name: 'TechQuiz 2026 | C Programming & Computer Awareness Quiz (Beginner Friendly)',
+  title: 'TechQuiz 2026 | C Programming & Computer Awareness Quiz (Beginner Friendly)',
+  shortName: 'TechQuiz 2026',
   description: 'Test your C programming and computer awareness skills in this exciting online quiz challenge',
   mode: 'Online',
-  date: '12 April 2026',
-  time: '6:00 PM – 6:30 PM IST',
-  registrationDeadline: '11 April 2026, 12:00 AM IST',
+  date: '15 April 2026',
+  time: '6:00 PM IST',
+  registrationDeadline: '14 April 2026, 11:59 PM IST',
+  registrationOpens: '01 April 2026',
   duration: '20 minutes',
   questions: 20,
-  capacity: 300,
-  registeredCount: 100,
-  status: 'upcoming',
+  capacity: null as number | null,
+  registeredCount: 234,
+  status: 'LIVE',
+  eventType: 'Quiz Challenge',
+  region: 'online',
   
   organizer: {
     name: 'BBS College of Engineering and Technology (BBSCET)',
     location: 'BBS Campus Santipuram, Prayagraj 211013',
   },
 
-  eventType: 'Quiz Challenge',
-  teamSize: 'Individual / Team of 2',
-  venue: 'Virtual + BBSCET Auditorium',
+  teamSize: 'Individual',
+  venue: 'Online',
   brochureUrl: 'https://example.com/event-brochure.pdf',
   rules: [
     'No external assistance is allowed.',
@@ -58,15 +60,17 @@ export const EVENT_DATA = {
 
   rounds: [
     {
-      id: 'assessment',
-      name: 'Assessment Round (Tech Quiz)',
-      date: '12 April 2026',
-      time: '6:00 PM – 6:30 PM IST',
+      id: 'tech-quiz-round',
+      name: 'Tech Quiz Round',
+      displayText: '20 MCQs in 20 Minutes',
+      date: '15 April 2026',
+      time: '6:00 PM IST',
       duration: '20 minutes',
       questions: 20,
       difficulty: 'Easy to Moderate',
       topics: 'Computer Awareness + C Programming',
       scoring: 'Ranking based on score + time',
+      totalRounds: 1,
     },
   ],
 
@@ -140,7 +144,7 @@ export const EVENT_DATA = {
   faqs: [
     {
       question: 'What is the registration deadline?',
-      answer: 'The registration deadline is 11 April 2026 at 12:00 AM IST. Make sure to register before this date to participate.',
+      answer: 'The registration deadline is 14 April 2026 at 11:59 PM IST. Make sure to register before this date to participate.',
     },
     {
       question: 'How long is the quiz?',
@@ -171,34 +175,40 @@ export const EVENT_DATA = {
   timeline: [
     {
       phase: 'Registration Opens',
-      date: 'Early April 2026',
+      date: '01 April 2026',
+      time: '12:00 AM IST',
       description: 'Registration window opens for all eligible students',
     },
     {
-      phase: 'Registration Deadline',
-      date: '11 April 2026, 12:00 AM IST',
+      phase: 'Registration Closes',
+      date: '14 April 2026',
+      time: '11:59 PM IST',
       description: 'Last day to register for the quiz challenge',
     },
     {
-      phase: 'Technical Session',
-      date: 'Saturday 11 April 2026, 7:00 PM IST',
-      description: 'Google Meet session for event briefing and rules.',
+      phase: 'Quiz Starts',
+      date: '15 April 2026',
+      time: '6:00 PM IST',
+      description: 'Live TechQuiz challenge begins on Unstop platform',
     },
     {
-      phase: 'Quiz Time',
-      date: '12 April 2026, 6:00 PM IST',
-      description: 'Live TechQuiz challenge begins on time.',
+      phase: 'Quiz Ends',
+      date: '15 April 2026',
+      time: '6:20 PM IST',
+      description: 'Submission window closes',
     },
     {
-      phase: 'Certificate Time',
+      phase: 'Results',
       date: 'Within 3 days after quiz',
-      description: 'Digital certificates issued to all participants after the quiz.',
+      time: '',
+      description: 'Rankings announced based on score. Time as tie-breaker.',
     },
   ],
 
   seats: {
-    total: 50,
-    available: 29,
+    status: 'Open',
+    participation: 'Individual',
+    teamSize: 1,
   },
 
   features: [
