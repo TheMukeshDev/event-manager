@@ -74,9 +74,9 @@ export function HeroSection({ event }: HeroSectionProps) {
           {/* Subtitle */}
           <motion.p
             variants={itemVariants}
-            className="text-sm sm:text-base md:text-xl text-gray-300 mb-6 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-2"
+            className="text-sm sm:text-base md:text-lg text-gray-300 mb-6 sm:mb-10 max-w-3xl mx-auto leading-relaxed px-2"
           >
-            {event.description}
+            Test your C programming and computer awareness skills in this exciting online quiz challenge. Beginner friendly and open to all streams.
           </motion.p>
 
           {/* Event Info Cards */}

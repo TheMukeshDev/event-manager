@@ -53,10 +53,7 @@ export function AboutSection({ event }: AboutSectionProps) {
         >
           <h2 className="heading-lg gradient-cyan-green mb-4 sm:mb-6 break-words px-2 sm:px-0">About {event.shortName}</h2>
           <p className="text-gray-300 text-base sm:text-lg mb-4 sm:mb-6 leading-relaxed">
-            {event.title} is an online quiz challenge designed to test your C programming and computer awareness skills. Beginner friendly and open to all streams.
-          </p>
-          <p className="text-gray-400 mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base">
-            The quiz covers Computer Awareness and C Programming fundamentals. Questions range from basic concepts to moderate difficulty, testing your knowledge of functions, pointers, and arrays.
+            {event.description}
           </p>
 
           <div className="mb-6 sm:mb-8">
