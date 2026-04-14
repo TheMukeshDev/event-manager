@@ -53,10 +53,10 @@ export function Footer() {
           {/* Brand */}
           <motion.div variants={itemVariants} className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <img 
-                src="/icon.svg" 
-                alt="Tech Hub BBS Logo" 
-                className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg shrink-0" 
+              <img
+                src="/icon.png"
+                alt="Tech Hub BBS Logo"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg shrink-0"
               />
               <span className="gradient-cyan-green font-bold text-sm sm:text-base md:text-lg">Tech Hub BBS</span>
             </div>
