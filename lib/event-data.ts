@@ -10,14 +10,14 @@ export const EVENT_DATA = {
   time: '6:00 PM – 6:10 PM IST',
   registrationDeadline: '14 April 2026, 6:00 PM IST',
   registrationOpens: '05 April 2026',
-  duration: '20 minutes',
+  duration: '10 minutes',
   questions: 20,
   capacity: null as number | null,
   registeredCount: 482,
   status: 'LIVE',
   eventType: 'Quiz Challenge',
   region: 'online',
-  
+
   organizer: {
     name: 'BBS College of Engineering and Technology (BBSCET)',
     location: 'BBS Campus Santipuram, Prayagraj 211013',
@@ -28,7 +28,7 @@ export const EVENT_DATA = {
   brochureUrl: 'https://example.com/event-brochure.pdf',
   rules: [
     'No external assistance is allowed.',
-    'All answers must be submitted within 20 minutes.',
+    'All answers must be submitted within 10 minutes.',
     'Participants should maintain academic honesty.',
     'Join the official WhatsApp community: https://chat.whatsapp.com/Hc1zaz52LdOAh6kM5NHREA',
   ],
@@ -62,11 +62,11 @@ export const EVENT_DATA = {
     {
       id: 'tech-quiz-round',
       name: 'Assessment Round (Tech Quiz)',
-      displayText: '20 MCQs in 20 Minutes',
+      displayText: '20 MCQs in 10 minutes',
       date: '14 April 2026',
       time: '6:00 PM IST',
       endTime: '6:10 PM IST',
-      duration: '20 minutes',
+      duration: '10 minutes',
       questions: 20,
       difficulty: 'Easy to Moderate',
       topics: 'Computer Awareness + C Programming',
@@ -100,7 +100,7 @@ export const EVENT_DATA = {
       eventId: '1',
       order: 1,
       title: 'Online Quiz Challenge',
-      description: '20 MCQs in 20 minutes covering computer awareness and C programming',
+      description: '20 MCQs in 10 minutes covering computer awareness and C programming',
       icon: 'Zap',
     },
     {
@@ -149,7 +149,7 @@ export const EVENT_DATA = {
     },
     {
       question: 'How long is the quiz?',
-      answer: 'The quiz duration is 20 minutes with 20 multiple-choice questions covering Computer Awareness and C Programming.',
+      answer: 'The quiz duration is 10 minutes with 20 multiple-choice questions covering Computer Awareness and C Programming.',
     },
     {
       question: 'When will I receive my certificate?',
@@ -190,7 +190,7 @@ export const EVENT_DATA = {
       phase: 'Quiz Starts',
       date: '14 April 2026',
       time: '6:00 PM IST',
-      description: 'Live TechQuiz challenge begins - 20 MCQs in 20 Minutes',
+      description: 'Live TechQuiz challenge begins - 20 MCQs in 10 minutes',
     },
     {
       phase: 'Quiz Ends',

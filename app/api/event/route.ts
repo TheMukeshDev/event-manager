@@ -56,9 +56,9 @@ interface UnstopCompetition {
 
 function parseAPIDate(dateStr: string): { date: string; time: string } {
   const date = new Date(dateStr)
-  const options: Intl.DateTimeFormatOptions = { 
-    day: 'numeric', 
-    month: 'long', 
+  const options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'long',
     year: 'numeric',
     timeZone: 'Asia/Kolkata'
   }
@@ -68,7 +68,7 @@ function parseAPIDate(dateStr: string): { date: string; time: string } {
     hour12: true,
     timeZone: 'Asia/Kolkata'
   }
-  
+
   return {
     date: date.toLocaleDateString('en-GB', options),
     time: date.toLocaleTimeString('en-US', timeOptions) + ' IST'
@@ -77,12 +77,12 @@ function parseAPIDate(dateStr: string): { date: string; time: string } {
 
 function parseDuration(duration: string): string {
   const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
-  if (!match) return '20 minutes'
-  
+  if (!match) return '10 minutes'
+
   const hours = parseInt(match[1] || '0')
   const minutes = parseInt(match[2] || '0')
   const seconds = parseInt(match[3] || '0')
-  
+
   if (hours > 0) {
     return `${hours} hour${hours > 1 ? 's' : ''}`
   }
@@ -99,7 +99,7 @@ function extractQuestionCount(displayText: string): number {
 
 function extractDisplayDuration(displayText: string): string {
   const match = displayText.match(/(\d+)\s*Minutes?/i)
-  return match ? `${match[1]} minutes` : '20 minutes'
+  return match ? `${match[1]} minutes` : '10 minutes'
 }
 
 export async function GET() {
@@ -124,7 +124,7 @@ export async function GET() {
 
     const regnStart = parseAPIDate(competition.regnRequirements.start_regn_dt)
     const regnEnd = parseAPIDate(competition.regnRequirements.end_regn_dt)
-    
+
     const firstRound = competition.rounds[0]
     const roundDetails = firstRound?.details[0]
     const roundStart = roundDetails ? parseAPIDate(roundDetails.start_date) : null
@@ -141,7 +141,7 @@ export async function GET() {
       region: competition.region,
       venue: competition.location || 'Online',
       logoUrl: competition.logoUrl,
-      
+
       registration: {
         opens: regnStart.date,
         opensTime: regnStart.time,
@@ -149,7 +149,7 @@ export async function GET() {
         closesTime: roundStart?.time || '6:00 PM IST',
         deadline: `14 April 2026, 6:00 PM IST`,
       },
-      
+
       rounds: competition.rounds.map((round, index) => ({
         id: round.id.toString(),
         order: round.round_order,
@@ -164,7 +164,7 @@ export async function GET() {
         difficulty: 'Easy to Moderate',
         totalRounds: competition.rounds.length,
       })),
-      
+
       stats: {
         registeredCount: competition.registerCount,
         playersCount: competition.players_count,
@@ -172,30 +172,30 @@ export async function GET() {
         questions: roundDetails ? extractQuestionCount(roundDetails.display_text) : 20,
         duration: parseDuration(roundDetails?.duration || 'PT20M'),
       },
-      
-      registrationUrl: competition.public_url 
-        ? `https://unstop.com/${competition.public_url}` 
+
+      registrationUrl: competition.public_url
+        ? `https://unstop.com/${competition.public_url}`
         : competition.short_url,
       shortUrl: competition.short_url,
-      
+
       prizes: competition.prizes.map(p => ({
         rank: p.rank,
         reward: p.others,
         hasCertificate: p.certificate === 1,
       })),
-      
+
       teamSize: {
         min: competition.regnRequirements.min_team_size,
         max: competition.regnRequirements.max_team_size,
-        display: competition.regnRequirements.max_team_size === 1 
-          ? 'Individual' 
+        display: competition.regnRequirements.max_team_size === 1
+          ? 'Individual'
           : `Team of ${competition.regnRequirements.min_team_size}-${competition.regnRequirements.max_team_size}`,
       },
-      
+
       showRegistrationsCount: competition.display_configs?.show_registrations_count === 1,
       showImpressions: competition.display_configs?.show_impressions === 1,
       showRoundsData: competition.display_configs?.show_rounds_data === 1,
-      
+
       fetchedAt: new Date().toISOString(),
     }
 
@@ -207,8 +207,8 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching Unstop data:', error)
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to fetch competition data',
         message: error instanceof Error ? error.message : 'Unknown error'
       },

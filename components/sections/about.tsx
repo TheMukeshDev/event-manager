@@ -14,7 +14,7 @@ export function AboutSection({ event }: AboutSectionProps) {
 
   const stats = [
     { icon: Target, label: 'Questions', value: `${event.questions} MCQs` },
-    { icon: Clock, label: 'Duration', value: event.duration ?? '20 minutes' },
+    { icon: Clock, label: 'Duration', value: event.duration ?? '10 minutes' },
     { icon: Users, label: 'Registered', value: `${event.registeredCount} Participants` },
     { icon: Award, label: 'Mode', value: 'Online' },
   ]
@@ -110,29 +110,26 @@ export function AboutSection({ event }: AboutSectionProps) {
             <motion.div
               key={index}
               whileHover={{ scale: 1.02, y: -5 }}
-              className={`glass-dark rounded-lg sm:rounded-xl p-4 sm:p-6 border-l-4 ${
-                index % 4 === 0
+              className={`glass-dark rounded-lg sm:rounded-xl p-4 sm:p-6 border-l-4 ${index % 4 === 0
                   ? 'border-l-cyan-400 glow-cyan'
                   : index % 4 === 1
                     ? 'border-l-green-400 glow-green'
                     : index % 4 === 2
                       ? 'border-l-blue-400 glow-blue'
                       : 'border-l-yellow-400 glow-yellow'
-              } hover-glow-cyan`}
+                } hover-glow-cyan`}
             >
               <div className="flex items-center gap-3">
-                <stat.icon className={`w-5 h-5 shrink-0 ${
-                  index % 4 === 0 ? 'text-cyan-400' :
-                  index % 4 === 1 ? 'text-green-400' :
-                  index % 4 === 2 ? 'text-blue-400' : 'text-yellow-400'
-                }`} />
+                <stat.icon className={`w-5 h-5 shrink-0 ${index % 4 === 0 ? 'text-cyan-400' :
+                    index % 4 === 1 ? 'text-green-400' :
+                      index % 4 === 2 ? 'text-blue-400' : 'text-yellow-400'
+                  }`} />
                 <div>
                   <p className="text-gray-400 text-xs sm:text-sm font-medium mb-0.5 sm:mb-1">{stat.label}</p>
-                  <p className={`text-xl sm:text-2xl font-bold ${
-                    index % 4 === 0 ? 'text-cyan-300' :
-                    index % 4 === 1 ? 'text-green-300' :
-                    index % 4 === 2 ? 'text-blue-300' : 'text-yellow-300'
-                  }`}>
+                  <p className={`text-xl sm:text-2xl font-bold ${index % 4 === 0 ? 'text-cyan-300' :
+                      index % 4 === 1 ? 'text-green-300' :
+                        index % 4 === 2 ? 'text-blue-300' : 'text-yellow-300'
+                    }`}>
                     {stat.value}
                   </p>
                 </div>
