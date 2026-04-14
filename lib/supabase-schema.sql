@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS registrations (
 CREATE TABLE IF NOT EXISTS certificates (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   certificate_id VARCHAR(50) UNIQUE NOT NULL, -- Format: BBSCET-TQ-2026-[TYPE]-[SERIAL]
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  event_id UUID REFERENCES events(id) ON DELETE SET NULL,
   event_name VARCHAR(255) NOT NULL,
   issue_date TIMESTAMP DEFAULT now(),
   certificate_type VARCHAR(50), -- 'P' for participation, 'W1' for winner 1st, 'W2' for winner 2nd, 'W3' for winner 3rd
@@ -59,6 +59,29 @@ CREATE TABLE IF NOT EXISTS certificates (
   created_at TIMESTAMP DEFAULT now(),
   updated_at TIMESTAMP DEFAULT now()
 );
+
+-- Certificate Records table (for Unstop CSV import)
+CREATE TABLE IF NOT EXISTS certificate_records (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  certificate_id VARCHAR(50) UNIQUE NOT NULL, -- Format: THBBS-2026-0001
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  event VARCHAR(255) NOT NULL DEFAULT 'TechQuiz 2026',
+  score INTEGER,
+  rank INTEGER,
+  certificate_type VARCHAR(50) NOT NULL, -- 'winner', 'runner-up', 'second-runner-up', 'participation'
+  status VARCHAR(50) DEFAULT 'valid', -- 'valid', 'invalid'
+  sent_status BOOLEAN DEFAULT false,
+  imported_at TIMESTAMP DEFAULT now(),
+  sent_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+-- Create indexes for certificate_records
+CREATE INDEX idx_certificate_records_email ON certificate_records(email);
+CREATE INDEX idx_certificate_records_certificate_id ON certificate_records(certificate_id);
+CREATE INDEX idx_certificate_records_sent_status ON certificate_records(sent_status);
 
 -- Admin Settings table
 CREATE TABLE IF NOT EXISTS admin_settings (

@@ -20,7 +20,7 @@ Place the Tech Hub BBS logo in these formats:
 - `og-image.png` - 1200x630 PNG for Facebook, Twitter, LinkedIn previews
 
 ### SVG Icon (Optional but Recommended)
-- `icon.svg` - Scalable vector version of the logo
+- `icon.png` - Scalable vector version of the logo
 
 ## How to Generate Icon Files
 

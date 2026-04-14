@@ -8,7 +8,11 @@
   "orientation": "portrait-primary",
   "background_color": "#001a33",
   "theme_color": "#00D9FF",
-  "categories": ["education", "technology", "productivity"],
+  "categories": [
+    "education",
+    "technology",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "/favicon-16x16.png",
@@ -41,7 +45,7 @@
       "purpose": "any"
     },
     {
-      "src": "/icon.svg",
+      "src": "/icon.png",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

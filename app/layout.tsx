@@ -61,7 +61,7 @@ export const metadata: Metadata = {
       { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
       { url: '/favicon.ico', sizes: 'any' },
       {
-        url: '/icon.svg',
+        url: '/icon.png',
         type: 'image/svg+xml',
         sizes: 'any',
       },
@@ -78,7 +78,7 @@ export const metadata: Metadata = {
       },
       {
         rel: 'mask-icon',
-        url: '/icon.svg',
+        url: '/icon.png',
         color: '#00D9FF',
       },
     ],

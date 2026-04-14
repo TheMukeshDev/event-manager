@@ -52,11 +52,10 @@ export function Navbar() {
       <motion.nav
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
-          isScrolled
+        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled
             ? 'glass-dark backdrop-blur-xl border-b border-cyan-500/20'
             : 'bg-transparent'
-        }`}
+          }`}
       >
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
@@ -67,10 +66,10 @@ export function Navbar() {
               className="flex items-center gap-2 font-bold z-[101]"
               onClick={handleNavClick}
             >
-              <img 
-                src="/icon.svg" 
-                alt="Tech Hub BBS Logo" 
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg shrink-0" 
+              <img
+                src="/icon.png"
+                alt="Tech Hub BBS Logo"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg shrink-0"
               />
               <span className="gradient-cyan-green text-xs sm:text-sm">{EVENT_DATA.shortName}</span>
             </motion.a>
@@ -135,7 +134,7 @@ export function Navbar() {
               onClick={() => setIsOpen(false)}
               aria-hidden="true"
             />
-            
+
             {/* Mobile Menu Drawer */}
             <motion.div
               initial={{ x: '100%' }}
