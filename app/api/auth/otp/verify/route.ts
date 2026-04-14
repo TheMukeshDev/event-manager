@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { verifyOTP, isAdminEmail } from '@/lib/otp-service'
-import { supabaseServer } from '@/lib/supabase-server'
+import { getAdminProfile } from '@/lib/admin-data'
 
 export async function POST(request: Request) {
   const body = await request.json()
@@ -21,19 +21,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, error: verification.error }, { status: 401 })
   }
 
-  const { data: profile, error: profileError } = await supabaseServer
-    .from('users')
-    .select('id,email,full_name,role')
-    .eq('email', email.toLowerCase())
-    .single()
-
-  if (profileError) {
-    console.error('Profile lookup failed:', profileError.message)
-  }
+  const profile = getAdminProfile(email)
 
   return NextResponse.json({
     success: true,
     message: 'Login successful!',
-    profile,
+    profile: profile || { id: '0', email, full_name: 'Admin', role: 'admin' },
   })
 }
