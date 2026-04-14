@@ -13,7 +13,7 @@ export const EVENT_DATA = {
   duration: '20 minutes',
   questions: 20,
   capacity: null as number | null,
-  registeredCount: 234,
+  registeredCount: 482,
   status: 'LIVE',
   eventType: 'Quiz Challenge',
   region: 'online',

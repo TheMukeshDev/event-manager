@@ -11,7 +11,7 @@ interface TimelineSectionProps {
 
 export function TimelineSection({ timeline }: TimelineSectionProps) {
   const { apiData } = useEventData()
-  
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -104,45 +104,41 @@ export function TimelineSection({ timeline }: TimelineSectionProps) {
                 variants={itemVariants}
                 className={`relative flex items-start ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'}`}
               >
-                <div className={`absolute left-0 md:left-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transform -translate-x-1 md:-translate-x-1/2 z-10 ${
-                  color === 'cyan' ? 'bg-cyan-500/20 border border-cyan-500' :
-                  color === 'green' ? 'bg-green-500/20 border border-green-500' :
-                  color === 'red' ? 'bg-red-500/20 border border-red-500' :
-                  color === 'orange' ? 'bg-orange-500/20 border border-orange-500' :
-                  color === 'yellow' ? 'bg-yellow-500/20 border border-yellow-500' :
-                  'bg-blue-500/20 border border-blue-500'
-                }`}>
-                  <Icon className={`w-4 h-4 md:w-5 md:h-5 ${
-                    color === 'cyan' ? 'text-cyan-400' :
-                    color === 'green' ? 'text-green-400' :
-                    color === 'red' ? 'text-red-400' :
-                    color === 'orange' ? 'text-orange-400' :
-                    color === 'yellow' ? 'text-yellow-400' :
-                    'text-blue-400'
-                  }`} />
+                <div className={`absolute left-0 md:left-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transform -translate-x-1 md:-translate-x-1/2 z-10 ${color === 'cyan' ? 'bg-cyan-500/20 border border-cyan-500' :
+                    color === 'green' ? 'bg-green-500/20 border border-green-500' :
+                      color === 'red' ? 'bg-red-500/20 border border-red-500' :
+                        color === 'orange' ? 'bg-orange-500/20 border border-orange-500' :
+                          color === 'yellow' ? 'bg-yellow-500/20 border border-yellow-500' :
+                            'bg-blue-500/20 border border-blue-500'
+                  }`}>
+                  <Icon className={`w-4 h-4 md:w-5 md:h-5 ${color === 'cyan' ? 'text-cyan-400' :
+                      color === 'green' ? 'text-green-400' :
+                        color === 'red' ? 'text-red-400' :
+                          color === 'orange' ? 'text-orange-400' :
+                            color === 'yellow' ? 'text-yellow-400' :
+                              'text-blue-400'
+                    }`} />
                 </div>
 
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   className={`w-full md:w-[45%] ${isLeft ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left'}`}
                 >
-                  <div className={`glass-dark rounded-lg p-4 sm:p-5 border-l-2 ${
-                    color === 'cyan' ? 'border-l-cyan-500 hover:shadow-[0_0_20px_rgba(6,182,212,0.3)]' :
-                    color === 'green' ? 'border-l-green-500 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)]' :
-                    color === 'red' ? 'border-l-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]' :
-                    color === 'orange' ? 'border-l-orange-500 hover:shadow-[0_0_20px_rgba(249,115,22,0.3)]' :
-                    color === 'yellow' ? 'border-l-yellow-500 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)]' :
-                    'border-l-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]'
-                  }`}>
+                  <div className={`glass-dark rounded-lg p-4 sm:p-5 border-l-2 ${color === 'cyan' ? 'border-l-cyan-500 hover:shadow-[0_0_20px_rgba(6,182,212,0.3)]' :
+                      color === 'green' ? 'border-l-green-500 hover:shadow-[0_0_20px_rgba(34,197,94,0.3)]' :
+                        color === 'red' ? 'border-l-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.3)]' :
+                          color === 'orange' ? 'border-l-orange-500 hover:shadow-[0_0_20px_rgba(249,115,22,0.3)]' :
+                            color === 'yellow' ? 'border-l-yellow-500 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)]' :
+                              'border-l-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]'
+                    }`}>
                     <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                      <span className={`text-xs sm:text-sm font-semibold ${
-                        color === 'cyan' ? 'text-cyan-300' :
-                        color === 'green' ? 'text-green-300' :
-                        color === 'red' ? 'text-red-300' :
-                        color === 'orange' ? 'text-orange-300' :
-                        color === 'yellow' ? 'text-yellow-300' :
-                        'text-blue-300'
-                      }`}>{item.date}</span>
+                      <span className={`text-xs sm:text-sm font-semibold ${color === 'cyan' ? 'text-cyan-300' :
+                          color === 'green' ? 'text-green-300' :
+                            color === 'red' ? 'text-red-300' :
+                              color === 'orange' ? 'text-orange-300' :
+                                color === 'yellow' ? 'text-yellow-300' :
+                                  'text-blue-300'
+                        }`}>{item.date}</span>
                       {item.time && (
                         <span className="text-xs text-gray-400">{item.time}</span>
                       )}
