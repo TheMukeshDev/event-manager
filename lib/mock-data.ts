@@ -97,7 +97,7 @@ export const mockTimeline: TimelineItem[] = [
     time: '6:00 PM IST',
     title: 'Quiz Starts',
     type: 'session',
-    description: 'Live TechQuiz challenge begins - 20 MCQs in 20 Minutes',
+    description: 'Live TechQuiz challenge begins - 20 MCQs in 10 minutes',
   },
   {
     id: '4',
@@ -240,7 +240,7 @@ export const mockFAQs: FAQ[] = [
     id: '2',
     eventId: '1',
     question: 'How long is the quiz? ',
-    answer: 'The quiz is 20 minutes long and consists of 20 multiple-choice questions on Computer Awareness and C Programming.',
+    answer: 'The quiz is 10 minutes long and consists of 20 multiple-choice questions on Computer Awareness and C Programming.',
     category: 'Quiz',
     order: 2,
     createdAt: '2026-04-01',
