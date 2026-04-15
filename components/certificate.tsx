@@ -387,19 +387,28 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   lineHeight: 1.6
                 }}
               >
-                Powered by{' '}
-                <img
-                  src="/certificates/logos/unstop.png"
-                  alt="Unstop"
-                  className="branding-logo"
+                <span
                   style={{
-                    height: 22,
-                    width: 'auto',
-                    verticalAlign: 'middle',
-                    margin: '0 4px',
-                    filter: `drop-shadow(0 0 6px ${accentColor}35)`
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    whiteSpace: 'nowrap'
                   }}
-                />
+                >
+                  Powered by{' '}
+                  <img
+                    src="/certificates/logos/unstop.png"
+                    alt="Unstop"
+                    className="branding-logo"
+                    style={{
+                      maxHeight: 24,
+                      height: 22,
+                      width: 'auto',
+                      objectFit: 'contain',
+                      filter: `drop-shadow(0 0 6px ${accentColor}35)`
+                    }}
+                  />
+                </span>
                 <span style={{ color: '#666', margin: '0 6px' }}>|</span> National Level Technical Quiz
               </div>
             </div>
