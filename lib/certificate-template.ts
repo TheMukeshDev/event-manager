@@ -202,7 +202,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       max-height: 45px;
       max-width: 70px;
       object-fit: contain;
-      opacity: 0.9;
+      filter: drop-shadow(0 0 8px ${accentColor}30) brightness(1.1) contrast(1.05);
     }
     
     .main-header {
@@ -225,9 +225,10 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .techhub-header-logo {
-      max-height: 40px;
-      max-width: 70px;
+      max-height: 45px;
+      max-width: 80px;
       object-fit: contain;
+      filter: drop-shadow(0 0 10px ${accentColor}40) brightness(1.15) contrast(1.1);
     }
     
     .techhub-header-name {
@@ -308,28 +309,34 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       letter-spacing: 1.5px;
     }
     
-    .branding-line {
+    .branding-section {
       text-align: center;
-      font-size: 9px;
-      color: #777;
-      letter-spacing: 1px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
     
-    .branding-line span {
+    .branding-line {
+      font-size: 10px;
+      color: #888;
+      letter-spacing: 0.8px;
+      line-height: 1.6;
+    }
+    
+    .branding-line.gold {
       color: ${accentColor};
       font-weight: 500;
     }
     
+    .branding-separator {
+      color: #666;
+      margin: 0 6px;
+    }
+    
     .branding-logo {
-      height: 12px;
+      height: 11px;
       width: auto;
       vertical-align: middle;
+      margin: 0 3px;
+      filter: drop-shadow(0 0 5px ${accentColor}30);
     }
     
     .score-row {
@@ -507,8 +514,9 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
           <div class="event-name">${data.event}</div>
         </div>
         
-        <div class="branding-line">
-          Organised by <span>Tech Hub BBS</span> &nbsp;|&nbsp; In collaboration with <span>CSI</span> &amp; <span>BBS Coding Club</span> &nbsp;|&nbsp; Powered by <img src="${unstopLogoUrl}" alt="Unstop" class="branding-logo" />
+        <div class="branding-section">
+          <div class="branding-line gold">Organised by <strong>Tech Hub BBS</strong> in collaboration with <strong>Computer Society of India (CSI)</strong> &amp; <strong>BBS Coding Club</strong></div>
+          <div class="branding-line">Powered by <img src="${unstopLogoUrl}" alt="Unstop" class="branding-logo" /> <span class="branding-separator">|</span> National Level Technical Quiz</div>
         </div>
         
         <div class="score-row">
