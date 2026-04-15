@@ -134,9 +134,9 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .certificate {
-      width: 100%;
-      max-width: 960px;
-      aspect-ratio: 16 / 9;
+      width: 1600px;
+      height: 900px;
+      max-width: none;
       background: linear-gradient(145deg, #0d0d0d 0%, #141414 50%, #0d0d0d 100%);
       position: relative;
       overflow: hidden;
@@ -306,7 +306,10 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .branding-section {
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
       margin-bottom: 8px;
     }
     
@@ -314,7 +317,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       font-size: 10px;
       color: #888;
       letter-spacing: 0.8px;
-      line-height: 1.6;
+      text-align: center;
     }
     
     .branding-line.gold {
@@ -322,17 +325,27 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       font-weight: 500;
     }
     
-    .branding-separator {
-      color: #666;
-      margin: 0 6px;
+    .branding-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
     }
     
     .branding-logo {
-      height: 22px;
+      height: 28px;
       width: auto;
-      vertical-align: middle;
-      margin: 0 4px;
+      object-fit: contain;
+      display: block;
+      flex-shrink: 0;
       filter: drop-shadow(0 0 6px ${accentColor}35);
+    }
+    
+    .branding-quiz {
+      text-align: center;
+      width: 100%;
+      white-space: nowrap;
     }
     
     .score-row {
@@ -521,7 +534,10 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
         
         <div class="branding-section">
           <div class="branding-line gold">Organised by <strong>Tech Hub BBS</strong> in collaboration with <strong>Computer Society of India (CSI)</strong> &amp; <strong>BBS Coding Club</strong></div>
-          <div class="branding-line">Powered by <img src="${unstopLogo}" alt="Unstop" class="branding-logo" /> <span class="branding-separator">|</span> National Level Technical Quiz</div>
+          <div class="branding-line">
+            <div class="branding-row">Powered by <img src="${unstopLogo}" alt="Unstop" class="branding-logo" /></div>
+            <div class="branding-quiz">National Level Technical Quiz</div>
+          </div>
         </div>
         
         <div class="score-row">
@@ -611,6 +627,9 @@ export async function generatePDF(template: string): Promise<Buffer> {
     const puppeteer = await import('puppeteer-core')
     const chromium = await import('@sparticuz/chromium')
 
+    const CERT_WIDTH = 1600
+    const CERT_HEIGHT = 900
+
     const browser = await puppeteer.launch({
       args: [
         ...chromium.args,
@@ -622,7 +641,7 @@ export async function generatePDF(template: string): Promise<Buffer> {
         '--allow-file-access-from-files',
         '--enable-features=NetworkService'
       ],
-      defaultViewport: { width: 1920, height: 1080 },
+      defaultViewport: { width: CERT_WIDTH, height: CERT_HEIGHT },
       executablePath: await chromium.executablePath(),
       headless: true
     })
@@ -650,8 +669,8 @@ export async function generatePDF(template: string): Promise<Buffer> {
     })
 
     const pdf = await page.pdf({
-      width: '1920px',
-      height: '1080px',
+      width: `${CERT_WIDTH}px`,
+      height: `${CERT_HEIGHT}px`,
       printBackground: true,
       margin: { top: 0, bottom: 0, left: 0, right: 0 }
     })
@@ -670,6 +689,9 @@ export async function generateImage(template: string): Promise<Buffer> {
     const puppeteer = await import('puppeteer-core')
     const chromium = await import('@sparticuz/chromium')
 
+    const CERT_WIDTH = 1600
+    const CERT_HEIGHT = 900
+
     const browser = await puppeteer.launch({
       args: [
         ...chromium.args,
@@ -681,7 +703,7 @@ export async function generateImage(template: string): Promise<Buffer> {
         '--allow-file-access-from-files',
         '--enable-features=NetworkService'
       ],
-      defaultViewport: { width: 1920, height: 1080 },
+      defaultViewport: { width: CERT_WIDTH, height: CERT_HEIGHT },
       executablePath: await chromium.executablePath(),
       headless: true
     })
@@ -710,7 +732,7 @@ export async function generateImage(template: string): Promise<Buffer> {
 
     const screenshot = await page.screenshot({
       type: 'png',
-      fullPage: true,
+      fullPage: false,
       omitBackground: false
     })
 

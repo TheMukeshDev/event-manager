@@ -2,6 +2,9 @@
 
 import { useRef, useCallback, useState } from 'react'
 
+export const CERTIFICATE_WIDTH = 1600
+export const CERTIFICATE_HEIGHT = 900
+
 const CERTIFICATE_FONTS = [
   'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700',
   'https://fonts.googleapis.com/css2?family=Great+Vibes',
@@ -10,25 +13,27 @@ const CERTIFICATE_FONTS = [
 ]
 
 function preloadFonts(): Promise<void> {
-  const fontPromises = CERTIFICATE_FONTS.map(href => {
-    return new Promise<void>((resolve) => {
-      if (typeof document === 'undefined') {
-        resolve()
-        return
-      }
-      if (document.querySelector(`link[href="${href}"]`)) {
-        resolve()
-        return
-      }
-      const link = document.createElement('link')
-      link.rel = 'stylesheet'
-      link.href = href
-      link.onload = () => resolve()
-      link.onerror = () => resolve()
-      document.head.appendChild(link)
+  return new Promise<void>((resolve) => {
+    if (typeof document === 'undefined') {
+      resolve()
+      return
+    }
+    const fontPromises = CERTIFICATE_FONTS.map(href => {
+      return new Promise<void>((res) => {
+        if (document.querySelector(`link[href="${href}"]`)) {
+          res()
+          return
+        }
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = href
+        link.onload = () => res()
+        link.onerror = () => res()
+        document.head.appendChild(link)
+      })
     })
+    Promise.all(fontPromises).then(() => resolve())
   })
-  return Promise.all(fontPromises).then(() => {})
 }
 
 async function waitForFonts(): Promise<void> {
@@ -38,12 +43,10 @@ async function waitForFonts(): Promise<void> {
     if (document.fonts?.ready) {
       await document.fonts.ready
     }
-  } catch {
-    // Fonts API not available
-  }
-  
+  } catch {}
+
   await preloadFonts()
-  await new Promise<void>((resolve) => setTimeout(resolve, 500))
+  await new Promise<void>((resolve) => setTimeout(resolve, 300))
 }
 
 async function waitForImages(container: HTMLElement): Promise<void> {
@@ -62,7 +65,7 @@ async function waitForImages(container: HTMLElement): Promise<void> {
     })
   })
   await Promise.all(promises)
-  await new Promise<void>((resolve) => setTimeout(resolve, 300))
+  await new Promise<void>((resolve) => setTimeout(resolve, 200))
 }
 
 async function waitForCertificateAssets(certificateElement: HTMLElement): Promise<void> {
@@ -82,7 +85,7 @@ export async function getCertificateDataUrl(
     throw new Error('Export only works in browser')
   }
   
-  const pixelRatio = options.pixelRatio || 2
+  const pixelRatio = options.pixelRatio || 1
 
   await waitForCertificateAssets(certificateElement)
 
@@ -92,7 +95,9 @@ export async function getCertificateDataUrl(
     cacheBust: true,
     pixelRatio,
     skipAutoScale: true,
-    backgroundColor: '#0a0a0a'
+    backgroundColor: '#0a0a0a',
+    width: CERTIFICATE_WIDTH,
+    height: CERTIFICATE_HEIGHT
   })
 
   return dataUrl
@@ -103,9 +108,8 @@ export async function downloadCertificatePNG(
   certificateId: string,
   recipientName: string
 ): Promise<void> {
-  const dataUrl = await getCertificateDataUrl(certificateElement, { pixelRatio: 3 })
+  const dataUrl = await getCertificateDataUrl(certificateElement, { pixelRatio: 1 })
   
-  // Get first name only
   const firstName = recipientName.trim().split(' ')[0]
   const sanitizedName = firstName.replace(/[^a-zA-Z0-9]/g, '-')
   const filename = `${sanitizedName}-Tech-Hub-BBS.png`
@@ -116,49 +120,15 @@ export async function downloadCertificatePNG(
   link.click()
 }
 
-export async function downloadCertificatePDF(
-  certificateElement: HTMLElement,
-  certificateId: string,
-  recipientName: string
-): Promise<void> {
-  // Get first name only
-  const firstName = recipientName.trim().split(' ')[0]
-  const sanitizedName = firstName.replace(/[^a-zA-Z0-9]/g, '-')
-  const filename = `${sanitizedName}-Tech-Hub-BBS.pdf`
-  
-  // Use server-side API for PDF generation (more reliable)
-  const response = await fetch(`/api/certificates/download/${certificateId}?format=pdf`)
-  
-  const contentType = response.headers.get('Content-Type') || ''
-  
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ error: 'Failed to generate PDF' }))
-    throw new Error(errorData.error || 'Failed to generate PDF')
-  }
-  
-  // Check if we got an error HTML response instead of PDF
-  if (contentType.includes('text/html') || !contentType.includes('application/pdf')) {
-    throw new Error('PDF generation failed - server returned an error')
-  }
-  
-  const blob = await response.blob()
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = filename
-  link.click()
-  URL.revokeObjectURL(url)
-}
-
 export function useCertificateExport(certificateId: string, recipientName: string) {
   const certificateRef = useRef<HTMLDivElement>(null)
-  const [isExporting, setIsExporting] = useState<'none' | 'png' | 'pdf'>('none')
+  const [isExporting, setIsExporting] = useState<boolean>(false)
   const [exportError, setExportError] = useState<string | null>(null)
 
   const downloadPNG = useCallback(async () => {
-    if (!certificateRef.current || isExporting !== 'none') return
+    if (!certificateRef.current || isExporting) return
 
-    setIsExporting('png')
+    setIsExporting(true)
     setExportError(null)
 
     try {
@@ -167,23 +137,7 @@ export function useCertificateExport(certificateId: string, recipientName: strin
       console.error('PNG export error:', error)
       setExportError(error.message || 'Failed to export PNG')
     } finally {
-      setIsExporting('none')
-    }
-  }, [certificateId, recipientName, isExporting])
-
-  const downloadPDF = useCallback(async () => {
-    if (!certificateRef.current || isExporting !== 'none') return
-
-    setIsExporting('pdf')
-    setExportError(null)
-
-    try {
-      await downloadCertificatePDF(certificateRef.current, certificateId, recipientName)
-    } catch (error: any) {
-      console.error('PDF export error:', error)
-      setExportError(error.message || 'Failed to export PDF')
-    } finally {
-      setIsExporting('none')
+      setIsExporting(false)
     }
   }, [certificateId, recipientName, isExporting])
 
@@ -192,7 +146,14 @@ export function useCertificateExport(certificateId: string, recipientName: strin
     isExporting,
     exportError,
     downloadPNG,
-    downloadPDF,
     clearError: () => setExportError(null)
   }
+}
+
+export async function generateAndDownloadCertificate(
+  container: HTMLElement,
+  certificateId: string,
+  recipientName: string
+): Promise<void> {
+  await downloadCertificatePNG(container, certificateId, recipientName)
 }

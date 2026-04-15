@@ -1,9 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Search, Award, Loader2, ArrowRight, Download, Mail, AlertCircle } from 'lucide-react'
+import { Certificate, CERTIFICATE_WIDTH, CERTIFICATE_HEIGHT } from '@/components/certificate'
+import { downloadCertificatePNG, CERTIFICATE_WIDTH as EXPORT_WIDTH, CERTIFICATE_HEIGHT as EXPORT_HEIGHT } from '@/components/certificate-export'
+import { generateQRCodeBase64 } from '@/lib/qr-generator'
 
 interface Certificate {
   certificate_id: string
@@ -15,12 +18,29 @@ interface Certificate {
   score: number | null
 }
 
+interface CertificateWithQR extends Certificate {
+  qrCodeUrl: string
+  title: string
+}
+
+function getTitle(certificateType: string): string {
+  switch (certificateType) {
+    case 'excellence': return 'CERTIFICATE OF EXCELLENCE'
+    case 'appreciation': return 'CERTIFICATE OF APPRECIATION'
+    case 'winner': return 'WINNER CERTIFICATE'
+    case 'runner-up': return 'RUNNER-UP CERTIFICATE'
+    case 'second-runner-up': return 'SECOND RUNNER-UP CERTIFICATE'
+    default: return 'CERTIFICATE OF PARTICIPATION'
+  }
+}
+
 export default function DownloadCertificatePage() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [certificates, setCertificates] = useState<Certificate[]>([])
+  const [certificates, setCertificates] = useState<CertificateWithQR[]>([])
   const [downloading, setDownloading] = useState<string | null>(null)
+  const certificateRefs = useRef<Map<string, HTMLDivElement>>(new Map())
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,7 +55,18 @@ export default function DownloadCertificatePage() {
       const data = await response.json()
 
       if (data.success && data.certificates && data.certificates.length > 0) {
-        setCertificates(data.certificates)
+        const certsWithQR = await Promise.all(
+          data.certificates.map(async (cert: Certificate) => {
+            const verifyUrl = `${process.env.NEXT_PUBLIC_VERIFY_BASE_URL || 'https://techhub-bbs.vercel.app'}/verify/${cert.certificate_id}`
+            const qrBase64 = await generateQRCodeBase64(verifyUrl, 200)
+            return {
+              ...cert,
+              qrCodeUrl: qrBase64,
+              title: getTitle(cert.certificate_type)
+            }
+          })
+        )
+        setCertificates(certsWithQR)
       } else {
         setError(data.message || 'No certificates found for this email address')
       }
@@ -46,48 +77,26 @@ export default function DownloadCertificatePage() {
     }
   }
 
-  const handleDownloadPNG = async (certificate: Certificate) => {
+  const handleDownloadPNG = async (certificate: CertificateWithQR) => {
+    const certElement = certificateRefs.current.get(certificate.certificate_id)
+    if (!certElement) {
+      console.error('Certificate element not found')
+      return
+    }
+
     try {
-      setDownloading('png' + certificate.certificate_id)
-      
-      const response = await fetch(`/api/certificates/download/${certificate.certificate_id}?format=png`)
-      
-      if (!response.ok) {
-        throw new Error('Failed to generate PNG')
-      }
-      
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      const firstName = certificate.name.trim().split(' ')[0]
-      a.download = `${firstName}-Tech-Hub-BBS.png`
-      a.target = '_blank'
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-    } catch (error) {
-      console.error('Error downloading PNG:', error)
+      setDownloading(certificate.certificate_id)
+      await downloadCertificatePNG(certElement, certificate.certificate_id, certificate.name)
+    } catch (err) {
+      console.error('Error downloading PNG:', err)
+      setError('Failed to download certificate. Please try again.')
     } finally {
       setDownloading(null)
     }
   }
 
-  const getCertificateTitle = (type: string) => {
-    switch (type) {
-      case 'excellence': return 'Certificate of Excellence'
-      case 'appreciation': return 'Certificate of Appreciation'
-      case 'winner': return 'Winner Certificate'
-      case 'runner-up': return 'Runner-up Certificate'
-      case 'second-runner-up': return 'Second Runner-up Certificate'
-      default: return 'Certificate of Participation'
-    }
-  }
-
   return (
     <div className="min-h-screen bg-black py-12 px-4">
-      {/* Header */}
       <div className="max-w-2xl mx-auto mb-8">
         <Link
           href="/"
@@ -98,7 +107,6 @@ export default function DownloadCertificatePage() {
         </Link>
       </div>
 
-      {/* Title */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -111,7 +119,6 @@ export default function DownloadCertificatePage() {
         <p className="text-gray-400">Enter your registered email to find and download your certificate</p>
       </motion.div>
 
-      {/* Search Form */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -148,7 +155,6 @@ export default function DownloadCertificatePage() {
           </button>
         </form>
 
-        {/* Error Message */}
         {error && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -160,7 +166,6 @@ export default function DownloadCertificatePage() {
           </motion.div>
         )}
 
-        {/* Certificates Found */}
         {certificates.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -186,7 +191,7 @@ export default function DownloadCertificatePage() {
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <div className="p-3 bg-gray-800/50 rounded-lg">
                     <p className="text-xs text-gray-400 mb-1">Certificate Type</p>
-                    <p className="text-white font-medium text-sm">{getCertificateTitle(cert.certificate_type)}</p>
+                    <p className="text-white font-medium text-sm">{cert.title}</p>
                   </div>
                   {cert.rank && (
                     <div className="p-3 bg-gray-800/50 rounded-lg">
@@ -209,10 +214,10 @@ export default function DownloadCertificatePage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleDownloadPNG(cert)}
-                    disabled={downloading === 'png' + cert.certificate_id}
+                    disabled={downloading === cert.certificate_id}
                     className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] disabled:opacity-50"
                   >
-                    {downloading === 'png' + cert.certificate_id ? (
+                    {downloading === cert.certificate_id ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
                       <Download className="w-4 h-4" />
@@ -220,12 +225,31 @@ export default function DownloadCertificatePage() {
                     Download Certificate
                   </button>
                 </div>
+
+                <div className="hidden">
+                  <div
+                    ref={(el) => {
+                      if (el) certificateRefs.current.set(cert.certificate_id, el)
+                    }}
+                  >
+                    <Certificate
+                      name={cert.name}
+                      event={cert.event || 'TechQuiz 2026'}
+                      certificateType={cert.certificate_type}
+                      title={cert.title}
+                      date={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      rank={cert.rank}
+                      score={cert.score}
+                      certificateId={cert.certificate_id}
+                      qrCodeUrl={cert.qrCodeUrl}
+                    />
+                  </div>
+                </div>
               </div>
             ))}
           </motion.div>
         )}
 
-        {/* Help Text */}
         {!certificates.length && !error && !loading && (
           <p className="text-center text-gray-500 text-sm">
             Enter the email address you used to register for the quiz.
