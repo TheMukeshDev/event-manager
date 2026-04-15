@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { FileCheck, Download, Loader2, CheckCircle, XCircle, AlertTriangle } from 'lucide-react'
+import { FileCheck, Download, Loader2, CheckCircle, XCircle, AlertTriangle, Image as ImageIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export function CertificateSection() {
@@ -11,6 +11,7 @@ export function CertificateSection() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<any>(null)
+  const [downloading, setDownloading] = useState(false)
 
   const handleVerify = async () => {
     if (!certificateId.trim()) {
@@ -38,8 +39,29 @@ export function CertificateSection() {
     }
   }
 
-  const handleDownload = () => {
-    window.open(`/api/certificates/download/${certificateId}`, '_blank')
+  const handleDownload = async (format: 'pdf' | 'png') => {
+    try {
+      setDownloading(true)
+      const response = await fetch(`/api/certificates/download/${certificateId}?format=${format}`)
+      
+      if (!response.ok) {
+        throw new Error(`Failed to generate ${format.toUpperCase()}`)
+      }
+      
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `certificate-${certificateId}.${format}`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error(`Error downloading ${format.toUpperCase()}:`, error)
+    } finally {
+      setDownloading(false)
+    }
   }
 
   const handleViewFull = () => {
@@ -187,17 +209,32 @@ export function CertificateSection() {
             </motion.button>
 
             {result?.valid && (
-              <motion.button
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleDownload}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 mt-3 rounded-lg bg-green-500/20 border border-green-500/50 text-green-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,255,136,0.3)]"
-              >
-                <Download className="w-4 h-4" />
-                Download PDF
-              </motion.button>
+              <div className="flex gap-2 mt-3">
+                <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleDownload('png')}
+                  disabled={downloading}
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] disabled:opacity-50"
+                >
+                  {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
+                  Download PNG
+                </motion.button>
+                <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleDownload('pdf')}
+                  disabled={downloading}
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-green-500/20 border border-green-500/50 text-green-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,255,136,0.3)] disabled:opacity-50"
+                >
+                  {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                  Download PDF
+                </motion.button>
+              </div>
             )}
           </div>
         </motion.div>

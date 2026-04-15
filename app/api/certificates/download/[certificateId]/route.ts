@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase-server'
-import { getCertificateTemplate } from '@/lib/certificate-template'
+import { getCertificateTemplate, generatePDF, generateImage } from '@/lib/certificate-template'
 
 export async function GET(
   request: NextRequest,
@@ -8,6 +8,12 @@ export async function GET(
 ) {
   try {
     const { certificateId } = await params
+    const { searchParams } = new URL(request.url)
+    const format = searchParams.get('format') || 'pdf'
+
+    if (!supabaseServer) {
+      return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
+    }
 
     const { data: cert, error } = await supabaseServer
       .from('certificate_records')
@@ -31,37 +37,29 @@ export async function GET(
 
     const html = getCertificateTemplate(cert.certificate_type, templateData)
 
-    // Dynamic import to avoid build-time issues
-    const puppeteer = await import('puppeteer-core')
-    const chromium = await import('@sparticuz/chromium')
+    let buffer: Buffer
+    let contentType: string
+    let filename: string
 
-    const browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: { width: 1123, height: 794 },
-      executablePath: await chromium.executablePath(),
-      headless: true
-    })
+    if (format === 'png' || format === 'image') {
+      buffer = await generateImage(html)
+      contentType = 'image/png'
+      filename = `certificate-${certificateId}.png`
+    } else {
+      buffer = await generatePDF(html)
+      contentType = 'application/pdf'
+      filename = `certificate-${certificateId}.pdf`
+    }
 
-    const page = await browser.newPage()
-    await page.setContent(html, { waitUntil: 'networkidle0' })
-
-    const pdfBuffer = await page.pdf({
-      format: 'A4',
-      printBackground: true,
-      landscape: false
-    })
-
-    await browser.close()
-
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(buffer, {
       headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="certificate-${certificateId}.pdf"`,
-        'Content-Length': pdfBuffer.length.toString()
+        'Content-Type': contentType,
+        'Content-Disposition': `attachment; filename="${filename}"`,
+        'Content-Length': buffer.length.toString()
       }
     })
   } catch (error: any) {
-    console.error('Error generating PDF:', error)
-    return NextResponse.json({ error: error.message || 'Failed to generate PDF' }, { status: 500 })
+    console.error('Error generating certificate:', error)
+    return NextResponse.json({ error: error.message || 'Failed to generate certificate' }, { status: 500 })
   }
 }
