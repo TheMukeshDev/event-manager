@@ -205,8 +205,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .logo-img {
-      max-height: 32px;
-      max-width: 70px;
+      max-height: 60px;
+      max-width: 120px;
       object-fit: contain;
     }
     
@@ -217,8 +217,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .unstop-logo-img {
-      max-height: 22px;
-      max-width: 48px;
+      max-height: 40px;
+      max-width: 80px;
       object-fit: contain;
     }
     
@@ -238,13 +238,13 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .bbs-group-logo {
-      max-height: 38px;
-      margin-bottom: 4px;
+      max-height: 70px;
+      margin-bottom: 5px;
     }
     
     .techhub-logo {
-      max-height: 42px;
-      margin-bottom: 3px;
+      max-height: 80px;
+      margin-bottom: 4px;
     }
     
     .techhub-name {
