@@ -9,39 +9,51 @@ interface User {
   email: string
   full_name?: string
   name?: string
-  role: 'user' | 'admin' | 'ambassador'
+  role: 'user' | 'admin' | 'ambassador' | 'participant'
   created_at: string
   referral_count: number
   referral_code?: string
   is_verified: boolean
 }
 
-const mockUsers: User[] = [
-  { id: '1', email: 'user1@example.com', full_name: 'User One', role: 'user', created_at: '2026-01-01', referral_count: 0, is_verified: true },
-  { id: '2', email: 'user2@example.com', full_name: 'User Two', role: 'ambassador', created_at: '2026-01-02', referral_count: 5, is_verified: true },
-  { id: '3', email: 'admin@techhub-bbs.com', full_name: 'Admin User', role: 'admin', created_at: '2026-01-01', referral_count: 0, is_verified: true },
-]
-
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [filter, setFilter] = useState<'all' | 'admin' | 'ambassador' | 'user'>('all')
+  const [totalCount, setTotalCount] = useState(0)
   const usersPerPage = 10
 
   useEffect(() => {
     async function fetchUsers() {
+      setLoading(true)
+      setError(null)
       try {
-        const response = await fetch(`/api/admin/users?page=${currentPage}&limit=${usersPerPage}&filter=${filter}`)
-        if (response.ok) {
-          const data = await response.json()
-          setUsers(data.users || [])
+        const params = new URLSearchParams()
+        params.set('page', currentPage.toString())
+        params.set('limit', usersPerPage.toString())
+        params.set('filter', filter)
+        if (search) params.set('search', search)
+        
+        const response = await fetch(`/api/admin/users?${params}`)
+        const data = await response.json()
+        
+        if (data.success && data.users) {
+          setUsers(data.users)
+          setTotalCount(data.total || 0)
+        } else if (data.users) {
+          setUsers(data.users)
+          setTotalCount(data.total || 0)
         } else {
-          setUsers(mockUsers)
+          setUsers([])
+          setTotalCount(0)
         }
-      } catch {
-        setUsers(mockUsers)
+      } catch (err) {
+        console.error('Error fetching users:', err)
+        setError('Failed to load users')
+        setUsers([])
       } finally {
         setLoading(false)
       }
@@ -54,7 +66,24 @@ export default function UsersPage() {
     (user.full_name || user.name || '').toLowerCase().includes(search.toLowerCase())
   )
 
-  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / usersPerPage))
+  const totalPages = Math.max(1, Math.ceil(totalCount / usersPerPage))
+
+  const getRoleBadge = (role: string) => {
+    const normalizedRole = (role || 'user').toLowerCase()
+    const roleClasses: Record<string, { bg: string; text: string; label: string }> = {
+      admin: { bg: 'bg-purple-500/20', text: 'text-purple-300', label: 'Admin' },
+      ambassador: { bg: 'bg-green-500/20', text: 'text-green-300', label: 'Ambassador' },
+      user: { bg: 'bg-gray-500/20', text: 'text-gray-300', label: 'User' },
+      participant: { bg: 'bg-gray-500/20', text: 'text-gray-300', label: 'Participant' }
+    }
+    const roleStyle = roleClasses[normalizedRole] || roleClasses.user
+    return (
+      <span className={`inline-flex items-center gap-1 px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${roleStyle.bg} ${roleStyle.text}`}>
+        {normalizedRole === 'admin' && <Shield className="w-3 h-3" />}
+        {roleStyle.label}
+      </span>
+    )
+  }
 
   if (loading) {
     return (
@@ -71,9 +100,22 @@ export default function UsersPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-6 sm:mb-8"
       >
-        <h1 className="text-2xl sm:text-3xl font-bold gradient-cyan-green mb-2">Users</h1>
-        <p className="text-gray-400 text-sm sm:text-base">Manage registered users and administrators</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold gradient-cyan-green mb-2">Users</h1>
+            <p className="text-gray-400 text-sm sm:text-base">Manage registered users and administrators</p>
+          </div>
+          <div className="text-sm text-gray-400">
+            Total: {totalCount} users
+          </div>
+        </div>
       </motion.div>
+
+      {error && (
+        <div className="mb-4 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-300">
+          {error}
+        </div>
+      )}
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -135,14 +177,7 @@ export default function UsersPage() {
                       </div>
                     </td>
                     <td className="py-3 sm:py-4 px-3 sm:px-4">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${
-                        user.role === 'admin' ? 'bg-purple-500/20 text-purple-300' :
-                        user.role === 'ambassador' ? 'bg-green-500/20 text-green-300' :
-                        'bg-gray-500/20 text-gray-300'
-                      }`}>
-                        {user.role === 'admin' && <Shield className="w-3 h-3" />}
-                        {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                      </span>
+                      {getRoleBadge(user.role)}
                     </td>
                     <td className="py-3 sm:py-4 px-3 sm:px-4 text-white text-sm hidden sm:table-cell">{user.referral_count}</td>
                     <td className="py-3 sm:py-4 px-3 sm:px-4">

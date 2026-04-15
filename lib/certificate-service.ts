@@ -1,6 +1,10 @@
 import { supabaseServer } from './supabase-server'
 import { getCertificateTemplate } from './certificate-template'
 
+if (!supabaseServer) {
+  console.warn('Supabase server not configured - database operations will fail')
+}
+
 // Types
 export interface CertificateRecord {
   id: string
@@ -107,12 +111,17 @@ export function getTemplateCategory(certificateType: string): string {
 
 // Bulk create certificates with score-based type assignment
 export async function createCertificatesWithScores(rules: CertificateRules = DEFAULT_RULES): Promise<BulkCreateResult> {
+  if (!supabaseServer) {
+    return { created: 0, updated: 0, skipped: 0, failed: ['Database not configured'], total: 0 }
+  }
+
   try {
+    // Get all valid records (either without certificate_type or with it but no certificate_id)
     const { data: records, error } = await supabaseServer
       .from('certificate_records')
       .select('*')
-      .is('certificate_type', null)
-      .or('status.is.null,status.eq.invalid')
+      .eq('status', 'valid')
+      .or('certificate_type.is.null,certificate_id.is.null')
 
     if (error) throw error
 
@@ -143,16 +152,8 @@ export async function createCertificatesWithScores(rules: CertificateRules = DEF
       try {
         const record = sortedRecords[i]
         
-        // Check if certificate already exists
-        const { data: existing } = await supabaseServer
-          .from('certificate_records')
-          .select('id')
-          .eq('email', record.email)
-          .not('certificate_type', 'is', null)
-          .eq('status', 'valid')
-          .maybeSingle()
-
-        if (existing) {
+        // Check if certificate already exists (has certificate_id)
+        if (record.certificate_id) {
           skipped++
           continue
         }
@@ -167,39 +168,28 @@ export async function createCertificatesWithScores(rules: CertificateRules = DEF
           certificateType = 'participation'
         }
 
-        const isUpdate = record.certificate_type !== null
+        // Generate certificate ID
+        const { count } = await supabaseServer
+          .from('certificate_records')
+          .select('*', { count: 'exact', head: true })
+        
+        const certificateId = `THBBS-2026-${String((count || 0) + i + 1).padStart(4, '0')}`
 
-        const { error: upsertError } = isUpdate 
-          ? await supabaseServer
-              .from('certificate_records')
-              .update({
-                certificate_type: certificateType,
-                status: 'valid',
-                template_used: certificateType,
-                generated_at: new Date().toISOString()
-              })
-              .eq('id', record.id)
-          : await supabaseServer
-              .from('certificate_records')
-              .insert({
-                certificate_id: `THBBS-2026-${String(i + 1).padStart(4, '0')}`,
-                name: record.name,
-                email: record.email,
-                event: record.event || 'TechQuiz 2026',
-                score: record.score,
-                rank: record.rank,
-                best_time: record.best_time,
-                certificate_type: certificateType,
-                status: 'valid',
-                template_used: certificateType,
-                imported_at: new Date().toISOString(),
-                generated_at: new Date().toISOString()
-              })
+        // Update the record with certificate_id and final certificate_type
+        const { error: upsertError } = await supabaseServer
+          .from('certificate_records')
+          .update({
+            certificate_id: certificateId,
+            certificate_type: certificateType,
+            status: 'valid',
+            template_used: certificateType,
+            generated_at: new Date().toISOString()
+          })
+          .eq('id', record.id)
 
         if (upsertError) throw upsertError
 
-        if (isUpdate) updated++
-        else created++
+        updated++
       } catch (err: any) {
         console.error(`Failed to process cert for record:`, err)
         failed.push(err.message || 'Unknown error')
@@ -221,6 +211,10 @@ export async function createCertificatesWithScores(rules: CertificateRules = DEF
 
 // Legacy function for backward compatibility
 export async function createBulkParticipation(mode: 'participation' | 'result-based' = 'participation'): Promise<BulkCreateResult> {
+  if (!supabaseServer) {
+    return { created: 0, updated: 0, skipped: 0, failed: ['Database not configured'], total: 0 }
+  }
+
   if (mode === 'result-based') {
     return createCertificatesWithScores(DEFAULT_RULES)
   }
@@ -302,6 +296,10 @@ export async function getCertificates(filters: {
   sortBy?: string
   sortOrder?: string
 }): Promise<{ data: CertificateRecord[], count: number }> {
+  if (!supabaseServer) {
+    return { data: [], count: 0 }
+  }
+
   let query = supabaseServer
     .from('certificate_records')
     .select('*', { count: 'exact' })
@@ -341,6 +339,20 @@ export async function getCertificateStats(): Promise<{
   failed: number
   verified: number
 }> {
+  if (!supabaseServer) {
+    return {
+      totalImported: 0,
+      totalCertificates: 0,
+      excellence: 0,
+      appreciation: 0,
+      participation: 0,
+      sent: 0,
+      pending: 0,
+      failed: 0,
+      verified: 0
+    }
+  }
+
   try {
     const { data: records, error } = await supabaseServer
       .from('certificate_records')
@@ -379,6 +391,10 @@ export async function getCertificateStats(): Promise<{
 
 // Update sent status
 export async function updateSentStatus(certificateIds: string[], sent: boolean, sentAt?: string): Promise<{ success: boolean }> {
+  if (!supabaseServer) {
+    return { success: false }
+  }
+
   const { error } = await supabaseServer
     .from('certificate_records')
     .update({ 
@@ -392,6 +408,10 @@ export async function updateSentStatus(certificateIds: string[], sent: boolean, 
 
 // Generate preview HTML
 export async function generatePreviewHtml(certificateId: string): Promise<string> {
+  if (!supabaseServer) {
+    throw new Error('Database not configured')
+  }
+
   const { data } = await supabaseServer
     .from('certificate_records')
     .select('*')
@@ -415,6 +435,10 @@ export async function generatePreviewHtml(certificateId: string): Promise<string
 
 // Delete bulk
 export async function deleteCertificates(certificateIds: string[]): Promise<{ deleted: number }> {
+  if (!supabaseServer) {
+    return { deleted: 0 }
+  }
+
   const { count } = await supabaseServer
     .from('certificate_records')
     .delete()
@@ -425,6 +449,10 @@ export async function deleteCertificates(certificateIds: string[]): Promise<{ de
 
 // Get templates
 export async function getTemplates(): Promise<any[]> {
+  if (!supabaseServer) {
+    return []
+  }
+
   const { data, error } = await supabaseServer
     .from('certificate_templates')
     .select('*')

@@ -20,6 +20,10 @@ export function isAdminEmail(email: string) {
 }
 
 export async function seedAdminProfiles() {
+  if (!supabaseServer) {
+    return { success: false, error: 'Database not configured' }
+  }
+
   const profiles = Object.entries(ADMIN_PROFILE_MAP).map(([email, profile]) => ({
     email,
     full_name: profile.full_name,
@@ -47,6 +51,10 @@ export async function createAuthUserWithPassword(payload: {
   college?: string
   stream?: string
 }) {
+  if (!supabaseServer) {
+    return { success: false, error: 'Database not configured' }
+  }
+
   const { email, password, fullName, phone, college, stream } = payload
   const role = isAdminEmail(email) ? 'admin' : 'participant'
 
@@ -93,6 +101,10 @@ export async function createAuthUserWithPassword(payload: {
 }
 
 export async function signInWithEmailPassword(email: string, password: string) {
+  if (!supabaseBrowser) {
+    return { success: false, error: 'Authentication not configured' }
+  }
+
   const { data, error } = await supabaseBrowser.auth.signInWithPassword({
     email,
     password,
@@ -106,6 +118,10 @@ export async function signInWithEmailPassword(email: string, password: string) {
 }
 
 export function signInWithGoogle() {
+  if (!supabaseBrowser) {
+    throw new Error('Authentication not configured')
+  }
+
   return supabaseBrowser.auth.signInWithOAuth({
     provider: 'google',
     options: {
