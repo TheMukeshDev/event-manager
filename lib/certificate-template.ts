@@ -6,7 +6,13 @@ export interface CertificateData {
   rank: number | null
   certificateType: string
   date: string
-  qrCodeUrl?: string
+  qrCodeBase64?: string
+  logos?: {
+    techHub: string
+    bbsGroup: string
+    csi: string
+    unstop: string
+  }
 }
 
 const VERIFY_BASE_URL = process.env.NEXT_PUBLIC_VERIFY_BASE_URL || 'https://techhub-bbs.vercel.app'
@@ -97,44 +103,34 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
   const accentColor = getAccentColor()
   const glowColor = getGlowColor()
   const title = getTitle()
+  const recipientNameFontSize = data.name.length > 18 ? '72' : '88'
 
-  const verifyUrl = `${VERIFY_BASE_URL}/verify/${data.certificateId}`
-  const qrCodeUrl = data.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}&format=png`
-
-  const techHubLogoUrl = '/certificates/logos/techhubbs.png'
-  const bbsGroupLogoUrl = '/certificates/logos/bbslogo.png'
-  const csiLogoUrl = '/certificates/logos/csi.png'
-  const unstopLogoUrl = '/certificates/logos/unstop.png'
+  const techHubLogo = data.logos?.techHub || '/certificates/logos/techhubbs.png'
+  const bbsGroupLogo = data.logos?.bbsGroup || '/certificates/logos/bbslogo.png'
+  const csiLogo = data.logos?.csi || '/certificates/logos/csi.png'
+  const unstopLogo = data.logos?.unstop || '/certificates/logos/unstop.png'
+  const qrCodeUrl = data.qrCodeBase64 || ''
 
   return `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <title>Certificate - ${data.name}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&family=Playfair+Display:wght@400;500;600&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&family=Playfair+Display:wght@400;500;600&family=Source+Sans+3:wght@300;400;500;600&display=swap');
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    @font-face {
-      font-family: 'Great Vibes';
-      src: url('https://fonts.gstatic.com/s/greatvibes/v16/RWmMoKWR8V214OGfVQOc40C7Qd7yj0e7C7S.woff2') format('woff2');
-      font-weight: 400;
-      font-display: swap;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
-      font-family: 'Source Sans 3', sans-serif;
+      font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
       background: #0a0a0a;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       margin: 0;
+      -webkit-font-smoothing: antialiased;
     }
     
     .certificate {
@@ -232,7 +228,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .techhub-header-name {
-      font-family: 'Cinzel', serif;
+      font-family: 'Cinzel', 'Times New Roman', serif;
       font-size: 6px;
       font-weight: 700;
       color: ${accentColor};
@@ -250,7 +246,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .main-title {
-      font-family: 'Cinzel', serif;
+      font-family: 'Cinzel', 'Times New Roman', serif;
       font-size: 36px;
       font-weight: 700;
       color: ${accentColor};
@@ -272,8 +268,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .recipient-name {
-      font-family: 'Great Vibes', cursive;
-      font-size: ${data.name.length > 18 ? '72' : '88'}px;
+      font-family: 'Great Vibes', 'Georgia', cursive;
+      font-size: ${recipientNameFontSize}px;
       font-weight: 400;
       color: #ffffff;
       margin: 6px 0 10px;
@@ -302,7 +298,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .event-name {
-      font-family: 'Playfair Display', serif;
+      font-family: 'Playfair Display', 'Georgia', serif;
       font-size: 24px;
       font-weight: 600;
       color: #fff;
@@ -362,7 +358,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .score-value {
-      font-family: 'Playfair Display', serif;
+      font-family: 'Playfair Display', 'Georgia', serif;
       font-size: 20px;
       font-weight: 600;
       color: ${accentColor};
@@ -475,6 +471,15 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       color: #777;
       line-height: 1.3;
     }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .certificate {
+      animation: fadeIn 0.3s ease-out;
+    }
   </style>
 </head>
 <body>
@@ -488,14 +493,14 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     <div class="certificate-content">
       <div class="header-section">
-        <img src="${csiLogoUrl}" alt="CSI" class="corner-logo" onerror="this.style.display='none'" />
+        <img src="${csiLogo}" alt="CSI" class="corner-logo" />
         
         <div class="main-header">
-          <img src="${bbsGroupLogoUrl}" alt="BBS Group" class="bbs-main-logo" onerror="this.style.display='none'" />
+          <img src="${bbsGroupLogo}" alt="BBS Group" class="bbs-main-logo" />
         </div>
         
         <div class="right-techhub">
-          <img src="${techHubLogoUrl}" alt="Tech Hub BBS" class="techhub-header-logo" onerror="this.style.display='none'" />
+          <img src="${techHubLogo}" alt="Tech Hub BBS" class="techhub-header-logo" />
           <div class="techhub-header-name">Tech Hub BBS</div>
         </div>
       </div>
@@ -516,7 +521,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
         
         <div class="branding-section">
           <div class="branding-line gold">Organised by <strong>Tech Hub BBS</strong> in collaboration with <strong>Computer Society of India (CSI)</strong> &amp; <strong>BBS Coding Club</strong></div>
-          <div class="branding-line">Powered by <img src="${unstopLogoUrl}" alt="Unstop" class="branding-logo" /> <span class="branding-separator">|</span> National Level Technical Quiz</div>
+          <div class="branding-line">Powered by <img src="${unstopLogo}" alt="Unstop" class="branding-logo" /> <span class="branding-separator">|</span> National Level Technical Quiz</div>
         </div>
         
         <div class="score-row">
@@ -569,36 +574,71 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
 </html>`
 }
 
+async function waitForFonts(timeout: number = 10000): Promise<void> {
+  if (document.fonts) {
+    try {
+      await document.fonts.ready
+      await new Promise<void>((resolve) => setTimeout(resolve, 500))
+    } catch {
+      await new Promise<void>((resolve) => setTimeout(resolve, 2000))
+    }
+  }
+}
+
+async function waitForImages(): Promise<void> {
+  const images = Array.from(document.querySelectorAll('img'))
+  const promises = images.map((img) => {
+    return new Promise<void>((resolve) => {
+      if (img.complete && img.naturalHeight !== 0) {
+        resolve()
+      } else {
+        img.onload = () => resolve()
+        img.onerror = () => resolve()
+      }
+    })
+  })
+  await Promise.all(promises)
+}
+
+async function waitForRender(): Promise<void> {
+  await waitForFonts()
+  await waitForImages()
+  await new Promise<void>((resolve) => setTimeout(resolve, 1000))
+}
+
 export async function generatePDF(template: string): Promise<Buffer> {
   try {
     const puppeteer = await import('puppeteer-core')
     const chromium = await import('@sparticuz/chromium')
 
     const browser = await puppeteer.launch({
-      args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
-      defaultViewport: { width: 1280, height: 720 },
+      args: [
+        ...chromium.args,
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--disable-web-security',
+        '--allow-file-access-from-files'
+      ],
+      defaultViewport: { width: 1920, height: 1080 },
       executablePath: await chromium.executablePath(),
       headless: true
     })
 
     const page = await browser.newPage()
 
-    await page.setContent(template, { waitUntil: 'networkidle0', timeout: 30000 })
+    await page.setContent(template, { waitUntil: 'domcontentloaded', timeout: 30000 })
+    await page.waitForTimeout(2000)
 
-    await page.evaluate(() => {
-      return new Promise<void>((resolve) => {
-        if (document.readyState === 'complete') {
-          setTimeout(resolve, 500)
-        } else {
-          window.addEventListener('load', () => setTimeout(resolve, 500))
-        }
-      })
+    await page.evaluate(async () => {
+      await waitForRender()
     })
 
     const pdf = await page.pdf({
-      format: 'A4',
+      width: '1920px',
+      height: '1080px',
       printBackground: true,
-      landscape: true,
       margin: { top: 0, bottom: 0, left: 0, right: 0 }
     })
 
@@ -617,24 +657,27 @@ export async function generateImage(template: string): Promise<Buffer> {
     const chromium = await import('@sparticuz/chromium')
 
     const browser = await puppeteer.launch({
-      args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
-      defaultViewport: { width: 1280, height: 720 },
+      args: [
+        ...chromium.args,
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--disable-web-security',
+        '--allow-file-access-from-files'
+      ],
+      defaultViewport: { width: 1920, height: 1080 },
       executablePath: await chromium.executablePath(),
       headless: true
     })
 
     const page = await browser.newPage()
 
-    await page.setContent(template, { waitUntil: 'networkidle0', timeout: 30000 })
+    await page.setContent(template, { waitUntil: 'domcontentloaded', timeout: 30000 })
+    await page.waitForTimeout(2000)
 
-    await page.evaluate(() => {
-      return new Promise<void>((resolve) => {
-        if (document.readyState === 'complete') {
-          setTimeout(resolve, 500)
-        } else {
-          window.addEventListener('load', () => setTimeout(resolve, 500))
-        }
-      })
+    await page.evaluate(async () => {
+      await waitForRender()
     })
 
     const screenshot = await page.screenshot({

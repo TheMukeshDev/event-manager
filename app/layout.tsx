@@ -1,10 +1,15 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { Cinzel, Playfair_Display, Source_Sans_3, Great_Vibes } from 'next/font/google'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const cinzel = Cinzel({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-cinzel" });
+const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-playfair" });
+const sourceSans = Source_Sans_3({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--font-source-sans" });
+const greatVibes = Great_Vibes({ subsets: ["latin"], weight: ["400"], variable: "--font-great-vibes" });
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -98,7 +103,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#001a33" />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className="font-sans antialiased bg-black text-white overflow-x-hidden">
+      <body className={`font-sans antialiased bg-black text-white overflow-x-hidden ${cinzel.variable} ${playfair.variable} ${sourceSans.variable} ${greatVibes.variable}`}>
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
