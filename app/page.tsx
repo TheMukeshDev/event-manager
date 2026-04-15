@@ -16,13 +16,17 @@ import { FAQSection } from '@/components/sections/faq'
 import { getPublicOverview } from '@/lib/public-data'
 import { EventDataProvider } from '@/components/event-data-provider'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+const API_URL = process.env.NEXT_PUBLIC_VERCEL_URL 
+  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` 
+  : process.env.NEXT_PUBLIC_BASE_URL 
+  || 'https://techhub-bbs.vercel.app'
 
 async function getEventDataFromAPI() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || API_URL
+    const baseUrl = API_URL
     const res = await fetch(`${baseUrl}/api/event`, {
       next: { revalidate: 300 },
+      cache: 'no-store'
     })
     if (!res.ok) return null
     const json = await res.json()
