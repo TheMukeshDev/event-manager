@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase-service'
+import { supabaseServer as supabase } from '@/lib/supabase-server'
 import { generatePreviewHtml } from '@/lib/certificate-service'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { data, error } = await supabase
       .from('certificate_records')
       .select('*')
-      .eq('certificate_id', params.id)
+      .eq('certificate_id', id)
       .single()
 
     if (error || !data) {
@@ -26,12 +27,13 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await request.json()
     const { action } = body
-    const certId = params.id
+    const { id } = await params
+    const certId = id
 
     if (action === 'preview') {
       const html = await generatePreviewHtml(certId)
@@ -48,13 +50,14 @@ export async function POST(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { error } = await supabase
       .from('certificate_records')
       .delete()
-      .eq('certificate_id', params.id)
+      .eq('certificate_id', id)
 
     if (error) throw error
 

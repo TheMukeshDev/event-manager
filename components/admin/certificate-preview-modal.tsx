@@ -76,17 +76,12 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
   }
 
   const handleDownloadPdf = async () => {
-    if (!previewHtml) return
-    
     try {
-      const response = await fetch('/api/certificates/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          certificateId: certificate.certificate_id,
-          html: previewHtml
-        })
-      })
+      const response = await fetch(`/api/certificates/download/${certificate.certificate_id}`)
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF')
+      }
       
       const blob = await response.blob()
       const url = URL.createObjectURL(blob)

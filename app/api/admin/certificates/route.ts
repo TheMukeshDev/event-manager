@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase-service'
+import { supabaseServer } from '@/lib/supabase-server'
 import { 
   getCertificates, 
-  createBulkParticipation, 
+  createBulkParticipation,
+  createCertificatesWithScores,
   generatePreviewHtml, 
   updateSentStatus, 
   deleteCertificates,
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
 
       // Check for duplicate emails
       const emails = records.map((r: any) => r.email)
-      const { data: existingEmails } = await supabase
+      const { data: existingEmails } = await supabaseServer
         .from('certificate_records')
         .select('email')
         .in('email', emails)
@@ -91,7 +92,7 @@ export async function POST(request: NextRequest) {
       const certificates: any[] = []
       let serialNumber = 1
 
-      const { count: existingCount } = await supabase
+      const { count: existingCount } = await supabaseServer
         .from('certificate_records')
         .select('*', { count: 'exact', head: true })
 
@@ -121,7 +122,7 @@ export async function POST(request: NextRequest) {
         serialNumber++
       }
 
-      const { data: inserted, error: insertError } = await supabase
+      const { data: inserted, error: insertError } = await supabaseServer
         .from('certificate_records')
         .insert(certificates)
         .select()
@@ -137,6 +138,10 @@ export async function POST(request: NextRequest) {
     } else if (action === 'create-all-participation') {
       const mode = data?.mode || 'participation'
       const result = await createBulkParticipation(mode)
+      return NextResponse.json({ success: true, ...result })
+    } else if (action === 'create-all-with-scores') {
+      const rules = data?.rules || { excellenceMinScore: 19, appreciationMinScore: 15 }
+      const result = await createCertificatesWithScores(rules)
       return NextResponse.json({ success: true, ...result })
     } else if (action === 'preview-html') {
       const { certificateId } = data

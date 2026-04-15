@@ -6,11 +6,18 @@ export interface CertificateData {
   rank: number | null
   certificateType: string
   date: string
+  qrCodeUrl?: string
 }
 
 export function getCertificateTemplate(certificateType: string, data: CertificateData): string {
   const getTitle = () => {
     switch (certificateType) {
+      case 'excellence':
+        return 'CERTIFICATE OF EXCELLENCE'
+      case 'appreciation':
+        return 'CERTIFICATE OF APPRECIATION'
+      case 'participation':
+        return 'CERTIFICATE OF PARTICIPATION'
       case 'winner':
         return 'WINNER'
       case 'runner-up':
@@ -24,6 +31,12 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
 
   const getSubtitle = () => {
     switch (certificateType) {
+      case 'excellence':
+        return 'For outstanding performance'
+      case 'appreciation':
+        return 'For excellent participation'
+      case 'participation':
+        return 'For participating in'
       case 'winner':
         return 'First Place'
       case 'runner-up':
@@ -37,6 +50,10 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
 
   const getBorderColor = () => {
     switch (certificateType) {
+      case 'excellence':
+        return '#FFD700'
+      case 'appreciation':
+        return '#4169E1'
       case 'winner':
         return '#FFD700'
       case 'runner-up':
@@ -50,6 +67,10 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
 
   const getAccentColor = () => {
     switch (certificateType) {
+      case 'excellence':
+        return '#FFD700'
+      case 'appreciation':
+        return '#4169E1'
       case 'winner':
         return '#FFD700'
       case 'runner-up':
@@ -63,6 +84,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
 
   const borderColor = getBorderColor()
   const accentColor = getAccentColor()
+  
+  const qrCodeUrl = data.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`https://techquiz2026.vercel.app/verify/${data.certificateId}`)}&format=png`
 
   return `<!DOCTYPE html>
 <html>
@@ -268,6 +291,27 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       color: ${accentColor};
       letter-spacing: 2px;
     }
+    
+    .qr-code {
+      position: absolute;
+      bottom: 30px;
+      right: 40px;
+      text-align: center;
+    }
+    
+    .qr-image {
+      width: 80px;
+      height: 80px;
+      border: 1px solid ${borderColor};
+      border-radius: 4px;
+    }
+    
+    .qr-label {
+      font-size: 10px;
+      color: #666;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
@@ -325,6 +369,11 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       </div>
       
       <div class="certificate-id">Certificate ID: ${data.certificateId}</div>
+      
+      <div class="qr-code">
+        <img src="${qrCodeUrl}" alt="QR Code" class="qr-image" />
+        <div class="qr-label">Scan to verify</div>
+      </div>
     </div>
   </div>
 </body>
@@ -333,8 +382,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
 
 export async function generatePDF(template: string): Promise<Buffer> {
   try {
-    const puppeteer = require('puppeteer-core')
-    const chromium = require('@sparticuz/chromium')
+    const puppeteer = await import('puppeteer-core')
+    const chromium = await import('@sparticuz/chromium')
     
     const browser = await puppeteer.launch({
       args: chromium.args,
