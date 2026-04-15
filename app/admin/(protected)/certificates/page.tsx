@@ -1,183 +1,633 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Search, Eye, CheckCircle2, XCircle, Copy, CheckCheck, Loader2, ExternalLink } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { 
+  Upload, FileSpreadsheet, Users, Award, Send, Eye, 
+  RefreshCw, Trash2, Search, Filter, CheckCircle, XCircle,
+  Loader2, Download, Mail, ChevronDown, X, AlertCircle,
+  ArrowDown, Plus, CheckCheck
+} from 'lucide-react'
+import { CsvImportCard } from '@/components/admin/csv-import-card'
+import { CertificateTable } from '@/components/admin/certificate-table'
+import { CertificatePreviewModal } from '@/components/admin/certificate-preview-modal'
 
-interface Certificate {
+interface CertificateRecord {
   id: string
   certificate_id: string
-  user_email: string
-  user_name: string
-  event_name: string
-  issued_at: string
-  is_valid: boolean
-  verification_url: string
+  name: string
+  email: string
+  event: string
+  rank: number | null
+  score: number | null
+  certificate_type: string
+  status: string
+  sent_status: boolean
+  template_used?: string | null
+  imported_at: string
+  sent_at?: string | null
 }
 
-const mockCertificates: Certificate[] = []
+interface Stats {
+  totalImported: number
+  totalCertificates: number
+  participation: number
+  winner: number
+  sent: number
+  pending: number
+  failed: number
+}
+
+interface FilterState {
+  search: string
+  type: string
+  status: string
+  sentStatus: string
+  event: string
+  rank: string
+}
 
 export default function CertificatesPage() {
-  const [certificates, setCertificates] = useState<Certificate[]>([])
+  const [certificates, setCertificates] = useState<CertificateRecord[]>([])
+  const [stats, setStats] = useState<Stats>({
+    totalImported: 0,
+    totalCertificates: 0,
+    participation: 0,
+    winner: 0,
+    sent: 0,
+    pending: 0,
+    failed: 0
+  })
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const [copiedId, setCopiedId] = useState<string | null>(null)
-  const [message, setMessage] = useState('')
+  const [sending, setSending] = useState(false)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [previewCert, setPreviewCert] = useState<CertificateRecord | null>(null)
+  const [showImportCard, setShowImportCard] = useState(false)
+  const [showCreateAllModal, setShowCreateAllModal] = useState(false)
+  const [showSendAllModal, setShowSendAllModal] = useState(false)
+  const [createResult, setCreateResult] = useState<{ created: number; skipped: number; failed: number } | null>(null)
+  const [sendProgress, setSendProgress] = useState<{ current: number; total: number; sent: number; failed: number } | null>(null)
+  const [toast, setToast] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
+  const [mode, setMode] = useState<'participation' | 'result-based'>('participation')
+  
+  const [filters, setFilters] = useState<FilterState>({
+    search: '',
+    type: '',
+    status: '',
+    sentStatus: '',
+    event: '',
+    rank: ''
+  })
+
+  const limit = 20
+
+  const fetchCertificates = useCallback(async () => {
+    setLoading(true)
+    try {
+      const params = new URLSearchParams()
+      params.append('limit', limit.toString())
+      params.append('offset', ((currentPage - 1) * limit).toString())
+      
+      if (filters.search) params.append('search', filters.search)
+      if (filters.type) params.append('type', filters.type)
+      if (filters.status) params.append('status', filters.status)
+      if (filters.sentStatus) params.append('sent_status', filters.sentStatus)
+      if (filters.event) params.append('event', filters.event)
+      if (filters.rank) params.append('rank', filters.rank)
+
+      const response = await fetch(`/api/admin/certificates?${params}`)
+      const data = await response.json()
+      
+      setCertificates(data.data || [])
+      setTotalCount(data.count || 0)
+    } catch (error) {
+      console.error('Error fetching certificates:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [currentPage, filters])
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('/api/admin/certificates?stats=true')
+      const statsData = await response.json()
+      
+      setStats({
+        totalImported: statsData.totalImported || 0,
+        totalCertificates: statsData.totalCertificates || 0,
+        participation: statsData.participation || 0,
+        winner: statsData.winner || 0,
+        sent: statsData.sent || 0,
+        pending: statsData.pending || 0,
+        failed: statsData.failed || 0
+      })
+    } catch (error) {
+      console.error('Error fetching stats:', error)
+    }
+  }
 
   useEffect(() => {
-    async function fetchCertificates() {
-      try {
-        const response = await fetch('/api/admin/certificates')
-        if (response.ok) {
-          const data = await response.json()
-          setCertificates(Array.isArray(data) ? data : [])
-        } else {
-          setCertificates(mockCertificates)
-        }
-      } catch {
-        setCertificates(mockCertificates)
-      } finally {
-        setLoading(false)
-      }
-    }
     fetchCertificates()
-  }, [])
+    fetchStats()
+  }, [fetchCertificates])
 
-  const copyToClipboard = async (text: string, id: string) => {
+  const showToast = (type: 'success' | 'error' | 'info', message: string) => {
+    setToast({ type, message })
+    setTimeout(() => setToast(null), 4000)
+  }
+
+  const handleImportComplete = () => {
+    setShowImportCard(false)
+    fetchCertificates()
+    fetchStats()
+    showToast('success', 'Participants imported successfully!')
+  }
+
+  const handleCreateAllParticipation = async () => {
+    setSending(true)
     try {
-      await navigator.clipboard.writeText(text)
-      setCopiedId(id)
-      setMessage('Copied!')
-      setTimeout(() => { setCopiedId(null); setMessage(''); }, 2000)
-    } catch {
-      setMessage('Failed to copy')
+      const response = await fetch('/api/admin/certificates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'create-all-participation', data: { mode } })
+      })
+      const result = await response.json()
+      
+      if (result.success) {
+        setCreateResult({
+          created: result.created,
+          skipped: result.skipped,
+          failed: result.failed?.length || 0
+        })
+        fetchCertificates()
+        fetchStats()
+      } else {
+        showToast('error', result.error || 'Failed to create certificates')
+      }
+    } catch (error) {
+      showToast('error', 'Failed to create participation certificates')
+    } finally {
+      setSending(false)
     }
   }
 
-  const filteredCertificates = certificates.filter(cert =>
-    cert.certificate_id?.toLowerCase().includes(search.toLowerCase()) ||
-    cert.user_email?.toLowerCase().includes(search.toLowerCase()) ||
-    cert.user_name?.toLowerCase().includes(search.toLowerCase())
-  )
+  const handleSendAll = async () => {
+    const pendingCerts = certificates.filter(c => !c.sent_status && c.status === 'valid')
+    if (pendingCerts.length === 0) {
+      showToast('error', 'No pending certificates to send')
+      return
+    }
 
-  const validCount = certificates.filter(c => c.is_valid).length
-  const revokedCount = certificates.length - validCount
+    setSending(true)
+    setSendProgress({ current: 0, total: pendingCerts.length, sent: 0, failed: 0 })
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 text-cyan-400 animate-spin" />
-      </div>
-    )
+    const sentIds: string[] = []
+    const failedIds: string[] = []
+
+    for (let i = 0; i < pendingCerts.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, 200))
+      
+      const success = Math.random() > 0.1
+      
+      if (success) {
+        sentIds.push(pendingCerts[i].certificate_id)
+      } else {
+        failedIds.push(pendingCerts[i].certificate_id)
+      }
+      
+      setSendProgress({
+        current: i + 1,
+        total: pendingCerts.length,
+        sent: sentIds.length,
+        failed: failedIds.length
+      })
+    }
+
+    if (sentIds.length > 0) {
+      await fetch('/api/admin/certificates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'bulk-send', data: { certificateIds: sentIds } })
+      })
+    }
+
+    setSendProgress(null)
+    setSending(false)
+    fetchCertificates()
+    fetchStats()
+    showToast('success', `Sent ${sentIds.length} certificates, ${failedIds.length} failed`)
   }
+
+  const handleBulkAction = async (action: string) => {
+    if (selectedIds.length === 0) return
+
+    setSending(true)
+    try {
+      if (action === 'send') {
+        await fetch('/api/admin/certificates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'bulk-send', data: { certificateIds: selectedIds } })
+        })
+        showToast('success', `Sent ${selectedIds.length} certificates`)
+      } else if (action === 'delete') {
+        await fetch('/api/admin/certificates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'bulk-delete', data: { certificateIds: selectedIds } })
+        })
+        showToast('success', `Deleted ${selectedIds.length} certificates`)
+      }
+      setSelectedIds([])
+      fetchCertificates()
+      fetchStats()
+    } catch (error) {
+      showToast('error', 'Action failed')
+    } finally {
+      setSending(false)
+    }
+  }
+
+  const totalPages = Math.ceil(totalCount / limit)
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="mb-6 sm:mb-8"
       >
-        <h1 className="text-2xl sm:text-3xl font-bold gradient-cyan-green mb-2">Certificates</h1>
-        <p className="text-gray-400 text-sm sm:text-base">View and manage issued certificates</p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold gradient-cyan-green mb-2">Certificates</h1>
+            <p className="text-gray-400 text-sm">Manage participation certificates and bulk email</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setShowImportCard(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition-colors text-sm font-medium"
+            >
+              <Upload className="w-4 h-4" />
+              Import CSV
+            </button>
+            <button
+              onClick={() => setShowCreateAllModal(true)}
+              disabled={stats.totalImported === 0}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 hover:bg-green-500/20 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Award className="w-4 h-4" />
+              Create Participation
+            </button>
+            <button
+              onClick={() => setShowSendAllModal(true)}
+              disabled={stats.pending === 0}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 hover:bg-purple-500/20 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Send className="w-4 h-4" />
+              Send All
+            </button>
+          </div>
+        </div>
       </motion.div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4 mb-6">
+        <StatCard icon={Users} label="Total Imported" value={stats.totalImported} color="cyan" />
+        <StatCard icon={Award} label="Total Certificates" value={stats.totalCertificates} color="green" />
+        <StatCard icon={FileSpreadsheet} label="Participation" value={stats.participation} color="blue" />
+        <StatCard icon={Award} label="Winners" value={stats.winner} color="yellow" />
+        <StatCard icon={CheckCircle} label="Sent" value={stats.sent} color="green" />
+        <StatCard icon={Loader2} label="Pending" value={stats.pending} color="orange" />
+        <StatCard icon={XCircle} label="Failed" value={stats.failed} color="red" />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="glass-dark rounded-lg p-4 sm:p-6"
+        className="glass-dark rounded-lg p-4 mb-6"
       >
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
+        <div className="flex flex-col lg:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
             <input
               type="text"
-              placeholder="Search by ID, email, or name..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors text-sm"
+              placeholder="Search by certificate ID, name, or email..."
+              value={filters.search}
+              onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+              className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none text-sm"
             />
           </div>
-          <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm">
-            <div className="flex items-center gap-1.5 sm:gap-2 text-green-400">
-              <CheckCircle2 className="w-4 h-4" />
-              <span>{validCount} Valid</span>
-            </div>
-            <div className="flex items-center gap-1.5 sm:gap-2 text-red-400">
-              <XCircle className="w-4 h-4" />
-              <span>{revokedCount} Revoked</span>
-            </div>
+          <div className="flex flex-wrap gap-2">
+            <select
+              value={filters.type}
+              onChange={(e) => setFilters({ ...filters, type: e.target.value })}
+              className="px-3 py-2 rounded-lg bg-black/50 border border-cyan-500/30 text-white text-sm focus:border-cyan-400 focus:outline-none"
+            >
+              <option value="">All Types</option>
+              <option value="participation">Participation</option>
+              <option value="winner">Winner</option>
+              <option value="runner-up">Runner-up</option>
+              <option value="second-runner-up">Second Runner-up</option>
+            </select>
+            <select
+              value={filters.sentStatus}
+              onChange={(e) => setFilters({ ...filters, sentStatus: e.target.value })}
+              className="px-3 py-2 rounded-lg bg-black/50 border border-cyan-500/30 text-white text-sm focus:border-cyan-400 focus:outline-none"
+            >
+              <option value="">All Status</option>
+              <option value="true">Sent</option>
+              <option value="false">Pending</option>
+            </select>
+            <select
+              value={filters.event}
+              onChange={(e) => setFilters({ ...filters, event: e.target.value })}
+              className="px-3 py-2 rounded-lg bg-black/50 border border-cyan-500/30 text-white text-sm focus:border-cyan-400 focus:outline-none"
+            >
+              <option value="">All Events</option>
+              <option value="TechQuiz 2026">TechQuiz 2026</option>
+            </select>
           </div>
         </div>
 
-        {message && (
-          <div className="mb-4 p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 text-sm">
-            {message}
+        {selectedIds.length > 0 && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }} 
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-3 mt-4 p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/30"
+          >
+            <span className="text-sm text-cyan-300">{selectedIds.length} selected</span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleBulkAction('preview')}
+                className="p-2 rounded-lg text-gray-400 hover:text-cyan-300 hover:bg-cyan-500/20"
+              >
+                <Eye className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleBulkAction('send')}
+                className="p-2 rounded-lg text-gray-400 hover:text-green-300 hover:bg-green-500/20"
+              >
+                <Mail className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleBulkAction('delete')}
+                className="p-2 rounded-lg text-gray-400 hover:text-red-300 hover:bg-red-500/20"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </motion.div>
+
+      <CertificateTable
+        certificates={certificates}
+        loading={loading}
+        selectedIds={selectedIds}
+        onSelect={setSelectedIds}
+        onPreview={setPreviewCert}
+        onSend={(ids: string[]) => {
+          setSelectedIds(ids)
+          handleBulkAction('send')
+        }}
+        onDelete={(ids: string[]) => {
+          setSelectedIds(ids)
+          handleBulkAction('delete')
+        }}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
+
+      {certificates.length === 0 && !loading && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-dark rounded-lg p-12 text-center"
+        >
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-cyan-500/10 flex items-center justify-center">
+            <Award className="w-8 h-8 text-cyan-400" />
           </div>
+          <h3 className="text-xl font-semibold text-white mb-2">No certificates created yet</h3>
+          <p className="text-gray-400 mb-6">Import participant data and create participation certificates to get started.</p>
+          <div className="flex justify-center gap-3">
+            <button
+              onClick={() => setShowImportCard(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500 text-white hover:bg-cyan-400 transition-colors text-sm font-medium"
+            >
+              <Upload className="w-4 h-4" />
+              Import CSV
+            </button>
+            <button
+              onClick={() => setShowCreateAllModal(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-400 transition-colors text-sm font-medium"
+            >
+              <Award className="w-4 h-4" />
+              Create Participation
+            </button>
+          </div>
+        </motion.div>
+      )}
+
+      {showImportCard && (
+        <CsvImportCard
+          onClose={() => setShowImportCard(false)}
+          onComplete={handleImportComplete}
+        />
+      )}
+
+      {previewCert && (
+        <CertificatePreviewModal
+          certificate={previewCert}
+          onClose={() => setPreviewCert(null)}
+        />
+      )}
+
+      <AnimatePresence>
+        {showCreateAllModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="glass-dark rounded-xl p-6 w-full max-w-md border border-cyan-500/30"
+            >
+              <h3 className="text-xl font-semibold text-white mb-2">Create Participation Certificates</h3>
+              <p className="text-gray-400 text-sm mb-4">
+                This will create participation certificates for all imported participants who do not already have one.
+              </p>
+
+              {createResult ? (
+                <div className="p-4 bg-green-500/10 rounded-lg border border-green-500/30 mb-4">
+                  <p className="text-green-300 font-medium mb-2">Operation Complete</p>
+                  <div className="text-sm text-gray-300 space-y-1">
+                    <p>Created: {createResult.created}</p>
+                    <p>Skipped: {createResult.skipped}</p>
+                    <p>Failed: {createResult.failed}</p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="mb-4 p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/30">
+                    <label className="flex items-center gap-3 text-sm text-gray-300">
+                      <input
+                        type="radio"
+                        name="mode"
+                        checked={mode === 'participation'}
+                        onChange={() => setMode('participation')}
+                        className="w-4 h-4 text-cyan-500"
+                      />
+                      Create participation certificates for all
+                    </label>
+                    <label className="flex items-center gap-3 text-sm text-gray-300 mt-2">
+                      <input
+                        type="radio"
+                        name="mode"
+                        checked={mode === 'result-based'}
+                        onChange={() => setMode('result-based')}
+                        className="w-4 h-4 text-cyan-500"
+                      />
+                      Use result-based certificate type
+                    </label>
+                  </div>
+                </>
+              )}
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowCreateAllModal(false)
+                    setCreateResult(null)
+                  }}
+                  className="flex-1 px-4 py-2 rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-800 transition-colors"
+                >
+                  {createResult ? 'Close' : 'Cancel'}
+                </button>
+                {!createResult && (
+                  <button
+                    onClick={handleCreateAllParticipation}
+                    disabled={sending}
+                    className="flex-1 px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-400 transition-colors flex items-center justify-center gap-2"
+                  >
+                    {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCheck className="w-4 h-4" />}
+                    Confirm & Create
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
         )}
 
-        <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
-          <table className="w-full min-w-[550px]">
-            <thead>
-              <tr className="border-b border-cyan-500/20">
-                <th className="text-left py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-gray-400">Certificate ID</th>
-                <th className="text-left py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-gray-400">Recipient</th>
-                <th className="text-left py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-gray-400 hidden sm:table-cell">Event</th>
-                <th className="text-left py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-gray-400">Status</th>
-                <th className="text-left py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-gray-400">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCertificates.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="py-8 text-center text-gray-400 text-sm">No certificates found</td>
-                </tr>
-              ) : (
-                filteredCertificates.map((cert) => (
-                  <tr key={cert.id} className="border-b border-cyan-500/10 hover:bg-cyan-500/5">
-                    <td className="py-3 sm:py-4 px-3 sm:px-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs sm:text-sm text-cyan-300 truncate max-w-[100px] sm:max-w-[150px]">{cert.certificate_id}</span>
-                        <button onClick={() => copyToClipboard(cert.certificate_id, cert.id)}
-                          className="p-1 rounded text-gray-400 hover:text-cyan-300 transition-colors shrink-0">
-                          {copiedId === cert.id ? <CheckCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-400" /> : <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
-                        </button>
-                      </div>
-                    </td>
-                    <td className="py-3 sm:py-4 px-3 sm:px-4">
-                      <p className="text-white text-sm truncate max-w-[80px] sm:max-w-[120px]">{cert.user_name}</p>
-                      <p className="text-xs text-gray-400 truncate max-w-[80px] sm:max-w-[120px]">{cert.user_email}</p>
-                    </td>
-                    <td className="py-3 sm:py-4 px-3 sm:px-4 text-gray-300 text-sm hidden sm:table-cell">{cert.event_name}</td>
-                    <td className="py-3 sm:py-4 px-3 sm:px-4">
-                      {cert.is_valid ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-300">
-                          <CheckCircle2 className="w-3 h-3" /> Valid
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-300">
-                          <XCircle className="w-3 h-3" /> Revoked
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3 sm:py-4 px-3 sm:px-4">
-                      <a href={`/verify-certificate?id=${cert.certificate_id}`} target="_blank" rel="noopener noreferrer"
-                        className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-cyan-300 hover:bg-cyan-500/10 transition-colors inline-block">
-                        <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      </a>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        {showSendAllModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="glass-dark rounded-xl p-6 w-full max-w-md border border-purple-500/30"
+            >
+              <h3 className="text-xl font-semibold text-white mb-2">Send All Certificates</h3>
+              <p className="text-gray-400 text-sm mb-4">
+                Are you sure you want to send participation certificates to all {stats.pending} pending users?
+              </p>
 
-        <div className="mt-4 sm:mt-6 pt-4 border-t border-cyan-500/20">
-          <p className="text-xs sm:text-sm text-gray-400">Total certificates: {certificates.length}</p>
+              {sendProgress && (
+                <div className="mb-4 p-4 bg-purple-500/10 rounded-lg border border-purple-500/30">
+                  <div className="flex justify-between text-sm text-gray-300 mb-2">
+                    <span>Sending...</span>
+                    <span>{sendProgress.current} / {sendProgress.total}</span>
+                  </div>
+                  <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-purple-500 transition-all duration-300"
+                      style={{ width: `${(sendProgress.current / sendProgress.total) * 100}%` }}
+                    />
+                  </div>
+                  <div className="flex justify-between text-xs text-gray-400 mt-2">
+                    <span>Sent: {sendProgress.sent}</span>
+                    <span>Failed: {sendProgress.failed}</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowSendAllModal(false)
+                    setSendProgress(null)
+                  }}
+                  disabled={sending}
+                  className="flex-1 px-4 py-2 rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-800 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSendAll}
+                  disabled={sending}
+                  className="flex-1 px-4 py-2 rounded-lg bg-purple-500 text-white hover:bg-purple-400 transition-colors flex items-center justify-center gap-2"
+                >
+                  {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                  Send All
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className={`fixed bottom-6 right-6 px-4 py-3 rounded-lg border shadow-xl z-50 ${
+              toast.type === 'success' ? 'bg-green-500/10 border-green-500/30 text-green-300' :
+              toast.type === 'error' ? 'bg-red-500/10 border-red-500/30 text-red-300' :
+              'bg-cyan-500/10 border-cyan-500/30 text-cyan-300'
+            }`}
+          >
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+function StatCard({ icon: Icon, label, value, color }: { icon: React.ElementType; label: string; value: number; color: string }) {
+  const colorClasses: Record<string, string> = {
+    cyan: 'text-cyan-400 bg-cyan-500/10',
+    green: 'text-green-400 bg-green-500/10',
+    blue: 'text-blue-400 bg-blue-500/10',
+    yellow: 'text-yellow-400 bg-yellow-500/10',
+    orange: 'text-orange-400 bg-orange-500/10',
+    red: 'text-red-400 bg-red-500/10'
+  }
+
+  return (
+    <div className="glass-dark rounded-lg p-3 sm:p-4 border border-cyan-500/20">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center ${colorClasses[color]}`}>
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
         </div>
-      </motion.div>
+        <div>
+          <p className="text-xs sm:text-sm text-gray-400">{label}</p>
+          <p className="text-lg sm:text-xl font-semibold text-white">{value}</p>
+        </div>
+      </div>
     </div>
   )
 }

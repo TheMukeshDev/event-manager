@@ -83,6 +83,12 @@ CREATE INDEX idx_certificate_records_email ON certificate_records(email);
 CREATE INDEX idx_certificate_records_certificate_id ON certificate_records(certificate_id);
 CREATE INDEX idx_certificate_records_sent_status ON certificate_records(sent_status);
 
+-- New fields for admin certificates workflow
+ALTER TABLE certificate_records 
+ADD COLUMN IF NOT EXISTS template_used VARCHAR(50),
+ADD COLUMN IF NOT EXISTS generated_at TIMESTAMP;
+
+
 -- Admin Settings table
 CREATE TABLE IF NOT EXISTS admin_settings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
