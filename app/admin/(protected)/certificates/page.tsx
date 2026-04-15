@@ -38,6 +38,7 @@ interface Stats {
   sent: number
   pending: number
   failed: number
+  verified: number
 }
 
 interface CertificateRules {
@@ -67,7 +68,8 @@ export default function CertificatesPage() {
     participation: 0,
     sent: 0,
     pending: 0,
-    failed: 0
+    failed: 0,
+    verified: 0
   })
   const [rules, setRules] = useState<CertificateRules>({
     excellenceMinScore: 19,
@@ -143,7 +145,8 @@ export default function CertificatesPage() {
         participation: statsData.participation || 0,
         sent: statsData.sent || 0,
         pending: statsData.pending || 0,
-        failed: statsData.failed || 0
+        failed: statsData.failed || 0,
+        verified: statsData.verified || 0
       })
     } catch (error) {
       console.error('Error fetching stats:', error)
@@ -322,7 +325,7 @@ export default function CertificatesPage() {
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-3 sm:gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 gap-3 sm:gap-4 mb-6">
         <StatCard icon={Users} label="Total Imported" value={stats.totalImported} color="cyan" />
         <StatCard icon={Award} label="Total Certificates" value={stats.totalCertificates} color="green" />
         <StatCard icon={Award} label="Excellence" value={stats.excellence} color="yellow" />
@@ -331,6 +334,7 @@ export default function CertificatesPage() {
         <StatCard icon={CheckCircle} label="Sent" value={stats.sent} color="green" />
         <StatCard icon={Loader2} label="Pending" value={stats.pending} color="orange" />
         <StatCard icon={XCircle} label="Failed" value={stats.failed} color="red" />
+        <StatCard icon={Award} label="Verified" value={stats.verified} color="purple" />
       </div>
 
       <motion.div

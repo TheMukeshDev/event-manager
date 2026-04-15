@@ -88,7 +88,9 @@ ALTER TABLE certificate_records
 ADD COLUMN IF NOT EXISTS template_used VARCHAR(50),
 ADD COLUMN IF NOT EXISTS generated_at TIMESTAMP,
 ADD COLUMN IF NOT EXISTS best_time VARCHAR(50),
-ADD COLUMN IF NOT EXISTS template_id UUID REFERENCES certificate_templates(id);
+ADD COLUMN IF NOT EXISTS template_id UUID REFERENCES certificate_templates(id),
+ADD COLUMN IF NOT EXISTS verification_count INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS last_verified_at TIMESTAMP;
 
 -- Certificate Templates table
 CREATE TABLE IF NOT EXISTS certificate_templates (

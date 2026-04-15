@@ -6,6 +6,7 @@ export interface CertificateData {
   rank: number | null
   certificateType: string
   date: string
+  qrCodeUrl?: string
 }
 
 export function getCertificateTemplate(certificateType: string, data: CertificateData): string {
@@ -83,6 +84,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
 
   const borderColor = getBorderColor()
   const accentColor = getAccentColor()
+  
+  const qrCodeUrl = data.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`https://techquiz2026.vercel.app/verify/${data.certificateId}`)}&format=png`
 
   return `<!DOCTYPE html>
 <html>
@@ -288,6 +291,27 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       color: ${accentColor};
       letter-spacing: 2px;
     }
+    
+    .qr-code {
+      position: absolute;
+      bottom: 30px;
+      right: 40px;
+      text-align: center;
+    }
+    
+    .qr-image {
+      width: 80px;
+      height: 80px;
+      border: 1px solid ${borderColor};
+      border-radius: 4px;
+    }
+    
+    .qr-label {
+      font-size: 10px;
+      color: #666;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
@@ -345,6 +369,11 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       </div>
       
       <div class="certificate-id">Certificate ID: ${data.certificateId}</div>
+      
+      <div class="qr-code">
+        <img src="${qrCodeUrl}" alt="QR Code" class="qr-image" />
+        <div class="qr-label">Scan to verify</div>
+      </div>
     </div>
   </div>
 </body>

@@ -19,6 +19,8 @@ export interface CertificateRecord {
   generated_at?: string | null
   imported_at: string
   sent_at?: string | null
+  verification_count?: number
+  last_verified_at?: string | null
 }
 
 export interface CertificateRules {
@@ -332,6 +334,7 @@ export async function getCertificateStats(): Promise<{
   sent: number
   pending: number
   failed: number
+  verified: number
 }> {
   try {
     const { data: records, error } = await supabaseServer
@@ -350,7 +353,8 @@ export async function getCertificateStats(): Promise<{
       participation: allRecords.filter(r => r.certificate_type === 'participation').length,
       sent: allRecords.filter(r => r.sent_status).length,
       pending: allRecords.filter(r => !r.sent_status && r.status === 'valid').length,
-      failed: allRecords.filter(r => r.status === 'invalid').length
+      failed: allRecords.filter(r => r.status === 'invalid').length,
+      verified: allRecords.filter(r => r.verification_count && r.verification_count > 0).length
     }
   } catch (error) {
     console.error('Error fetching stats:', error)
@@ -362,7 +366,8 @@ export async function getCertificateStats(): Promise<{
       participation: 0,
       sent: 0,
       pending: 0,
-      failed: 0
+      failed: 0,
+      verified: 0
     }
   }
 }

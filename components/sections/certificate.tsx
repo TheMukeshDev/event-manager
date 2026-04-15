@@ -1,9 +1,51 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { FileCheck, Download } from 'lucide-react'
+import { FileCheck, Download, Loader2, CheckCircle, XCircle, AlertTriangle } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 export function CertificateSection() {
+  const router = useRouter()
+  const [certificateId, setCertificateId] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [result, setResult] = useState<any>(null)
+
+  const handleVerify = async () => {
+    if (!certificateId.trim()) {
+      setError('Please enter a certificate ID')
+      return
+    }
+
+    setLoading(true)
+    setError(null)
+    setResult(null)
+
+    try {
+      const response = await fetch(`/api/verify/${certificateId.trim()}`)
+      const data = await response.json()
+      
+      if (data.certificate) {
+        setResult(data)
+      } else {
+        setError(data.message || 'Certificate not found')
+      }
+    } catch (err) {
+      setError('Failed to verify certificate. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDownload = () => {
+    window.open(`/api/certificates/download/${certificateId}`, '_blank')
+  }
+
+  const handleViewFull = () => {
+    router.push(`/verify?id=${certificateId}`)
+  }
+
   return (
     <section className="section-spacing px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -67,23 +109,96 @@ export function CertificateSection() {
             ))}
           </div>
 
-          <div className="glass-dark rounded-lg p-6 glow-green mb-8">
+          <div className="glass-dark rounded-lg p-6 glow-green">
             <p className="text-sm text-gray-300 mb-4">
               Verify your certificate with our online portal using your unique certificate ID.
             </p>
+            
             <input
               type="text"
-              placeholder="Enter your certificate ID"
+              placeholder="Enter your certificate ID (e.g., THBBS-2026-0001)"
+              value={certificateId}
+              onChange={(e) => {
+                setCertificateId(e.target.value)
+                setError(null)
+                setResult(null)
+              }}
+              onKeyDown={(e) => e.key === 'Enter' && handleVerify()}
               className="w-full px-4 py-3 rounded-lg bg-black/50 border border-green-500/30 text-white placeholder-gray-500 focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400 transition-colors mb-4"
             />
+            
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg flex items-center gap-2 text-red-300 text-sm">
+                <AlertTriangle className="w-4 h-4" />
+                {error}
+              </div>
+            )}
+
+            {result && (
+              <div className="mb-4 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
+                <div className="flex items-center gap-2 mb-3">
+                  {result.valid ? (
+                    <CheckCircle className="w-5 h-5 text-green-400" />
+                  ) : (
+                    <XCircle className="w-5 h-5 text-red-400" />
+                  )}
+                  <span className={`font-medium ${result.valid ? 'text-green-300' : 'text-red-300'}`}>
+                    {result.status}
+                  </span>
+                </div>
+                
+                <div className="space-y-2 text-sm">
+                  <p className="text-gray-300">
+                    <span className="text-gray-500">Recipient:</span> {result.certificate?.recipientName}
+                  </p>
+                  <p className="text-gray-300">
+                    <span className="text-gray-500">Type:</span> {result.certificate?.certificateType}
+                  </p>
+                  <p className="text-gray-300">
+                    <span className="text-gray-500">Event:</span> {result.certificate?.eventName}
+                  </p>
+                  {result.certificate?.score && (
+                    <p className="text-gray-300">
+                      <span className="text-gray-500">Score:</span> {result.certificate?.score}/20
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-green-500 text-green-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,255,136,0.5)]"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleVerify}
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-green-500 text-green-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,255,136,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Download className="w-4 h-4" />
-              Verify & Download
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Verifying...
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4" />
+                  Verify Certificate
+                </>
+              )}
             </motion.button>
+
+            {result?.valid && (
+              <motion.button
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleDownload}
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 mt-3 rounded-lg bg-green-500/20 border border-green-500/50 text-green-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,255,136,0.3)]"
+              >
+                <Download className="w-4 h-4" />
+                Download PDF
+              </motion.button>
+            )}
           </div>
         </motion.div>
       </div>
