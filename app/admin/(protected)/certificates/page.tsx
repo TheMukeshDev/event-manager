@@ -196,12 +196,12 @@ export default function CertificatesPage() {
     }
   }
 
-  const handleUploadAsset = async (file: File) => {
+  const handleUploadAsset = async (file: File, category: string = 'logo') => {
     const formData = new FormData()
     formData.append('file', file)
-    formData.append('name', file.name)
-    formData.append('type', 'logo')
-    formData.append('category', 'general')
+    formData.append('name', file.name.replace(/\.[^/.]+$/, ''))
+    formData.append('type', category === 'background' ? 'background' : 'logo')
+    formData.append('category', category)
     
     try {
       const res = await fetch('/api/certificates/assets', {
@@ -209,12 +209,17 @@ export default function CertificatesPage() {
         body: formData
       })
       const data = await res.json()
-      if (data.success) {
+      if (data.success && data.asset) {
         setAssets([data.asset, ...assets])
         showToast('success', 'Asset uploaded successfully!')
+        return { success: true, asset: data.asset }
+      } else {
+        showToast('error', data.error || 'Failed to upload asset')
+        return { success: false, error: data.error || 'Failed to upload' }
       }
     } catch (error) {
       showToast('error', 'Failed to upload asset')
+      return { success: false, error: 'Failed to upload' }
     }
   }
 

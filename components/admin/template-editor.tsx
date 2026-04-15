@@ -6,7 +6,7 @@ import {
   Upload, X, Move, RotateCcw, Scale, Trash2, Copy, 
   Eye, Save, Star, Image, Palette, Layout, ChevronLeft,
   ChevronRight, ChevronDown, UploadCloud, Check, AlertCircle,
-  Grid, Type, AlignLeft, AlignCenter, AlignRight
+  Grid, Type, AlignLeft, AlignCenter, AlignRight, RefreshCw
 } from 'lucide-react'
 
 interface Asset {
@@ -66,13 +66,19 @@ interface Template {
   is_published: boolean
 }
 
+interface UploadResult {
+  success: boolean
+  asset?: Asset
+  error?: string
+}
+
 interface TemplateEditorProps {
   template?: Template | null
   category: string
   onSave: (template: Partial<Template>) => void
   onClose: () => void
   assets: Asset[]
-  onUploadAsset: (file: File) => Promise<void>
+  onUploadAsset: (file: File, category?: string) => Promise<UploadResult>
 }
 
 export function TemplateEditor({ template, category, onSave, onClose, assets, onUploadAsset }: TemplateEditorProps) {
@@ -81,6 +87,12 @@ export function TemplateEditor({ template, category, onSave, onClose, assets, on
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const canvasRef = useRef<HTMLDivElement>(null)
+  const [uploadingAsset, setUploadingAsset] = useState(false)
+  const [localAssets, setLocalAssets] = useState<Asset[]>(assets)
+
+  useEffect(() => {
+    setLocalAssets(assets)
+  }, [assets])
 
   const [content, setContent] = useState<TemplateContent>(template?.content_json || {
     backgroundColor: '#0f0f0f',
@@ -172,8 +184,8 @@ export function TemplateEditor({ template, category, onSave, onClose, assets, on
   const [isPublished, setIsPublished] = useState(template?.is_published || false)
   const [isDefault, setIsDefault] = useState(template?.is_default || false)
 
-  const logoAssets = assets.filter(a => a.type === 'logo' || a.type === 'sponsor')
-  const backgroundAssets = assets.filter(a => a.type === 'background')
+  const logoAssets = localAssets.filter((a: Asset) => a.type === 'logo' || a.type === 'sponsor')
+  const backgroundAssets = localAssets.filter((a: Asset) => a.type === 'background')
 
   const handleAddLogo = (asset: Asset) => {
     const newLogo: LogoElement = {
@@ -412,43 +424,111 @@ export function TemplateEditor({ template, category, onSave, onClose, assets, on
             <div className="space-y-4">
               <div>
                 <p className="text-xs text-gray-500 mb-2">UPLOAD NEW</p>
-                <label className="w-full py-3 px-4 rounded bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-sm hover:bg-cyan-500/20 flex items-center justify-center gap-2 cursor-pointer">
-                  <UploadCloud className="w-4 h-4" /> Upload Logo/Image
+                <div className="space-y-2">
+                  <select
+                    id="asset-category-select"
+                    className="w-full px-2 py-1.5 rounded bg-black/50 border border-cyan-500/30 text-white text-xs"
+                    defaultValue="logo"
+                  >
+                    <option value="logo">Logo</option>
+                    <option value="sponsor">Sponsor Logo</option>
+                    <option value="background">Background</option>
+                    <option value="badge">Badge</option>
+                    <option value="seal">Seal</option>
+                  </select>
+                  <div
+                    className="w-full py-3 px-4 rounded bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-sm hover:bg-cyan-500/20 flex items-center justify-center gap-2 cursor-pointer"
+                    onClick={() => document.getElementById('asset-upload-input')?.click()}
+                  >
+                    {uploadingAsset ? (
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <UploadCloud className="w-4 h-4" />
+                    )} 
+                    {uploadingAsset ? 'Uploading...' : 'Upload Logo/Image'}
+                  </div>
                   <input
+                    id="asset-upload-input"
                     type="file"
-                    accept="image/*"
+                    accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml"
                     className="hidden"
-                    onChange={(e) => e.target.files?.[0] && onUploadAsset(e.target.files[0])}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+                      
+                      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/svg+xml']
+                      if (!allowedTypes.includes(file.type)) {
+                        alert('Invalid file type. Allowed: PNG, JPG, JPEG, WEBP, SVG')
+                        return
+                      }
+                      
+                      if (file.size > 5 * 1024 * 1024) {
+                        alert('File too large. Max 5MB allowed.')
+                        return
+                      }
+                      
+                      const categorySelect = document.getElementById('asset-category-select') as HTMLSelectElement
+                      const assetCategory = categorySelect?.value || 'logo'
+                      
+                      setUploadingAsset(true)
+                      try {
+                        const result = await onUploadAsset(file, assetCategory)
+                        if (result.success && result.asset) {
+                          setLocalAssets([result.asset, ...localAssets])
+                          alert('Asset uploaded successfully!')
+                        } else {
+                          alert(result.error || 'Failed to upload')
+                        }
+                      } catch (err) {
+                        alert('Upload failed')
+                      } finally {
+                        setUploadingAsset(false)
+                        e.target.value = ''
+                      }
+                    }}
                   />
-                </label>
+                </div>
               </div>
 
               <div>
-                <p className="text-xs text-gray-500 mb-2">LOGOS</p>
-                <div className="space-y-2">
-                  {logoAssets.map(asset => (
-                    <div
-                      key={asset.id}
-                      onClick={() => handleAddLogo(asset)}
-                      className="flex items-center gap-2 p-2 rounded bg-gray-800/30 hover:bg-cyan-500/10 cursor-pointer"
-                    >
-                      <img src={asset.file_url} alt={asset.name} className="w-10 h-10 object-contain rounded" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm text-white truncate">{asset.name}</p>
-                        <p className="text-xs text-gray-500">{asset.category}</p>
-                      </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          fetch(`/api/certificates/assets/${asset.id}`, { method: 'DELETE' })
-                        }}
-                        className="p-1 text-gray-500 hover:text-red-400"
+                <p className="text-xs text-gray-500 mb-2">LOGOS ({localAssets.length})</p>
+                {localAssets.length === 0 ? (
+                  <p className="text-xs text-gray-500 text-center py-4">No logos or images uploaded yet</p>
+                ) : (
+                  <div className="space-y-2">
+                    {localAssets.map(asset => (
+                      <div
+                        key={asset.id}
+                        onClick={() => handleAddLogo(asset)}
+                        className="flex items-center gap-2 p-2 rounded bg-gray-800/30 hover:bg-cyan-500/10 cursor-pointer border border-transparent hover:border-cyan-500/30"
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                        <div className="w-10 h-10 rounded bg-black/30 flex items-center justify-center overflow-hidden">
+                          <img src={asset.file_url} alt={asset.name} className="max-w-full max-h-full object-contain" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-white truncate">{asset.name}</p>
+                          <p className="text-xs text-gray-500 capitalize">{asset.category}</p>
+                        </div>
+                        <button
+                          onClick={async (e) => {
+                            e.stopPropagation()
+                            if (confirm('Delete this asset?')) {
+                              try {
+                                await fetch(`/api/certificates/assets/${asset.id}`, { method: 'DELETE' })
+                                setLocalAssets(localAssets.filter(a => a.id !== asset.id))
+                              } catch (err) {
+                                console.error('Delete failed')
+                              }
+                            }
+                          }}
+                          className="p-1 text-gray-500 hover:text-red-400"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}

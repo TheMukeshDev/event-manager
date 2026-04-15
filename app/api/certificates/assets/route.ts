@@ -13,23 +13,30 @@ export async function POST(request: NextRequest) {
     const category = formData.get('category') as string || 'general'
 
     if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+      return NextResponse.json({ success: false, error: 'No file provided' }, { status: 400 })
     }
 
-    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/svg+xml', 'image/gif']
+    // Validate file type
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/svg+xml']
     if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json({ error: 'Invalid file type. Allowed: PNG, JPG, JPEG, WEBP, SVG, GIF' }, { status: 400 })
+      return NextResponse.json({ success: false, error: 'Invalid file type. Allowed: PNG, JPG, JPEG, WEBP, SVG' }, { status: 400 })
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      return NextResponse.json({ success: false, error: 'File too large. Max 5MB allowed.' }, { status: 400 })
     }
 
     const ext = file.name.split('.').pop()?.toLowerCase() || 'png'
-    const fileType = ext === 'jpeg' ? 'jpg' : ext
+    const fileType = ext === 'jpeg' ? 'jpg' : ext === 'svg' ? 'svg' : ext
 
     const uploadDir = join(process.cwd(), 'public', 'uploads', 'assets')
     if (!existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true })
     }
 
-    const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileType}`
+    // Generate unique filename
+    const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileType}`
     const filePath = join(uploadDir, uniqueName)
 
     const buffer = Buffer.from(await file.arrayBuffer())
@@ -40,7 +47,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabaseServer
       .from('certificate_assets')
       .insert({
-        name: name || file.name,
+        name: name || file.name.replace(/\.[^/.]+$/, ''),
         type,
         category,
         file_url: fileUrl,
@@ -55,7 +62,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, asset: data })
   } catch (error: any) {
     console.error('Error uploading asset:', error)
-    return NextResponse.json({ error: error.message || 'Failed to upload asset' }, { status: 500 })
+    return NextResponse.json({ success: false, error: error.message || 'Failed to upload asset' }, { status: 500 })
   }
 }
 

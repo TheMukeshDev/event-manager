@@ -4,6 +4,7 @@ import {
   getCertificates, 
   createBulkParticipation,
   createCertificatesWithScores,
+  determineCertificateType,
   generatePreviewHtml, 
   updateSentStatus, 
   deleteCertificates,
@@ -100,16 +101,16 @@ export async function POST(request: NextRequest) {
       for (const record of records) {
         const existing = existingMap.get(record.email)
         
-        let certificateType = 'participation'
-        if (record.rank === 1) certificateType = 'winner'
-        else if (record.rank === 2) certificateType = 'runner-up'
-        else if (record.rank === 3) certificateType = 'second-runner-up'
+        // Use normalized score and event from CSV preview
+        const normalizedScore = record.normalizedScore ?? record.score ?? null
+        const eventName = record.event || 'TechQuiz 2026'
+        const certificateType = determineCertificateType(normalizedScore)
 
         if (existing && updateExisting) {
           updateRecords.push({
             id: existing.id,
             name: record.name,
-            score: record.score || null,
+            score: normalizedScore,
             rank: record.rank || null,
             certificate_type: certificateType,
             status: 'valid',
@@ -121,8 +122,8 @@ export async function POST(request: NextRequest) {
             certificate_id: certificateId,
             name: record.name,
             email: record.email,
-            event: record.event || 'TechQuiz 2026',
-            score: record.score || null,
+            event: eventName,
+            score: normalizedScore,
             rank: record.rank || null,
             certificate_type: certificateType,
             status: 'valid',
