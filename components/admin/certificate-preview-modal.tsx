@@ -206,7 +206,7 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
             <div className="flex justify-center">
               <iframe
                 srcDoc={previewHtml}
-                className="w-full max-w-3xl aspect-[1.414] border border-cyan-500/30 rounded-lg shadow-2xl"
+                className="w-full max-w-3xl aspect-video border border-cyan-500/30 rounded-lg shadow-2xl"
                 title="Certificate Preview"
               />
             </div>
