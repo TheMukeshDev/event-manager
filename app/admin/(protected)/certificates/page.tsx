@@ -6,12 +6,13 @@ import {
   Upload, FileSpreadsheet, Users, Award, Send, Eye, 
   RefreshCw, Trash2, Search, Filter, CheckCircle, XCircle,
   Loader2, Download, Mail, ChevronDown, X, AlertCircle,
-  ArrowDown, Plus, CheckCheck, Image
+  ArrowDown, Plus, CheckCheck, Image, Layout
 } from 'lucide-react'
 import { CsvImportCard } from '@/components/admin/csv-import-card'
 import { CertificateTable } from '@/components/admin/certificate-table'
 import { CertificatePreviewModal } from '@/components/admin/certificate-preview-modal'
 import { TemplateImportCard } from '@/components/admin/template-import-card'
+import { TemplateEditor } from '@/components/admin/template-editor'
 
 interface CertificateRecord {
   id: string
@@ -56,7 +57,14 @@ interface FilterState {
   event: string
   minScore: string
   maxScore: string
+  sortBy: string
+  sortOrder: string
 }
+
+const tabs = [
+  { id: 'certificates', label: 'Certificates', icon: Award },
+  { id: 'templates', label: 'Templates', icon: Layout }
+] as const
 
 export default function CertificatesPage() {
   const [certificates, setCertificates] = useState<CertificateRecord[]>([])
@@ -86,6 +94,10 @@ export default function CertificatesPage() {
   const [showCreateAllModal, setShowCreateAllModal] = useState(false)
   const [showSendAllModal, setShowSendAllModal] = useState(false)
   const [showRulesModal, setShowRulesModal] = useState(false)
+  const [showTemplateEditor, setShowTemplateEditor] = useState(false)
+  const [editingTemplate, setEditingTemplate] = useState<any>(null)
+  const [assets, setAssets] = useState<any[]>([])
+  const [templates, setTemplates] = useState<any[]>([])
   const [createResult, setCreateResult] = useState<{ created: number; updated: number; skipped: number; failed: number } | null>(null)
   const [sendProgress, setSendProgress] = useState<{ current: number; total: number; sent: number; failed: number } | null>(null)
   const [toast, setToast] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null)
@@ -100,7 +112,9 @@ export default function CertificatesPage() {
     sentStatus: '',
     event: '',
     minScore: '',
-    maxScore: ''
+    maxScore: '',
+    sortBy: 'imported_at',
+    sortOrder: 'desc'
   })
 
   const limit = 20
@@ -119,6 +133,8 @@ export default function CertificatesPage() {
       if (filters.event) params.append('event', filters.event)
       if (filters.minScore) params.append('minScore', filters.minScore)
       if (filters.maxScore) params.append('maxScore', filters.maxScore)
+      if (filters.sortBy) params.append('sortBy', filters.sortBy)
+      if (filters.sortOrder) params.append('sortOrder', filters.sortOrder)
 
       const response = await fetch(`/api/admin/certificates?${params}`)
       const data = await response.json()
@@ -156,7 +172,75 @@ export default function CertificatesPage() {
   useEffect(() => {
     fetchCertificates()
     fetchStats()
+    fetchAssets()
+    fetchTemplates()
   }, [fetchCertificates])
+
+  const fetchAssets = async () => {
+    try {
+      const res = await fetch('/api/certificates/assets')
+      const data = await res.json()
+      setAssets(data.assets || [])
+    } catch (error) {
+      console.error('Error fetching assets:', error)
+    }
+  }
+
+  const fetchTemplates = async () => {
+    try {
+      const res = await fetch('/api/certificates/templates')
+      const data = await res.json()
+      setTemplates(data.templates || [])
+    } catch (error) {
+      console.error('Error fetching templates:', error)
+    }
+  }
+
+  const handleUploadAsset = async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('name', file.name)
+    formData.append('type', 'logo')
+    formData.append('category', 'general')
+    
+    try {
+      const res = await fetch('/api/certificates/assets', {
+        method: 'POST',
+        body: formData
+      })
+      const data = await res.json()
+      if (data.success) {
+        setAssets([data.asset, ...assets])
+        showToast('success', 'Asset uploaded successfully!')
+      }
+    } catch (error) {
+      showToast('error', 'Failed to upload asset')
+    }
+  }
+
+  const handleSaveTemplate = async (templateData: any) => {
+    try {
+      const res = await fetch('/api/certificates/templates', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(templateData)
+      })
+      const data = await res.json()
+      if (data.success) {
+        setShowTemplateEditor(false)
+        setEditingTemplate(null)
+        fetchTemplates()
+        showToast('success', 'Template saved successfully!')
+      } else {
+        showToast('error', data.error || 'Failed to save template')
+      }
+    } catch (error) {
+      showToast('error', 'Failed to save template')
+    }
+  }
 
   const showToast = (type: 'success' | 'error' | 'info', message: string) => {
     setToast({ type, message })
@@ -290,40 +374,74 @@ export default function CertificatesPage() {
             <h1 className="text-2xl sm:text-3xl font-bold gradient-cyan-green mb-2">Certificates</h1>
             <p className="text-gray-400 text-sm">Manage participation certificates and bulk email</p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setShowImportCard(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition-colors text-sm font-medium"
-            >
-              <Upload className="w-4 h-4" />
-              Import CSV
-            </button>
-            <button
-              onClick={() => setShowTemplateCard(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 hover:bg-blue-500/20 transition-colors text-sm font-medium"
-            >
-              <Image className="w-4 h-4" />
-              Import Template
-            </button>
-            <button
-              onClick={() => setShowCreateAllModal(true)}
-              disabled={stats.totalImported === 0}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 hover:bg-green-500/20 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Award className="w-4 h-4" />
-              Create Certificates
-            </button>
-            <button
-              onClick={() => setShowSendAllModal(true)}
-              disabled={stats.pending === 0}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 hover:bg-purple-500/20 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Send className="w-4 h-4" />
-              Send All
-            </button>
-          </div>
+          {activeTab === 'certificates' && (
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setShowImportCard(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition-colors text-sm font-medium"
+              >
+                <Upload className="w-4 h-4" />
+                Import CSV
+              </button>
+              <button
+                onClick={() => setShowTemplateCard(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 hover:bg-blue-500/20 transition-colors text-sm font-medium"
+              >
+                <Image className="w-4 h-4" />
+                Import Template
+              </button>
+              <button
+                onClick={() => setShowCreateAllModal(true)}
+                disabled={stats.totalImported === 0}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 hover:bg-green-500/20 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Award className="w-4 h-4" />
+                Create Certificates
+              </button>
+              <button
+                onClick={() => setShowSendAllModal(true)}
+                disabled={stats.pending === 0}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 hover:bg-purple-500/20 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Send className="w-4 h-4" />
+                Send All
+              </button>
+            </div>
+          )}
+          {activeTab === 'templates' && (
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => {
+                  setEditingTemplate(null)
+                  setShowTemplateEditor(true)
+                }}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 hover:bg-green-500/20 transition-colors text-sm font-medium"
+              >
+                <Plus className="w-4 h-4" />
+                Add Template
+              </button>
+            </div>
+          )}
         </div>
       </motion.div>
+
+      {/* Tab Selector */}
+      <div className="flex gap-2 mb-6">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeTab === tab.id
+                ? 'bg-cyan-500/20 border border-cyan-500/50 text-cyan-300'
+                : 'bg-black/30 border border-transparent text-gray-400 hover:text-white hover:bg-black/50'
+            }`}
+          >
+            <tab.icon className="w-4 h-4" />
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 gap-3 sm:gap-4 mb-6">
         <StatCard icon={Users} label="Total Imported" value={stats.totalImported} color="cyan" />
@@ -383,6 +501,25 @@ export default function CertificatesPage() {
               <option value="">All Events</option>
               <option value="TechQuiz 2026">TechQuiz 2026</option>
             </select>
+            <select
+              value={filters.sortBy}
+              onChange={(e) => setFilters({ ...filters, sortBy: e.target.value })}
+              className="px-3 py-2 rounded-lg bg-black/50 border border-cyan-500/30 text-white text-sm focus:border-cyan-400 focus:outline-none"
+            >
+              <option value="imported_at">Sort: Recent</option>
+              <option value="name">Sort: Name</option>
+              <option value="score">Sort: Score</option>
+              <option value="rank">Sort: Rank</option>
+              <option value="email">Sort: Email</option>
+            </select>
+            <select
+              value={filters.sortOrder}
+              onChange={(e) => setFilters({ ...filters, sortOrder: e.target.value })}
+              className="px-3 py-2 rounded-lg bg-black/50 border border-cyan-500/30 text-white text-sm focus:border-cyan-400 focus:outline-none"
+            >
+              <option value="desc">Desc</option>
+              <option value="asc">Asc</option>
+            </select>
           </div>
         </div>
 
@@ -417,24 +554,106 @@ export default function CertificatesPage() {
         )}
       </motion.div>
 
-      <CertificateTable
-        certificates={certificates}
-        loading={loading}
-        selectedIds={selectedIds}
-        onSelect={setSelectedIds}
-        onPreview={setPreviewCert}
-        onSend={(ids: string[]) => {
-          setSelectedIds(ids)
-          handleBulkAction('send')
-        }}
-        onDelete={(ids: string[]) => {
-          setSelectedIds(ids)
-          handleBulkAction('delete')
-        }}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      {activeTab === 'certificates' && (
+        <CertificateTable
+          certificates={certificates}
+          loading={loading}
+          selectedIds={selectedIds}
+          onSelect={setSelectedIds}
+          onPreview={setPreviewCert}
+          onSend={(ids: string[]) => {
+            setSelectedIds(ids)
+            handleBulkAction('send')
+          }}
+          onDelete={(ids: string[]) => {
+            setSelectedIds(ids)
+            handleBulkAction('delete')
+          }}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
+
+      {activeTab === 'templates' && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="glass-dark rounded-lg p-6"
+        >
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <input
+                type="text"
+                placeholder="Search templates..."
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none text-sm"
+              />
+            </div>
+            <select className="px-3 py-2 rounded-lg bg-black/50 border border-cyan-500/30 text-white text-sm focus:border-cyan-400 focus:outline-none">
+              <option value="">All Categories</option>
+              <option value="excellence">Excellence</option>
+              <option value="appreciation">Appreciation</option>
+              <option value="participation">Participation</option>
+            </select>
+          </div>
+
+          {templates.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/10 flex items-center justify-center">
+                <Layout className="w-8 h-8 text-green-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">No templates created yet</h3>
+              <p className="text-gray-400 mb-6">Create visual certificate templates with drag-and-drop editor.</p>
+              <button
+                onClick={() => {
+                  setEditingTemplate(null)
+                  setShowTemplateEditor(true)
+                }}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-400 transition-colors text-sm font-medium"
+              >
+                <Plus className="w-4 h-4" />
+                Create Template
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {templates.map((template: any) => (
+                <div
+                  key={template.id}
+                  className="glass-dark rounded-lg p-4 border border-cyan-500/20 hover:border-cyan-500/50 transition-colors cursor-pointer"
+                  onClick={() => {
+                    setEditingTemplate(template)
+                    setShowTemplateEditor(true)
+                  }}
+                >
+                  <div className="aspect-[4/3] rounded-lg bg-black/50 mb-3 flex items-center justify-center overflow-hidden">
+                    {template.background_url ? (
+                      <img src={template.background_url} alt={template.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full" style={{ backgroundColor: template.background_color || '#0f0f0f' }} />
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium text-white">{template.name}</h4>
+                      <p className="text-xs text-gray-400 capitalize">{template.category}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {template.is_default && (
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-yellow-500/20 text-yellow-400">Default</span>
+                      )}
+                      {template.is_published && (
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-green-500/20 text-green-400">Published</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </motion.div>
+      )}
 
       {certificates.length === 0 && !loading && (
         <motion.div
@@ -636,6 +855,20 @@ export default function CertificatesPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showTemplateEditor && (
+        <TemplateEditor
+          template={editingTemplate}
+          category="participation"
+          onSave={handleSaveTemplate}
+          onClose={() => {
+            setShowTemplateEditor(false)
+            setEditingTemplate(null)
+          }}
+          assets={assets}
+          onUploadAsset={handleUploadAsset}
+        />
+      )}
 
       <AnimatePresence>
         {toast && (
