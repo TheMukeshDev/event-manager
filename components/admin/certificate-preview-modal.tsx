@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Download, Send, Loader2, ExternalLink, RefreshCw } from 'lucide-react'
+import { X, Download, Send, Loader2, ExternalLink, RefreshCw, Image as ImageIcon } from 'lucide-react'
 
 interface CertificateRecord {
   id: string
@@ -30,6 +30,7 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [viewMode, setViewMode] = useState<'modal' | 'fullpage'>('modal')
+  const [downloading, setDownloading] = useState<'none' | 'pdf' | 'png'>('none')
 
   useEffect(() => {
     async function fetchPreview() {
@@ -75,25 +76,28 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
     }
   }
 
-  const handleDownloadPdf = async () => {
+  const handleDownload = async (format: 'pdf' | 'png') => {
     try {
-      const response = await fetch(`/api/certificates/download/${certificate.certificate_id}`)
+      setDownloading(format)
+      const response = await fetch(`/api/certificates/download/${certificate.certificate_id}?format=${format}`)
       
       if (!response.ok) {
-        throw new Error('Failed to generate PDF')
+        throw new Error(`Failed to generate ${format.toUpperCase()}`)
       }
       
       const blob = await response.blob()
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `certificate-${certificate.certificate_id}.pdf`
+      a.download = `certificate-${certificate.certificate_id}.${format}`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
     } catch (error) {
-      console.error('Error downloading PDF:', error)
+      console.error(`Error downloading ${format.toUpperCase()}:`, error)
+    } finally {
+      setDownloading('none')
     }
   }
 
@@ -156,11 +160,20 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
               <ExternalLink className="w-5 h-5" />
             </button>
             <button
-              onClick={handleDownloadPdf}
-              className="p-2 rounded-lg text-gray-400 hover:text-green-300 hover:bg-green-500/20 transition-colors"
+              onClick={() => handleDownload('png')}
+              disabled={downloading !== 'none'}
+              className="p-2 rounded-lg text-gray-400 hover:text-cyan-300 hover:bg-cyan-500/20 transition-colors disabled:opacity-50"
+              title="Download Image (PNG)"
+            >
+              {downloading === 'png' ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImageIcon className="w-5 h-5" />}
+            </button>
+            <button
+              onClick={() => handleDownload('pdf')}
+              disabled={downloading !== 'none'}
+              className="p-2 rounded-lg text-gray-400 hover:text-green-300 hover:bg-green-500/20 transition-colors disabled:opacity-50"
               title="Download PDF"
             >
-              <Download className="w-5 h-5" />
+              {downloading === 'pdf' ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
             </button>
             {!certificate.sent_status && (
               <button
@@ -216,12 +229,32 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
             </div>
           </div>
           <div className="flex gap-2">
+            <div className="relative group">
+              <button
+                disabled={downloading !== 'none'}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition-colors text-sm disabled:opacity-50"
+              >
+                {downloading !== 'none' ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
+                PNG
+              </button>
+              <div className="absolute bottom-full left-0 mb-2 hidden group-hover:block bg-gray-800 rounded-lg shadow-lg p-2 z-10">
+                <button
+                  onClick={() => handleDownload('png')}
+                  disabled={downloading !== 'none'}
+                  className="w-full flex items-center gap-2 px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded disabled:opacity-50"
+                >
+                  <ImageIcon className="w-3 h-3" />
+                  Download as Image
+                </button>
+              </div>
+            </div>
             <button
-              onClick={handleDownloadPdf}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-green-500/30 text-green-300 hover:bg-green-500/20 transition-colors text-sm"
+              onClick={() => handleDownload('pdf')}
+              disabled={downloading !== 'none'}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-green-500/30 text-green-300 hover:bg-green-500/20 transition-colors text-sm disabled:opacity-50"
             >
-              <Download className="w-4 h-4" />
-              Download
+              {downloading === 'pdf' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              PDF
             </button>
             {!certificate.sent_status && (
               <button

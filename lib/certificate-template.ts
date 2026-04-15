@@ -11,8 +11,6 @@ export interface CertificateData {
 
 const VERIFY_BASE_URL = process.env.NEXT_PUBLIC_VERIFY_BASE_URL || 'https://techhub-bbs.vercel.app'
 
-const LOGO_BASE = ''
-
 export function getCertificateTemplate(certificateType: string, data: CertificateData): string {
   const getTitle = () => {
     switch (certificateType) {
@@ -87,11 +85,11 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
   const getGlowColor = () => {
     switch (certificateType) {
       case 'excellence':
-        return 'rgba(255, 215, 0, 0.08)'
+        return 'rgba(255, 215, 0, 0.06)'
       case 'appreciation':
-        return 'rgba(65, 105, 225, 0.08)'
+        return 'rgba(65, 105, 225, 0.06)'
       default:
-        return 'rgba(0, 206, 209, 0.08)'
+        return 'rgba(0, 206, 209, 0.06)'
     }
   }
 
@@ -100,7 +98,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
   const glowColor = getGlowColor()
   
   const verifyUrl = `${VERIFY_BASE_URL}/verify/${data.certificateId}`
-  const qrCodeUrl = data.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(verifyUrl)}&format=png`
+  const qrCodeUrl = data.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}&format=png`
 
   const techHubLogoUrl = '/certificates/logos/techhubbs.png'
   const csiLogoUrl = '/certificates/logos/csi.png'
@@ -131,40 +129,40 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       height: 794px;
       background: linear-gradient(145deg, #0d0d0d 0%, #141414 50%, #0d0d0d 100%);
       position: relative;
-      padding: 50px;
+      padding: 40px 50px;
     }
     
     .border {
       position: absolute;
-      top: 15px;
-      left: 15px;
-      right: 15px;
-      bottom: 15px;
-      border: 4px solid ${borderColor};
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      border: 3px solid ${borderColor};
       pointer-events: none;
     }
     
     .inner-border {
       position: absolute;
-      top: 25px;
-      left: 25px;
-      right: 25px;
-      bottom: 25px;
-      border: 1px solid ${borderColor}40;
+      top: 22px;
+      left: 22px;
+      right: 22px;
+      bottom: 22px;
+      border: 1px solid ${borderColor}30;
       pointer-events: none;
     }
     
     .corner {
       position: absolute;
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
       border: 2px solid ${accentColor};
     }
     
-    .corner-tl { top: 5px; left: 5px; border-right: none; border-bottom: none; }
-    .corner-tr { top: 5px; right: 5px; border-left: none; border-bottom: none; }
-    .corner-bl { bottom: 5px; left: 5px; border-right: none; border-top: none; }
-    .corner-br { bottom: 5px; right: 5px; border-left: none; border-top: none; }
+    .corner-tl { top: 3px; left: 3px; border-right: none; border-bottom: none; }
+    .corner-tr { top: 3px; right: 3px; border-left: none; border-bottom: none; }
+    .corner-bl { bottom: 3px; left: 3px; border-right: none; border-top: none; }
+    .corner-br { bottom: 3px; right: 3px; border-left: none; border-top: none; }
     
     .content {
       position: relative;
@@ -173,16 +171,16 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 35px 50px;
-      background: radial-gradient(circle at center, ${glowColor} 0%, transparent 70%);
+      justify-content: space-between;
+      padding: 20px 30px;
+      background: radial-gradient(circle at center top, ${glowColor} 0%, transparent 60%);
     }
     
     .top-logos {
       position: absolute;
-      top: 45px;
-      left: 50px;
-      right: 50px;
+      top: 35px;
+      left: 35px;
+      right: 35px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
@@ -190,13 +188,13 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     .collab-logos {
       display: flex;
-      gap: 15px;
+      gap: 12px;
       align-items: center;
     }
     
     .logo-img {
-      max-height: 40px;
-      max-width: 100px;
+      max-height: 45px;
+      max-width: 90px;
       object-fit: contain;
     }
     
@@ -207,117 +205,124 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .unstop-logo-img {
-      max-height: 35px;
-      max-width: 80px;
+      max-height: 32px;
+      max-width: 70px;
       object-fit: contain;
       margin-bottom: 3px;
     }
     
     .unstop-text {
-      font-size: 9px;
-      color: #666;
+      font-size: 8px;
+      color: #888;
       letter-spacing: 1px;
       text-transform: uppercase;
     }
     
     .logo-section {
       text-align: center;
-      margin-bottom: 15px;
+      margin-top: 10px;
     }
     
     .org-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 13px;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 12px;
       font-weight: 500;
-      color: #888;
-      letter-spacing: 5px;
+      color: #aaa;
+      letter-spacing: 4px;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     
     .main-logo {
       font-family: 'Cinzel', serif;
-      font-size: 26px;
+      font-size: 32px;
       font-weight: 700;
       color: ${accentColor};
-      letter-spacing: 5px;
+      letter-spacing: 6px;
       text-transform: uppercase;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
+      text-shadow: 0 0 20px ${accentColor}40;
+    }
+    
+    .main-logo-img {
+      max-height: 45px;
+      margin-bottom: 6px;
     }
     
     .tagline {
       font-size: 10px;
-      color: #555;
+      color: #666;
       letter-spacing: 2px;
     }
     
     .title {
       font-family: 'Cinzel', serif;
-      font-size: 38px;
+      font-size: 36px;
       font-weight: 700;
       color: ${accentColor};
       text-transform: uppercase;
-      letter-spacing: 5px;
-      margin-top: 25px;
-      margin-bottom: 6px;
+      letter-spacing: 4px;
+      margin-top: 15px;
+      margin-bottom: 4px;
       text-align: center;
     }
     
     .certificate-type-badge {
       display: inline-block;
-      padding: 5px 18px;
-      background: ${accentColor}15;
-      border: 1px solid ${accentColor}40;
+      padding: 4px 16px;
+      background: ${accentColor}12;
+      border: 1px solid ${accentColor}35;
       border-radius: 20px;
-      font-size: 11px;
+      font-size: 10px;
       color: ${accentColor};
       letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
     
     .presented-text {
-      font-size: 12px;
-      color: #666;
-      letter-spacing: 3px;
+      font-size: 11px;
+      color: #888;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     
     .name {
       font-family: 'Great Vibes', cursive;
-      font-size: ${data.name.length > 18 ? '48' : '58'}px;
+      font-size: ${data.name.length > 18 ? '52' : '62'}px;
       font-weight: 400;
-      color: #fff;
+      color: #ffffff;
       text-align: center;
-      margin-bottom: 20px;
-      line-height: 1.3;
+      margin-bottom: 18px;
+      line-height: 1.2;
       max-width: 90%;
+      text-shadow: 0 0 30px rgba(255,255,255,0.15);
     }
     
     .divider {
-      width: 180px;
+      width: 200px;
       height: 1px;
       background: linear-gradient(90deg, transparent, ${accentColor}, transparent);
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     
     .event-text {
-      font-size: 13px;
-      color: #777;
+      font-size: 12px;
+      color: #999;
       letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       text-align: center;
     }
     
     .event-name {
       font-family: 'Playfair Display', serif;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 600;
       color: #fff;
-      letter-spacing: 3px;
-      margin-bottom: 25px;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
       text-align: center;
     }
     
@@ -325,14 +330,14 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 20px;
+      gap: 6px;
+      margin-bottom: 15px;
     }
     
     .organiser-text {
-      font-size: 11px;
-      color: #888;
-      letter-spacing: 2px;
+      font-size: 10px;
+      color: #aaa;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
     }
     
@@ -342,8 +347,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .collab-text {
-      font-size: 10px;
-      color: #666;
+      font-size: 9px;
+      color: #888;
       letter-spacing: 1px;
       text-align: center;
     }
@@ -353,8 +358,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .powered-text {
-      font-size: 10px;
-      color: #555;
+      font-size: 9px;
+      color: #777;
       letter-spacing: 1px;
     }
     
@@ -365,103 +370,175 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     .details {
       display: flex;
-      gap: 40px;
-      margin-bottom: 25px;
+      gap: 35px;
+      margin-bottom: 20px;
     }
     
     .detail-item {
       text-align: center;
-      padding: 12px 25px;
+      padding: 10px 22px;
       background: ${accentColor}08;
-      border: 1px solid ${accentColor}30;
+      border: 1px solid ${accentColor}25;
       border-radius: 6px;
     }
     
     .detail-label {
-      font-size: 10px;
-      color: #666;
+      font-size: 9px;
+      color: #888;
       text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 4px;
+      letter-spacing: 1.5px;
+      margin-bottom: 3px;
     }
     
     .detail-value {
       font-family: 'Playfair Display', serif;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
       color: ${accentColor};
     }
     
-    .footer-section {
+    .footer-main {
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      width: 100%;
       margin-top: auto;
-      padding: 0 20px;
+      padding: 0 10px;
     }
     
-    .footer-left {
-      text-align: left;
+    .signature-section {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      align-items: flex-end;
+      padding-bottom: 10px;
     }
     
-    .footer-center {
-      text-align: center;
+    .signature-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 280px;
     }
     
-    .footer-right {
-      text-align: right;
+    .signature-line {
+      width: 180px;
+      height: 1px;
+      background: ${accentColor};
+      margin-bottom: 6px;
+      opacity: 0.6;
     }
     
-    .footer-label {
-      font-size: 10px;
-      color: #555;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 5px;
-    }
-    
-    .footer-value {
+    .signature-title {
+      font-family: 'Cinzel', serif;
       font-size: 12px;
-      color: #888;
+      color: ${accentColor};
+      font-weight: 600;
+      margin-bottom: 2px;
     }
     
-    .signature {
+    .signature-role {
+      font-size: 9px;
+      color: #aaa;
+      letter-spacing: 0.5px;
+      text-align: center;
+      line-height: 1.4;
+    }
+    
+    .signature-name {
       font-family: 'Great Vibes', cursive;
-      font-size: 18px;
+      font-size: 20px;
+      color: #fff;
+      margin-top: 4px;
+    }
+    
+    .cert-info-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      min-width: 200px;
+    }
+    
+    .qr-container {
+      background: #fff;
+      border: 3px solid ${accentColor};
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 0 25px ${accentColor}30, 0 4px 15px rgba(0,0,0,0.3);
+    }
+    
+    .qr-image {
+      width: 90px;
+      height: 90px;
+      display: block;
+    }
+    
+    .qr-label {
+      font-size: 10px;
       color: ${accentColor};
-      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    
+    .qr-sublabel {
+      font-size: 8px;
+      color: #888;
+      margin-top: 2px;
+    }
+    
+    .cert-id-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .cert-id-label {
+      font-size: 9px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
     }
     
     .cert-id {
       font-size: 10px;
-      color: #444;
-      font-family: monospace;
-      letter-spacing: 3px;
-      padding: 6px 12px;
+      color: #ccc;
+      font-family: 'Source Sans 3', monospace;
+      letter-spacing: 2px;
+      padding: 5px 10px;
       background: ${accentColor}10;
+      border: 1px solid ${accentColor}30;
       border-radius: 4px;
     }
     
-    .qr-section {
+    .date-container {
       display: flex;
       flex-direction: column;
       align-items: center;
+      gap: 6px;
     }
     
-    .qr-image {
-      width: 80px;
-      height: 80px;
-      border: 2px solid ${borderColor};
-      border-radius: 6px;
-      margin-bottom: 5px;
-    }
-    
-    .qr-label {
+    .date-label {
       font-size: 9px;
-      color: #555;
+      color: #888;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+    }
+    
+    .date-value {
+      font-size: 11px;
+      color: #ccc;
+      font-weight: 500;
+    }
+    
+    @media (max-width: 1123px) {
+      .certificate {
+        transform: scale(0.9);
+        transform-origin: center;
+      }
     }
   </style>
 </head>
@@ -477,7 +554,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     <div class="top-logos">
       <div class="collab-logos">
         <img src="${csiLogoUrl}" alt="CSI" class="logo-img" onerror="this.style.display='none'" />
-        <img src="${collegeLogoUrl}" alt="College" class="logo-img" onerror="this.style.display='none'" />
+        <img src="${collegeLogoUrl}" alt="BBSCET" class="logo-img" onerror="this.style.display='none'" />
       </div>
       <div class="unstop-logo">
         <img src="${unstopLogoUrl}" alt="Unstop" class="unstop-logo-img" onerror="this.style.display='none'" />
@@ -488,20 +565,24 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     <div class="content">
       <div class="logo-section">
         <div class="org-name">Organised by</div>
-        <img src="${techHubLogoUrl}" alt="Tech Hub BBS" class="logo-img" style="max-height: 35px; margin: 5px 0;" onerror="this.style.display='none'" />
-        <div class="main-logo" style="margin-top: 0;">Tech Hub BBS</div>
+        <img src="${techHubLogoUrl}" alt="Tech Hub BBS" class="main-logo-img" onerror="this.style.display='none'" />
+        <div class="main-logo">Tech Hub BBS</div>
         <div class="tagline">Empowering Innovation & Technical Excellence</div>
       </div>
       
-      <div class="title">${getTitle()}</div>
-      <div class="certificate-type-badge">${getTitle()}</div>
+      <div>
+        <div class="title">${getTitle()}</div>
+        <div class="certificate-type-badge">${getTitle()}</div>
+      </div>
       
-      <div class="presented-text">This certificate is proudly presented to</div>
-      <div class="name">${data.name}</div>
-      <div class="divider"></div>
-      
-      <div class="event-text">${getBodyText()}</div>
-      <div class="event-name">${data.event}</div>
+      <div>
+        <div class="presented-text">This certificate is proudly presented to</div>
+        <div class="name">${data.name}</div>
+        <div class="divider"></div>
+        
+        <div class="event-text">${getBodyText()}</div>
+        <div class="event-name">${data.event}</div>
+      </div>
       
       <div class="branding-section">
         <p class="organiser-text">Organised by <span>Tech Hub BBS</span></p>
@@ -524,20 +605,38 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
         ` : ''}
       </div>
       
-      <div class="footer-section">
-        <div class="footer-left">
-          <div class="footer-label">Date of Issue</div>
-          <div class="footer-value">${data.date}</div>
+      <div class="footer-main">
+        <div class="cert-info-block">
+          <div class="date-container">
+            <div class="date-label">Date of Issue</div>
+            <div class="date-value">${data.date}</div>
+          </div>
         </div>
         
-        <div class="footer-center">
-          <div class="cert-id">${data.certificateId}</div>
+        <div class="signature-section">
+          <div class="signature-block">
+            <div class="signature-line"></div>
+            <div class="signature-title">Digitally Signed by BBSCET</div>
+            <div class="signature-role">Director, BBSCET<br/>Prof. Ashutosh Shrivastava</div>
+          </div>
+          
+          <div class="signature-block">
+            <div class="signature-line"></div>
+            <div class="signature-title">Issued by Tech Hub BBS</div>
+            <div class="signature-role">President & Student Coordinator<br/>Mukesh Kumar</div>
+          </div>
         </div>
         
-        <div class="footer-right">
-          <div class="qr-section">
+        <div class="cert-info-block">
+          <div class="qr-container">
             <img src="${qrCodeUrl}" alt="QR Code" class="qr-image" />
-            <div class="qr-label">Scan to Verify</div>
+          </div>
+          <div class="qr-label">Scan to Verify</div>
+          <div class="qr-sublabel">Verify Authenticity Online</div>
+          
+          <div class="cert-id-container" style="margin-top: 10px;">
+            <div class="cert-id-label">Certificate ID</div>
+            <div class="cert-id">${data.certificateId}</div>
           </div>
         </div>
       </div>
@@ -574,5 +673,34 @@ export async function generatePDF(template: string): Promise<Buffer> {
   } catch (error) {
     console.error('PDF generation error:', error)
     throw new Error('Failed to generate PDF')
+  }
+}
+
+export async function generateImage(template: string): Promise<Buffer> {
+  try {
+    const puppeteer = await import('puppeteer-core')
+    const chromium = await import('@sparticuz/chromium')
+    
+    const browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: { width: 1123, height: 794 },
+      executablePath: await chromium.executablePath(),
+      headless: true
+    })
+    
+    const page = await browser.newPage()
+    await page.setContent(template, { waitUntil: 'networkidle0' })
+    
+    const screenshot = await page.screenshot({
+      type: 'png',
+      fullPage: true
+    })
+    
+    await browser.close()
+    
+    return Buffer.from(screenshot as string, 'base64')
+  } catch (error) {
+    console.error('Image generation error:', error)
+    throw new Error('Failed to generate image')
   }
 }

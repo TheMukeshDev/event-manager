@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { CheckCircle, XCircle, AlertTriangle, Loader2, Award, User, Calendar, Hash, FileText } from 'lucide-react'
+import { CheckCircle, XCircle, AlertTriangle, Loader2, Award, User, Calendar, Hash, Download, Image as ImageIcon } from 'lucide-react'
 
 interface CertificateData {
   certificateId: string
@@ -24,6 +24,7 @@ export default function VerifyCertificatePage() {
   const [certificate, setCertificate] = useState<CertificateData | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState<string>('UNKNOWN')
+  const [downloading, setDownloading] = useState(false)
 
   useEffect(() => {
     if (!certificateId) {
@@ -54,6 +55,31 @@ export default function VerifyCertificatePage() {
 
     verifyCertificate()
   }, [certificateId])
+
+  const handleDownload = async (format: 'pdf' | 'png') => {
+    try {
+      setDownloading(true)
+      const response = await fetch(`/api/certificates/download/${certificateId}?format=${format}`)
+      
+      if (!response.ok) {
+        throw new Error(`Failed to generate ${format.toUpperCase()}`)
+      }
+      
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `certificate-${certificateId}.${format}`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error(`Error downloading ${format.toUpperCase()}:`, error)
+    } finally {
+      setDownloading(false)
+    }
+  }
 
   const isValid = status === 'VALID'
   const isRevoked = status === 'REVOKED'
@@ -187,6 +213,25 @@ export default function VerifyCertificatePage() {
             <p className="text-center text-gray-500 text-sm">
               Issued by: <span className="text-cyan-400">{certificate?.issuedBy}</span>
             </p>
+          </div>
+
+          <div className="flex gap-2 mt-4">
+            <button
+              onClick={() => handleDownload('png')}
+              disabled={downloading}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] disabled:opacity-50"
+            >
+              <ImageIcon className="w-4 h-4" />
+              Download PNG
+            </button>
+            <button
+              onClick={() => handleDownload('pdf')}
+              disabled={downloading}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-green-500/20 border border-green-500/50 text-green-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(0,255,136,0.3)] disabled:opacity-50"
+            >
+              <Download className="w-4 h-4" />
+              Download PDF
+            </button>
           </div>
         </div>
       </motion.div>
