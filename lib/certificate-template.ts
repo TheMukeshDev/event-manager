@@ -99,7 +99,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
   const title = getTitle()
   
   const verifyUrl = `${VERIFY_BASE_URL}/verify/${data.certificateId}`
-  const qrCodeUrl = data.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(verifyUrl)}&format=png`
+  const qrCodeUrl = data.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}&format=png`
 
   const techHubLogoUrl = '/certificates/logos/techhubbs.png'
   const bbsGroupLogoUrl = '/certificates/logos/bbsgroup.png'
@@ -121,6 +121,13 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       box-sizing: border-box;
     }
     
+    @font-face {
+      font-family: 'Great Vibes';
+      src: url('https://fonts.gstatic.com/s/greatvibes/v16/RWmMoKWR8V214OGfVQOc40C7Qd7yj0e7C7S.woff2') format('woff2');
+      font-weight: 400;
+      font-display: swap;
+    }
+    
     body {
       font-family: 'Source Sans 3', sans-serif;
       background: #0a0a0a;
@@ -128,6 +135,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      margin: 0;
     }
     
     .certificate {
@@ -136,50 +144,51 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       aspect-ratio: 16 / 9;
       background: linear-gradient(145deg, #0d0d0d 0%, #141414 50%, #0d0d0d 100%);
       position: relative;
+      overflow: hidden;
     }
     
     .safe-area {
       position: absolute;
-      top: 0.8%;
-      left: 0.8%;
-      right: 0.8%;
-      bottom: 0.8%;
+      top: 0.6%;
+      left: 0.6%;
+      right: 0.6%;
+      bottom: 0.6%;
       border: 2.5px solid ${borderColor};
       pointer-events: none;
     }
     
     .inner-safe {
       position: absolute;
-      top: 1.8%;
-      left: 1.8%;
-      right: 1.8%;
-      bottom: 1.8%;
+      top: 1.5%;
+      left: 1.5%;
+      right: 1.5%;
+      bottom: 1.5%;
       border: 1px solid ${borderColor}18;
       pointer-events: none;
     }
     
     .corner {
       position: absolute;
-      width: 35px;
-      height: 35px;
+      width: 32px;
+      height: 32px;
       border: 1.5px solid ${accentColor};
     }
     
-    .corner-tl { top: 0.2%; left: 0.2%; border-right: none; border-bottom: none; }
-    .corner-tr { top: 0.2%; right: 0.2%; border-left: none; border-bottom: none; }
-    .corner-bl { bottom: 0.2%; left: 0.2%; border-right: none; border-top: none; }
-    .corner-br { bottom: 0.2%; right: 0.2%; border-left: none; border-top: none; }
+    .corner-tl { top: 0.15%; left: 0.15%; border-right: none; border-bottom: none; }
+    .corner-tr { top: 0.15%; right: 0.15%; border-left: none; border-bottom: none; }
+    .corner-bl { bottom: 0.15%; left: 0.15%; border-right: none; border-top: none; }
+    .corner-br { bottom: 0.15%; right: 0.15%; border-left: none; border-top: none; }
     
     .certificate-content {
       position: absolute;
-      top: 1.8%;
-      left: 1.8%;
-      right: 1.8%;
-      bottom: 1.8%;
+      top: 1.5%;
+      left: 1.5%;
+      right: 1.5%;
+      bottom: 1.5%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 1% 2%;
+      padding: 0.8% 1.8%;
       background: radial-gradient(circle at 50% 10%, ${glowColor} 0%, transparent 40%);
     }
     
@@ -189,7 +198,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       align-items: flex-start;
     }
     
-    .collab-logos {
+    .left-logos {
       display: flex;
       gap: 10px;
       align-items: center;
@@ -201,7 +210,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       object-fit: contain;
     }
     
-    .unstop-wrapper {
+    .right-unstop {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -214,54 +223,42 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .unstop-label {
-      font-size: 5.5px;
+      font-size: 5px;
       color: #555;
       letter-spacing: 0.8px;
       text-transform: uppercase;
       margin-top: 1px;
     }
     
-    .header-section {
+    .center-header {
       text-align: center;
-      padding: 0.4% 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     
     .bbs-group-logo {
-      max-height: 45px;
+      max-height: 38px;
       margin-bottom: 4px;
     }
     
-    .bbs-group-name {
-      font-family: 'Cinzel', serif;
-      font-size: 18px;
-      font-weight: 700;
-      color: ${accentColor};
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      text-shadow: 0 0 15px ${accentColor}25;
-    }
-    
-    .techhub-section {
-      margin-top: 6px;
-    }
-    
     .techhub-logo {
-      max-height: 40px;
+      max-height: 42px;
       margin-bottom: 3px;
     }
     
     .techhub-name {
       font-family: 'Cinzel', serif;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: ${accentColor};
-      letter-spacing: 3px;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
       text-shadow: 0 0 12px ${accentColor}20;
     }
     
     .techhub-tagline {
-      font-size: 6px;
+      font-size: 5.5px;
       color: #444;
       letter-spacing: 1px;
       margin-top: 2px;
@@ -269,22 +266,22 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     .main-title {
       font-family: 'Cinzel', serif;
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 700;
       color: ${accentColor};
       text-transform: uppercase;
-      letter-spacing: 3px;
+      letter-spacing: 2.5px;
       text-align: center;
-      margin-top: 0.4%;
+      margin-top: 0.3%;
     }
     
     .recipient-section {
       text-align: center;
-      padding: 0.3% 0;
+      padding: 0.2% 0;
     }
     
     .presented-to {
-      font-size: 9px;
+      font-size: 8px;
       color: #888;
       letter-spacing: 1.5px;
       text-transform: uppercase;
@@ -292,19 +289,19 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     .recipient-name {
       font-family: 'Great Vibes', cursive;
-      font-size: ${data.name.length > 18 ? '48' : '56'}px;
+      font-size: ${data.name.length > 18 ? '46' : '54'}px;
       font-weight: 400;
       color: #ffffff;
-      margin: 0.3% 0 0.8%;
+      margin: 0.25% 0 0.7%;
       line-height: 1.1;
-      text-shadow: 0 0 20px rgba(255,255,255,0.12);
+      text-shadow: 0 0 18px rgba(255,255,255,0.12);
     }
     
     .divider {
-      width: 180px;
+      width: 170px;
       height: 1px;
       background: linear-gradient(90deg, transparent, ${accentColor}, transparent);
-      margin: 0 auto 0.8%;
+      margin: 0 auto 0.7%;
     }
     
     .event-section {
@@ -312,7 +309,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .event-text {
-      font-size: 10px;
+      font-size: 9px;
       color: #999;
       letter-spacing: 1.5px;
       text-transform: uppercase;
@@ -321,18 +318,18 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     .event-name {
       font-family: 'Playfair Display', serif;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
       color: #fff;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.2px;
     }
     
     .branding-line {
       text-align: center;
-      font-size: 7px;
+      font-size: 6px;
       color: #777;
       letter-spacing: 0.8px;
-      margin: 0.6% 0;
+      margin: 0.5% 0;
     }
     
     .branding-line span {
@@ -343,29 +340,29 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     .score-row {
       display: flex;
       justify-content: center;
-      gap: 25px;
-      margin: 0.6% 0;
+      gap: 22px;
+      margin: 0.5% 0;
     }
     
     .score-box {
       text-align: center;
-      padding: 5px 14px;
+      padding: 4px 12px;
       background: ${accentColor}06;
       border: 1px solid ${accentColor}18;
       border-radius: 4px;
     }
     
     .score-label {
-      font-size: 6.5px;
+      font-size: 6px;
       color: #777;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       margin-bottom: 1px;
     }
     
     .score-value {
       font-family: 'Playfair Display', serif;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       color: ${accentColor};
     }
@@ -374,7 +371,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      padding-top: 0.6%;
+      padding-top: 0.5%;
       border-top: 1px solid ${accentColor}10;
     }
     
@@ -386,97 +383,97 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .footer-col.left {
-      min-width: 100px;
+      min-width: 90px;
     }
     
     .footer-col.center {
-      min-width: 200px;
+      min-width: 180px;
     }
     
     .footer-col.right {
-      min-width: 120px;
+      min-width: 110px;
     }
     
     .footer-label {
-      font-size: 6.5px;
+      font-size: 6px;
       color: #666;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 3px;
+      letter-spacing: 0.8px;
+      margin-bottom: 2px;
     }
     
     .footer-value {
-      font-size: 9px;
+      font-size: 8px;
       color: #bbb;
       font-weight: 500;
     }
     
     .sig-line {
-      width: 140px;
+      width: 120px;
       height: 1px;
       background: ${accentColor};
-      margin: 0 auto 4px;
+      margin: 0 auto 3px;
       opacity: 0.4;
     }
     
     .sig-title {
-      font-size: 9px;
+      font-size: 8px;
       color: ${accentColor};
       font-weight: 600;
     }
     
     .sig-role {
-      font-size: 6.5px;
+      font-size: 6px;
       color: #999;
       line-height: 1.3;
     }
     
-    .sig-name {
-      font-family: 'Great Vibes', cursive;
-      font-size: 18px;
-      color: #fff;
-      margin-top: 2px;
+    .qr-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 6px;
     }
     
     .qr-box {
       background: #ffffff;
       border: 2px solid ${accentColor};
-      border-radius: 6px;
-      padding: 5px;
-      box-shadow: 0 0 15px ${accentColor}20, 0 2px 6px rgba(0,0,0,0.2);
+      border-radius: 5px;
+      padding: 4px;
+      box-shadow: 0 0 12px ${accentColor}18, 0 1px 5px rgba(0,0,0,0.15);
     }
     
     .qr-img {
-      width: 60px;
-      height: 60px;
+      width: 52px;
+      height: 52px;
       display: block;
     }
     
     .qr-text {
-      font-size: 6px;
+      font-size: 5.5px;
       color: ${accentColor};
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       font-weight: 600;
-      margin-top: 4px;
+      margin-top: 3px;
     }
     
     .qr-sub {
-      font-size: 5.5px;
+      font-size: 5px;
       color: #666;
-      margin-top: 1px;
+      margin-top: 0.5px;
     }
     
     .cert-id-box {
-      font-size: 7.5px;
+      font-size: 7px;
       color: #aaa;
       font-family: monospace;
-      letter-spacing: 1px;
-      padding: 3px 6px;
-      background: ${accentColor}06;
-      border: 1px solid ${accentColor}15;
-      border-radius: 3px;
-      margin-top: 6px;
+      letter-spacing: 0.8px;
+      padding: 2px 5px;
+      background: ${accentColor}05;
+      border: 1px solid ${accentColor}12;
+      border-radius: 2px;
+      margin-top: 4px;
     }
   </style>
 </head>
@@ -491,24 +488,21 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     <div class="certificate-content">
       <div class="top-row">
-        <div class="collab-logos">
+        <div class="left-logos">
           <img src="${csiLogoUrl}" alt="CSI" class="logo-img" onerror="this.style.display='none'" />
           <img src="${collegeLogoUrl}" alt="BBSCET" class="logo-img" onerror="this.style.display='none'" />
         </div>
-        <div class="unstop-wrapper">
-          <img src="${unstopLogoUrl}" alt="Unstop" class="unstop-logo-img" onerror="this.style.display='none'" />
-          <span class="unstop-label">Powered by</span>
-        </div>
-      </div>
-      
-      <div class="header-section">
-        <img src="${bbsGroupLogoUrl}" alt="BBS Group of Institutions" class="bbs-group-logo" onerror="this.style.display='none'" />
-        <div class="bbs-group-name">BBS Group of Institutions</div>
         
-        <div class="techhub-section">
+        <div class="center-header">
+          <img src="${bbsGroupLogoUrl}" alt="BBS Group" class="bbs-group-logo" onerror="this.style.display='none'" />
           <img src="${techHubLogoUrl}" alt="Tech Hub BBS" class="techhub-logo" onerror="this.style.display='none'" />
           <div class="techhub-name">Tech Hub BBS</div>
           <div class="techhub-tagline">Empowering Innovation & Technical Excellence</div>
+        </div>
+        
+        <div class="right-unstop">
+          <img src="${unstopLogoUrl}" alt="Unstop" class="unstop-logo-img" onerror="this.style.display='none'" />
+          <span class="unstop-label">Powered by</span>
         </div>
       </div>
       
@@ -561,7 +555,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
           <div class="sig-title">Issued by Tech Hub BBS</div>
           <div class="sig-role">President & Student Coordinator<br/>Mukesh Kumar</div>
           
-          <div style="margin-top: 8px;">
+          <div class="qr-section">
             <div class="qr-box">
               <img src="${qrCodeUrl}" alt="QR" class="qr-img" />
             </div>
@@ -583,19 +577,31 @@ export async function generatePDF(template: string): Promise<Buffer> {
     const chromium = await import('@sparticuz/chromium')
     
     const browser = await puppeteer.launch({
-      args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
-      defaultViewport: { width: 960, height: 540 },
+      args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+      defaultViewport: { width: 1280, height: 720 },
       executablePath: await chromium.executablePath(),
       headless: true
     })
     
     const page = await browser.newPage()
-    await page.setContent(template, { waitUntil: 'networkidle0' })
+    
+    await page.setContent(template, { waitUntil: 'networkidle0', timeout: 30000 })
+    
+    await page.evaluate(() => {
+      return new Promise<void>((resolve) => {
+        if (document.readyState === 'complete') {
+          setTimeout(resolve, 500)
+        } else {
+          window.addEventListener('load', () => setTimeout(resolve, 500))
+        }
+      })
+    })
     
     const pdf = await page.pdf({
       format: 'A4',
       printBackground: true,
-      landscape: true
+      landscape: true,
+      margin: { top: 0, bottom: 0, left: 0, right: 0 }
     })
     
     await browser.close()
@@ -613,18 +619,30 @@ export async function generateImage(template: string): Promise<Buffer> {
     const chromium = await import('@sparticuz/chromium')
     
     const browser = await puppeteer.launch({
-      args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
-      defaultViewport: { width: 960, height: 540 },
+      args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+      defaultViewport: { width: 1280, height: 720 },
       executablePath: await chromium.executablePath(),
       headless: true
     })
     
     const page = await browser.newPage()
-    await page.setContent(template, { waitUntil: 'networkidle0' })
+    
+    await page.setContent(template, { waitUntil: 'networkidle0', timeout: 30000 })
+    
+    await page.evaluate(() => {
+      return new Promise<void>((resolve) => {
+        if (document.readyState === 'complete') {
+          setTimeout(resolve, 500)
+        } else {
+          window.addEventListener('load', () => setTimeout(resolve, 500))
+        }
+      })
+    })
     
     const screenshot = await page.screenshot({
       type: 'png',
-      fullPage: true
+      fullPage: true,
+      omitBackground: false
     })
     
     await browser.close()
