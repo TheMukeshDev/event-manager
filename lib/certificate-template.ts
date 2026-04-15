@@ -11,6 +11,12 @@ export interface CertificateData {
 export function getCertificateTemplate(certificateType: string, data: CertificateData): string {
   const getTitle = () => {
     switch (certificateType) {
+      case 'excellence':
+        return 'CERTIFICATE OF EXCELLENCE'
+      case 'appreciation':
+        return 'CERTIFICATE OF APPRECIATION'
+      case 'participation':
+        return 'CERTIFICATE OF PARTICIPATION'
       case 'winner':
         return 'WINNER'
       case 'runner-up':
@@ -24,6 +30,12 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
 
   const getSubtitle = () => {
     switch (certificateType) {
+      case 'excellence':
+        return 'For outstanding performance'
+      case 'appreciation':
+        return 'For excellent participation'
+      case 'participation':
+        return 'For participating in'
       case 'winner':
         return 'First Place'
       case 'runner-up':
@@ -37,6 +49,10 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
 
   const getBorderColor = () => {
     switch (certificateType) {
+      case 'excellence':
+        return '#FFD700'
+      case 'appreciation':
+        return '#4169E1'
       case 'winner':
         return '#FFD700'
       case 'runner-up':
@@ -50,6 +66,10 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
 
   const getAccentColor = () => {
     switch (certificateType) {
+      case 'excellence':
+        return '#FFD700'
+      case 'appreciation':
+        return '#4169E1'
       case 'winner':
         return '#FFD700'
       case 'runner-up':

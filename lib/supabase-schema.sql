@@ -86,7 +86,22 @@ CREATE INDEX idx_certificate_records_sent_status ON certificate_records(sent_sta
 -- New fields for admin certificates workflow
 ALTER TABLE certificate_records 
 ADD COLUMN IF NOT EXISTS template_used VARCHAR(50),
-ADD COLUMN IF NOT EXISTS generated_at TIMESTAMP;
+ADD COLUMN IF NOT EXISTS generated_at TIMESTAMP,
+ADD COLUMN IF NOT EXISTS best_time VARCHAR(50),
+ADD COLUMN IF NOT EXISTS template_id UUID REFERENCES certificate_templates(id);
+
+-- Certificate Templates table
+CREATE TABLE IF NOT EXISTS certificate_templates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(255) NOT NULL,
+  category VARCHAR(100) NOT NULL, -- 'excellence', 'appreciation', 'participation'
+  file_url VARCHAR(500) NOT NULL,
+  file_type VARCHAR(20) NOT NULL, -- 'png', 'jpg', 'jpeg', 'webp', 'pdf', 'html'
+  is_default BOOLEAN DEFAULT false,
+  uploaded_at TIMESTAMP DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_certificate_templates_category ON certificate_templates(category);
 
 
 -- Admin Settings table

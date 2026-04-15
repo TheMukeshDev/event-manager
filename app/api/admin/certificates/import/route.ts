@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase-service'
 
 interface ParsedRecord {
   name: string
   email: string
   rank: number | null
   score: number | null
+  bestTime: string | null
   event: string
   certificateType: string
 }
@@ -28,6 +28,7 @@ function parseCSV(csvText: string): ParsedRecord[] {
   const emailIndex = headers.findIndex(h => h.toLowerCase().includes("candidate's email"))
   const rankIndex = headers.findIndex(h => h.toLowerCase().includes('rank'))
   const scoreIndex = headers.findIndex(h => h.toLowerCase().includes('effective score'))
+  const bestTimeIndex = headers.findIndex(h => h.toLowerCase().includes('best time'))
 
   if (nameIndex === -1 || emailIndex === -1) {
     throw new Error('Required columns not found: Candidate\'s Name, Candidate\'s Email')
@@ -42,6 +43,7 @@ function parseCSV(csvText: string): ParsedRecord[] {
     const email = values[emailIndex] || ''
     const rankStr = rankIndex !== -1 ? values[rankIndex] : null
     const scoreStr = scoreIndex !== -1 ? values[scoreIndex] : null
+    const bestTime = bestTimeIndex !== -1 ? values[bestTimeIndex] : null
 
     const rank = rankStr ? parseInt(rankStr, 10) : null
     const score = scoreStr ? parseFloat(scoreStr) : null
@@ -51,6 +53,7 @@ function parseCSV(csvText: string): ParsedRecord[] {
       email,
       rank: !isNaN(rank as number) ? rank as number : null,
       score: !isNaN(score as number) ? score as number : null,
+      bestTime: bestTime || null,
       event: 'TechQuiz 2026',
       certificateType: 'participation'
     })

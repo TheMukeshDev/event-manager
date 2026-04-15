@@ -6,11 +6,12 @@ import {
   Upload, FileSpreadsheet, Users, Award, Send, Eye, 
   RefreshCw, Trash2, Search, Filter, CheckCircle, XCircle,
   Loader2, Download, Mail, ChevronDown, X, AlertCircle,
-  ArrowDown, Plus, CheckCheck
+  ArrowDown, Plus, CheckCheck, Image
 } from 'lucide-react'
 import { CsvImportCard } from '@/components/admin/csv-import-card'
 import { CertificateTable } from '@/components/admin/certificate-table'
 import { CertificatePreviewModal } from '@/components/admin/certificate-preview-modal'
+import { TemplateImportCard } from '@/components/admin/template-import-card'
 
 interface CertificateRecord {
   id: string
@@ -31,11 +32,19 @@ interface CertificateRecord {
 interface Stats {
   totalImported: number
   totalCertificates: number
+  excellence: number
+  appreciation: number
   participation: number
-  winner: number
   sent: number
   pending: number
   failed: number
+}
+
+interface CertificateRules {
+  excellenceMinScore: number
+  appreciationMinScore: number
+  maxExcellence?: number
+  useRankBased?: boolean
 }
 
 interface FilterState {
@@ -44,7 +53,8 @@ interface FilterState {
   status: string
   sentStatus: string
   event: string
-  rank: string
+  minScore: string
+  maxScore: string
 }
 
 export default function CertificatesPage() {
@@ -52,25 +62,34 @@ export default function CertificatesPage() {
   const [stats, setStats] = useState<Stats>({
     totalImported: 0,
     totalCertificates: 0,
+    excellence: 0,
+    appreciation: 0,
     participation: 0,
-    winner: 0,
     sent: 0,
     pending: 0,
     failed: 0
+  })
+  const [rules, setRules] = useState<CertificateRules>({
+    excellenceMinScore: 19,
+    appreciationMinScore: 15,
+    maxExcellence: undefined,
+    useRankBased: false
   })
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [previewCert, setPreviewCert] = useState<CertificateRecord | null>(null)
   const [showImportCard, setShowImportCard] = useState(false)
+  const [showTemplateCard, setShowTemplateCard] = useState(false)
   const [showCreateAllModal, setShowCreateAllModal] = useState(false)
   const [showSendAllModal, setShowSendAllModal] = useState(false)
-  const [createResult, setCreateResult] = useState<{ created: number; skipped: number; failed: number } | null>(null)
+  const [showRulesModal, setShowRulesModal] = useState(false)
+  const [createResult, setCreateResult] = useState<{ created: number; updated: number; skipped: number; failed: number } | null>(null)
   const [sendProgress, setSendProgress] = useState<{ current: number; total: number; sent: number; failed: number } | null>(null)
   const [toast, setToast] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalCount, setTotalCount] = useState(0)
-  const [mode, setMode] = useState<'participation' | 'result-based'>('participation')
+  const [activeTab, setActiveTab] = useState<'certificates' | 'templates'>('certificates')
   
   const [filters, setFilters] = useState<FilterState>({
     search: '',
@@ -78,7 +97,8 @@ export default function CertificatesPage() {
     status: '',
     sentStatus: '',
     event: '',
-    rank: ''
+    minScore: '',
+    maxScore: ''
   })
 
   const limit = 20
@@ -95,7 +115,8 @@ export default function CertificatesPage() {
       if (filters.status) params.append('status', filters.status)
       if (filters.sentStatus) params.append('sent_status', filters.sentStatus)
       if (filters.event) params.append('event', filters.event)
-      if (filters.rank) params.append('rank', filters.rank)
+      if (filters.minScore) params.append('minScore', filters.minScore)
+      if (filters.maxScore) params.append('maxScore', filters.maxScore)
 
       const response = await fetch(`/api/admin/certificates?${params}`)
       const data = await response.json()
@@ -117,8 +138,9 @@ export default function CertificatesPage() {
       setStats({
         totalImported: statsData.totalImported || 0,
         totalCertificates: statsData.totalCertificates || 0,
+        excellence: statsData.excellence || 0,
+        appreciation: statsData.appreciation || 0,
         participation: statsData.participation || 0,
-        winner: statsData.winner || 0,
         sent: statsData.sent || 0,
         pending: statsData.pending || 0,
         failed: statsData.failed || 0
@@ -151,14 +173,15 @@ export default function CertificatesPage() {
       const response = await fetch('/api/admin/certificates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'create-all-participation', data: { mode } })
+        body: JSON.stringify({ action: 'create-all-with-scores', data: { rules } })
       })
       const result = await response.json()
       
       if (result.success) {
         setCreateResult({
-          created: result.created,
-          skipped: result.skipped,
+          created: result.created || 0,
+          updated: result.updated || 0,
+          skipped: result.skipped || 0,
           failed: result.failed?.length || 0
         })
         fetchCertificates()
@@ -273,12 +296,19 @@ export default function CertificatesPage() {
               Import CSV
             </button>
             <button
+              onClick={() => setShowTemplateCard(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-300 hover:bg-blue-500/20 transition-colors text-sm font-medium"
+            >
+              <Image className="w-4 h-4" />
+              Import Template
+            </button>
+            <button
               onClick={() => setShowCreateAllModal(true)}
               disabled={stats.totalImported === 0}
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-300 hover:bg-green-500/20 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Award className="w-4 h-4" />
-              Create Participation
+              Create Certificates
             </button>
             <button
               onClick={() => setShowSendAllModal(true)}
@@ -292,11 +322,12 @@ export default function CertificatesPage() {
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-3 sm:gap-4 mb-6">
         <StatCard icon={Users} label="Total Imported" value={stats.totalImported} color="cyan" />
         <StatCard icon={Award} label="Total Certificates" value={stats.totalCertificates} color="green" />
-        <StatCard icon={FileSpreadsheet} label="Participation" value={stats.participation} color="blue" />
-        <StatCard icon={Award} label="Winners" value={stats.winner} color="yellow" />
+        <StatCard icon={Award} label="Excellence" value={stats.excellence} color="yellow" />
+        <StatCard icon={Award} label="Appreciation" value={stats.appreciation} color="blue" />
+        <StatCard icon={FileSpreadsheet} label="Participation" value={stats.participation} color="cyan" />
         <StatCard icon={CheckCircle} label="Sent" value={stats.sent} color="green" />
         <StatCard icon={Loader2} label="Pending" value={stats.pending} color="orange" />
         <StatCard icon={XCircle} label="Failed" value={stats.failed} color="red" />
@@ -438,6 +469,16 @@ export default function CertificatesPage() {
         />
       )}
 
+      {showTemplateCard && (
+        <TemplateImportCard
+          onClose={() => setShowTemplateCard(false)}
+          onComplete={() => {
+            setShowTemplateCard(false)
+            showToast('success', 'Template imported successfully!')
+          }}
+        />
+      )}
+
       {previewCert && (
         <CertificatePreviewModal
           certificate={previewCert}
@@ -459,9 +500,9 @@ export default function CertificatesPage() {
               exit={{ scale: 0.95, opacity: 0 }}
               className="glass-dark rounded-xl p-6 w-full max-w-md border border-cyan-500/30"
             >
-              <h3 className="text-xl font-semibold text-white mb-2">Create Participation Certificates</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">Create Certificates For All Users</h3>
               <p className="text-gray-400 text-sm mb-4">
-                This will create participation certificates for all imported participants who do not already have one.
+                This will automatically assign certificate types based on scores and create certificates for all imported participants.
               </p>
 
               {createResult ? (
@@ -469,33 +510,38 @@ export default function CertificatesPage() {
                   <p className="text-green-300 font-medium mb-2">Operation Complete</p>
                   <div className="text-sm text-gray-300 space-y-1">
                     <p>Created: {createResult.created}</p>
+                    <p>Updated: {createResult.updated}</p>
                     <p>Skipped: {createResult.skipped}</p>
                     <p>Failed: {createResult.failed}</p>
                   </div>
                 </div>
               ) : (
                 <>
-                  <div className="mb-4 p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/30">
-                    <label className="flex items-center gap-3 text-sm text-gray-300">
-                      <input
-                        type="radio"
-                        name="mode"
-                        checked={mode === 'participation'}
-                        onChange={() => setMode('participation')}
-                        className="w-4 h-4 text-cyan-500"
-                      />
-                      Create participation certificates for all
-                    </label>
-                    <label className="flex items-center gap-3 text-sm text-gray-300 mt-2">
-                      <input
-                        type="radio"
-                        name="mode"
-                        checked={mode === 'result-based'}
-                        onChange={() => setMode('result-based')}
-                        className="w-4 h-4 text-cyan-500"
-                      />
-                      Use result-based certificate type
-                    </label>
+                  <div className="mb-4 p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/30 space-y-3">
+                    <p className="text-sm text-gray-300 font-medium">Certificate Rules</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-xs text-gray-400">Excellence Min Score</label>
+                        <input
+                          type="number"
+                          value={rules.excellenceMinScore}
+                          onChange={(e) => setRules({ ...rules, excellenceMinScore: parseInt(e.target.value) || 19 })}
+                          className="w-full px-2 py-1 text-sm rounded bg-black/50 border border-cyan-500/30 text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-gray-400">Appreciation Min Score</label>
+                        <input
+                          type="number"
+                          value={rules.appreciationMinScore}
+                          onChange={(e) => setRules({ ...rules, appreciationMinScore: parseInt(e.target.value) || 15 })}
+                          className="w-full px-2 py-1 text-sm rounded bg-black/50 border border-cyan-500/30 text-white"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Score &gt;= {rules.excellenceMinScore} → Excellence | Score &gt;= {rules.appreciationMinScore} → Appreciation | Below → Participation
+                    </p>
                   </div>
                 </>
               )}
