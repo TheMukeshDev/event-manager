@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { CheckCircle, XCircle, AlertTriangle, Loader2, Award, User, Calendar, Hash, Download, Image as ImageIcon, FileText } from 'lucide-react'
+import { CheckCircle, XCircle, AlertTriangle, Loader2, Award, User, Calendar, Hash, Download, Image as ImageIcon, FileText, Instagram, Linkedin, Share2, ArrowRight, Search } from 'lucide-react'
 
 interface CertificateData {
   certificateId: string
@@ -15,6 +16,9 @@ interface CertificateData {
   issueDate: string
   issuedBy: string
 }
+
+const INSTAGRAM_URL = 'https://www.instagram.com/techhub_bbs'
+const LINKEDIN_URL = 'https://www.linkedin.com/company/tech-hub-bbs'
 
 export default function VerifyCertificatePage() {
   const params = useParams()
@@ -69,7 +73,8 @@ export default function VerifyCertificatePage() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `certificate-${certificateId}.${format === 'html' ? 'html' : format}`
+      const firstName = certificate?.recipientName?.trim().split(' ')[0] || 'Certificate'
+      a.download = `${firstName}-Tech-Hub-BBS.${format === 'html' ? 'html' : format}`
       a.target = '_blank'
       document.body.appendChild(a)
       a.click()
@@ -80,6 +85,18 @@ export default function VerifyCertificatePage() {
     } finally {
       setDownloading(false)
     }
+  }
+
+  const shareOnInstagram = () => {
+    const text = `I just verified my certificate from TechQuiz 2026 by Tech Hub BBS! 🎉\n\nRecipient: ${certificate?.recipientName}\nEvent: ${certificate?.eventName}\nCertificate ID: ${certificate?.certificateId}\n\nVerify your certificate at: techhub-bbs.vercel.app/verify/${certificateId}`
+    const url = `https://www.instagram.com/create/post/?caption=${encodeURIComponent(text)}`
+    window.open(url, '_blank')
+  }
+
+  const shareOnLinkedIn = () => {
+    const text = `I'm proud to share my certificate from TechQuiz 2026 by Tech Hub BBS! 🎉\n\nRecipient: ${certificate?.recipientName}\nEvent: ${certificate?.eventName}\nCertificate ID: ${certificate?.certificateId}`
+    const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://techhub-bbs.vercel.app/verify/${certificateId}`)}`
+    window.open(url, '_blank')
   }
 
   const isValid = status === 'VALID'
@@ -128,17 +145,42 @@ export default function VerifyCertificatePage() {
           {certificateId && (
             <p className="text-gray-500 text-sm mt-4 font-mono">{certificateId}</p>
           )}
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-lg bg-cyan-500 text-white font-medium hover:bg-cyan-400 transition-colors"
+          >
+            Go to Home
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </motion.div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-black py-12 px-4">
+      {/* Header */}
+      <div className="max-w-lg mx-auto mb-8 flex items-center justify-between">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors"
+        >
+          <ArrowRight className="w-4 h-4 rotate-180" />
+          Back to Home
+        </Link>
+        <Link
+          href="/verify"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors text-sm"
+        >
+          <Search className="w-4 h-4" />
+          Verify Another
+        </Link>
+      </div>
+
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="glass-dark rounded-2xl p-8 max-w-lg w-full border"
+        className="glass-dark rounded-2xl p-8 max-w-lg mx-auto border"
       >
         <div className={`text-center mb-8 ${isValid ? 'border-green-500/30' : 'border-red-500/30'}`}>
           <div className={`w-24 h-24 mx-auto mb-4 rounded-full flex items-center justify-center ${
@@ -216,6 +258,7 @@ export default function VerifyCertificatePage() {
             </p>
           </div>
 
+          {/* Download Section */}
           <div className="flex gap-2 mt-4">
             <button
               onClick={() => handleDownload('png')}
@@ -223,7 +266,7 @@ export default function VerifyCertificatePage() {
               className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] disabled:opacity-50"
             >
               <ImageIcon className="w-4 h-4" />
-              Download PNG
+              PNG
             </button>
             <button
               onClick={() => handleDownload('html')}
@@ -231,7 +274,7 @@ export default function VerifyCertificatePage() {
               className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gray-500/20 border border-gray-500/50 text-gray-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(128,128,128,0.3)] disabled:opacity-50"
             >
               <FileText className="w-4 h-4" />
-              Download HTML
+              HTML
             </button>
             <button
               onClick={() => handleDownload('pdf')}
@@ -239,9 +282,58 @@ export default function VerifyCertificatePage() {
               className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-green-500/20 border border-green-500/50 text-green-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(0,255,136,0.3)] disabled:opacity-50"
             >
               <Download className="w-4 h-4" />
-              Download PDF
+              PDF
             </button>
           </div>
+
+          {/* Share Section - Only for Valid Certificates */}
+          {isValid && (
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <p className="text-center text-gray-400 text-sm mb-4">
+                Share your achievement and follow us!
+              </p>
+              
+              {/* Social Media Buttons */}
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={shareOnInstagram}
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 text-white font-medium transition-all hover:shadow-[0_0_20px_rgba(225,48,108,0.4)]"
+                >
+                  <Instagram className="w-5 h-5" />
+                  Follow on Instagram
+                </button>
+                <button
+                  onClick={shareOnLinkedIn}
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-blue-600 text-white font-medium transition-all hover:shadow-[0_0_20px_rgba(10,102,194,0.4)]"
+                >
+                  <Linkedin className="w-5 h-5" />
+                  Connect on LinkedIn
+                </button>
+              </div>
+
+              {/* Social Links Preview */}
+              <div className="mt-4 flex items-center justify-center gap-6 text-sm">
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-pink-400 hover:text-pink-300 transition-colors"
+                >
+                  <Instagram className="w-4 h-4" />
+                  @techhub_bbs
+                </a>
+                <a
+                  href={LINKEDIN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
+                >
+                  <Linkedin className="w-4 h-4" />
+                  Tech Hub BBS
+                </a>
+              </div>
+            </div>
+          )}
         </div>
       </motion.div>
     </div>

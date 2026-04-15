@@ -1,0 +1,263 @@
+'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { Search, Award, Loader2, ArrowRight, Image as ImageIcon, FileText, Download, Mail, AlertCircle } from 'lucide-react'
+
+interface Certificate {
+  certificate_id: string
+  name: string
+  email: string
+  event: string
+  certificate_type: string
+  rank: number | null
+  score: number | null
+}
+
+export default function DownloadCertificatePage() {
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [certificates, setCertificates] = useState<Certificate[]>([])
+  const [downloading, setDownloading] = useState<string | null>(null)
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email.trim()) return
+
+    setLoading(true)
+    setError(null)
+    setCertificates([])
+
+    try {
+      const response = await fetch(`/api/certificates/find-by-email?email=${encodeURIComponent(email.trim())}`)
+      const data = await response.json()
+
+      if (data.success && data.certificates && data.certificates.length > 0) {
+        setCertificates(data.certificates)
+      } else {
+        setError(data.message || 'No certificates found for this email address')
+      }
+    } catch (err) {
+      setError('Failed to fetch certificates. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDownload = async (certificate: Certificate, format: 'pdf' | 'png' | 'html') => {
+    try {
+      setDownloading(format + certificate.certificate_id)
+      
+      const response = await fetch(`/api/certificates/download/${certificate.certificate_id}?format=${format}`)
+      
+      if (!response.ok) {
+        throw new Error(`Failed to generate ${format.toUpperCase()}`)
+      }
+      
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      const firstName = certificate.name.trim().split(' ')[0]
+      a.download = `${firstName}-Tech-Hub-BBS.${format === 'html' ? 'html' : format}`
+      a.target = '_blank'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error(`Error downloading ${format}:`, error)
+    } finally {
+      setDownloading(null)
+    }
+  }
+
+  const getCertificateTitle = (type: string) => {
+    switch (type) {
+      case 'excellence': return 'Certificate of Excellence'
+      case 'appreciation': return 'Certificate of Appreciation'
+      case 'winner': return 'Winner Certificate'
+      case 'runner-up': return 'Runner-up Certificate'
+      case 'second-runner-up': return 'Second Runner-up Certificate'
+      default: return 'Certificate of Participation'
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-black py-12 px-4">
+      {/* Header */}
+      <div className="max-w-2xl mx-auto mb-8">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors"
+        >
+          <ArrowRight className="w-4 h-4 rotate-180" />
+          Back to Home
+        </Link>
+      </div>
+
+      {/* Title */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-2xl mx-auto text-center mb-8"
+      >
+        <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
+          <Award className="w-10 h-10 text-white" />
+        </div>
+        <h1 className="text-3xl font-bold text-white mb-2">Download Your Certificate</h1>
+        <p className="text-gray-400">Enter your registered email to find and download your certificate</p>
+      </motion.div>
+
+      {/* Search Form */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="max-w-2xl mx-auto"
+      >
+        <form onSubmit={handleSearch} className="mb-6">
+          <div className="relative">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your registered email address"
+              className="w-full pl-12 pr-4 py-4 rounded-xl bg-gray-900/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading || !email.trim()}
+            className="w-full mt-4 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Searching...
+              </>
+            ) : (
+              <>
+                <Search className="w-5 h-5" />
+                Find My Certificates
+              </>
+            )}
+          </button>
+        </form>
+
+        {/* Error Message */}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="p-4 rounded-xl bg-red-500/20 border border-red-500/50 text-red-400 text-center mb-6 flex items-center justify-center gap-2"
+          >
+            <AlertCircle className="w-5 h-5" />
+            {error}
+          </motion.div>
+        )}
+
+        {/* Certificates Found */}
+        {certificates.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-4"
+          >
+            <p className="text-gray-400 text-sm text-center mb-4">
+              Found {certificates.length} certificate{certificates.length > 1 ? 's' : ''} for {email}
+            </p>
+            
+            {certificates.map((cert) => (
+              <div key={cert.certificate_id} className="glass-dark rounded-2xl p-6 border border-cyan-500/30">
+                <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-700">
+                  <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                    <Award className="w-6 h-6 text-green-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-white">{cert.name}</h3>
+                    <p className="text-sm text-gray-400">{cert.event}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <div className="p-3 bg-gray-800/50 rounded-lg">
+                    <p className="text-xs text-gray-400 mb-1">Certificate Type</p>
+                    <p className="text-white font-medium text-sm">{getCertificateTitle(cert.certificate_type)}</p>
+                  </div>
+                  {cert.rank && (
+                    <div className="p-3 bg-gray-800/50 rounded-lg">
+                      <p className="text-xs text-gray-400 mb-1">Rank Achieved</p>
+                      <p className="text-white font-medium">#{cert.rank}</p>
+                    </div>
+                  )}
+                  {cert.score !== null && (
+                    <div className="p-3 bg-gray-800/50 rounded-lg">
+                      <p className="text-xs text-gray-400 mb-1">Score</p>
+                      <p className="text-white font-medium">{cert.score}/20</p>
+                    </div>
+                  )}
+                  <div className="p-3 bg-gray-800/50 rounded-lg">
+                    <p className="text-xs text-gray-400 mb-1">Certificate ID</p>
+                    <p className="text-white font-mono text-sm">{cert.certificate_id}</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleDownload(cert, 'png')}
+                    disabled={downloading === 'png' + cert.certificate_id}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] disabled:opacity-50"
+                  >
+                    {downloading === 'png' + cert.certificate_id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <ImageIcon className="w-4 h-4" />
+                    )}
+                    PNG
+                  </button>
+                  <button
+                    onClick={() => handleDownload(cert, 'html')}
+                    disabled={downloading === 'html' + cert.certificate_id}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gray-500/20 border border-gray-500/50 text-gray-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(128,128,128,0.3)] disabled:opacity-50"
+                  >
+                    {downloading === 'html' + cert.certificate_id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <FileText className="w-4 h-4" />
+                    )}
+                    HTML
+                  </button>
+                  <button
+                    onClick={() => handleDownload(cert, 'pdf')}
+                    disabled={downloading === 'pdf' + cert.certificate_id}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-green-500/20 border border-green-500/50 text-green-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(0,255,136,0.3)] disabled:opacity-50"
+                  >
+                    {downloading === 'pdf' + cert.certificate_id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Download className="w-4 h-4" />
+                    )}
+                    PDF
+                  </button>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        )}
+
+        {/* Help Text */}
+        {!certificates.length && !error && !loading && (
+          <p className="text-center text-gray-500 text-sm">
+            Enter the email address you used to register for the quiz.
+            <br />
+            Your certificates will appear here if found.
+          </p>
+        )}
+      </motion.div>
+    </div>
+  )
+}

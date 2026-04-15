@@ -89,6 +89,12 @@ export async function GET(
       }
     } catch (genError: any) {
       console.error('Generation failed:', genError.message)
+      
+      // Return error JSON for PNG/PDF requests, HTML fallback for HTML
+      if (format === 'pdf' || format === 'png') {
+        return NextResponse.json({ error: genError.message || 'Failed to generate ' + format.toUpperCase() }, { status: 500 })
+      }
+      
       return new NextResponse(html, {
         headers: {
           'Content-Type': 'text/html',
@@ -97,7 +103,7 @@ export async function GET(
       })
     }
 
-    return new NextResponse(buffer, {
+    return new NextResponse(new Uint8Array(buffer), {
       headers: {
         'Content-Type': contentType,
         'Content-Disposition': `attachment; filename="${filename}"`,

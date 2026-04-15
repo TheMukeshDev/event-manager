@@ -100,37 +100,57 @@ export async function getCertificateDataUrl(
 
 export async function downloadCertificatePNG(
   certificateElement: HTMLElement,
-  certificateId: string
+  certificateId: string,
+  recipientName: string
 ): Promise<void> {
   const dataUrl = await getCertificateDataUrl(certificateElement, { pixelRatio: 3 })
   
+  // Get first name only
+  const firstName = recipientName.trim().split(' ')[0]
+  const sanitizedName = firstName.replace(/[^a-zA-Z0-9]/g, '-')
+  const filename = `${sanitizedName}-Tech-Hub-BBS.png`
+  
   const link = document.createElement('a')
-  link.download = `certificate-${certificateId}.png`
+  link.download = filename
   link.href = dataUrl
   link.click()
 }
 
 export async function downloadCertificatePDF(
   certificateElement: HTMLElement,
-  certificateId: string
+  certificateId: string,
+  recipientName: string
 ): Promise<void> {
+  // Get first name only
+  const firstName = recipientName.trim().split(' ')[0]
+  const sanitizedName = firstName.replace(/[^a-zA-Z0-9]/g, '-')
+  const filename = `${sanitizedName}-Tech-Hub-BBS.pdf`
+  
   // Use server-side API for PDF generation (more reliable)
   const response = await fetch(`/api/certificates/download/${certificateId}?format=pdf`)
   
+  const contentType = response.headers.get('Content-Type') || ''
+  
   if (!response.ok) {
-    throw new Error('Failed to generate PDF')
+    const errorData = await response.json().catch(() => ({ error: 'Failed to generate PDF' }))
+    throw new Error(errorData.error || 'Failed to generate PDF')
+  }
+  
+  // Check if we got an error HTML response instead of PDF
+  if (contentType.includes('text/html') || !contentType.includes('application/pdf')) {
+    throw new Error('PDF generation failed - server returned an error')
   }
   
   const blob = await response.blob()
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
-  link.download = `certificate-${certificateId}.pdf`
+  link.download = filename
   link.click()
   URL.revokeObjectURL(url)
 }
 
-export function useCertificateExport(certificateId: string) {
+export function useCertificateExport(certificateId: string, recipientName: string) {
   const certificateRef = useRef<HTMLDivElement>(null)
   const [isExporting, setIsExporting] = useState<'none' | 'png' | 'pdf'>('none')
   const [exportError, setExportError] = useState<string | null>(null)
@@ -142,14 +162,14 @@ export function useCertificateExport(certificateId: string) {
     setExportError(null)
 
     try {
-      await downloadCertificatePNG(certificateRef.current, certificateId)
+      await downloadCertificatePNG(certificateRef.current, certificateId, recipientName)
     } catch (error: any) {
       console.error('PNG export error:', error)
       setExportError(error.message || 'Failed to export PNG')
     } finally {
       setIsExporting('none')
     }
-  }, [certificateId, isExporting])
+  }, [certificateId, recipientName, isExporting])
 
   const downloadPDF = useCallback(async () => {
     if (!certificateRef.current || isExporting !== 'none') return
@@ -158,14 +178,14 @@ export function useCertificateExport(certificateId: string) {
     setExportError(null)
 
     try {
-      await downloadCertificatePDF(certificateRef.current, certificateId)
+      await downloadCertificatePDF(certificateRef.current, certificateId, recipientName)
     } catch (error: any) {
       console.error('PDF export error:', error)
       setExportError(error.message || 'Failed to export PDF')
     } finally {
       setIsExporting('none')
     }
-  }, [certificateId, isExporting])
+  }, [certificateId, recipientName, isExporting])
 
   return {
     certificateRef,

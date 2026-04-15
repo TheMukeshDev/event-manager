@@ -62,7 +62,7 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
     downloadPNG,
     downloadPDF,
     clearError
-  } = useCertificateExport(certificate.certificate_id)
+  } = useCertificateExport(certificate.certificate_id, certificate.name)
 
   useEffect(() => {
     async function fetchPreview() {

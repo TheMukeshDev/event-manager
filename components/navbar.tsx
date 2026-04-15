@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, ShieldCheck, Award } from 'lucide-react'
 import { EVENT_DATA } from '@/lib/event-data'
 
 const navItems = [
@@ -15,6 +15,21 @@ const navItems = [
   { label: 'Team', href: '#team' },
   { label: 'Ambassador', href: '#ambassador' },
   { label: 'FAQ', href: '#faq' },
+]
+
+const specialItems = [
+  { 
+    label: 'Download Certificate', 
+    href: '/download', 
+    icon: Award,
+    highlight: true 
+  },
+  { 
+    label: 'Verify Certificate', 
+    href: '/verify', 
+    icon: ShieldCheck,
+    highlight: false 
+  },
 ]
 
 export function Navbar() {
@@ -75,7 +90,7 @@ export function Navbar() {
             </motion.a>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden lg:flex items-center gap-1">
               {navItems.map((item, idx) => (
                 <motion.a
                   key={idx}
@@ -87,10 +102,27 @@ export function Navbar() {
                   {item.label}
                 </motion.a>
               ))}
+              <div className="h-6 w-px bg-cyan-500/30 mx-2" />
+              {specialItems.map((item, idx) => (
+                <motion.a
+                  key={idx}
+                  href={item.href}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 pointer-events-auto cursor-pointer ${
+                    item.highlight 
+                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:shadow-[0_0_20px_rgba(6,182,212,0.5)]' 
+                      : 'bg-green-500/20 border border-green-500/50 text-green-400 hover:bg-green-500/30'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <item.icon className="w-4 h-4" />
+                  {item.label}
+                </motion.a>
+              ))}
             </div>
 
             {/* CTA Button */}
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden lg:flex items-center gap-4">
               <motion.a
                 href="https://unstop.com/o/EhGlUDp?lb=GUZITycG&utm_medium=Share&utm_source=quizzes&utm_campaign=Mukeskum10881"
                 target="_blank"
@@ -165,6 +197,26 @@ export function Navbar() {
                     className="block w-full px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-cyan-500/20 transition-all duration-300 text-sm font-medium"
                     onClick={handleNavClick}
                   >
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+
+              {/* Special Items */}
+              <div className="p-4 border-t border-cyan-500/20 space-y-2">
+                <p className="text-xs text-gray-500 uppercase tracking-wider px-4 mb-2">Quick Access</p>
+                {specialItems.map((item, idx) => (
+                  <a
+                    key={idx}
+                    href={item.href}
+                    className={`flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
+                      item.highlight 
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white' 
+                        : 'bg-green-500/20 border border-green-500/50 text-green-400'
+                    }`}
+                    onClick={handleNavClick}
+                  >
+                    <item.icon className="w-5 h-5" />
                     {item.label}
                   </a>
                 ))}
