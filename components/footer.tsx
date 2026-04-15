@@ -33,8 +33,8 @@ export function Footer() {
   ]
 
   const socials = [
-    { icon: Linkedin, href: 'https://linkedin.com/company/tech-hub-bbs', label: 'LinkedIn' },
-    { icon: Instagram, href: 'https://instagram.com/tech.hub.bbs', label: 'Instagram' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/company/tech-hub-bbs', label: 'LinkedIn' },
+    { icon: Instagram, href: 'https://www.instagram.com/tech.hub.bbs', label: 'Instagram' },
   ]
 
   return (

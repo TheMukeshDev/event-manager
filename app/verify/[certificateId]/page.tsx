@@ -17,7 +17,7 @@ interface CertificateData {
   issuedBy: string
 }
 
-const INSTAGRAM_URL = 'https://www.instagram.com/techhub_bbs'
+const INSTAGRAM_URL = 'https://www.instagram.com/tech.hub.bbs'
 const LINKEDIN_URL = 'https://www.linkedin.com/company/tech-hub-bbs'
 
 export default function VerifyCertificatePage() {

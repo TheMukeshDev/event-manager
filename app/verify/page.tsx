@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ShieldCheck, Loader2, ArrowRight, Instagram, Linkedin, AlertCircle, Award } from 'lucide-react'
 
-const INSTAGRAM_URL = 'https://www.instagram.com/techhub_bbs'
+const INSTAGRAM_URL = 'https://www.instagram.com/tech.hub.bbs'
 const LINKEDIN_URL = 'https://www.linkedin.com/company/tech-hub-bbs'
 
 interface Certificate {

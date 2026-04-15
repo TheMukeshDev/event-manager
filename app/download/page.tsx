@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Search, Award, Loader2, ArrowRight, Image as ImageIcon, FileText, Download, Mail, AlertCircle } from 'lucide-react'
+import { Search, Award, Loader2, ArrowRight, Download, Mail, AlertCircle } from 'lucide-react'
 
 interface Certificate {
   certificate_id: string
@@ -46,14 +46,14 @@ export default function DownloadCertificatePage() {
     }
   }
 
-  const handleDownload = async (certificate: Certificate, format: 'pdf' | 'png' | 'html') => {
+  const handleDownloadPNG = async (certificate: Certificate) => {
     try {
-      setDownloading(format + certificate.certificate_id)
+      setDownloading('png' + certificate.certificate_id)
       
-      const response = await fetch(`/api/certificates/download/${certificate.certificate_id}?format=${format}`)
+      const response = await fetch(`/api/certificates/download/${certificate.certificate_id}?format=png`)
       
       if (!response.ok) {
-        throw new Error(`Failed to generate ${format.toUpperCase()}`)
+        throw new Error('Failed to generate PNG')
       }
       
       const blob = await response.blob()
@@ -61,14 +61,14 @@ export default function DownloadCertificatePage() {
       const a = document.createElement('a')
       a.href = url
       const firstName = certificate.name.trim().split(' ')[0]
-      a.download = `${firstName}-Tech-Hub-BBS.${format === 'html' ? 'html' : format}`
+      a.download = `${firstName}-Tech-Hub-BBS.png`
       a.target = '_blank'
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
     } catch (error) {
-      console.error(`Error downloading ${format}:`, error)
+      console.error('Error downloading PNG:', error)
     } finally {
       setDownloading(null)
     }
@@ -208,40 +208,16 @@ export default function DownloadCertificatePage() {
 
                 <div className="flex gap-2">
                   <button
-                    onClick={() => handleDownload(cert, 'png')}
+                    onClick={() => handleDownloadPNG(cert)}
                     disabled={downloading === 'png' + cert.certificate_id}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] disabled:opacity-50"
                   >
                     {downloading === 'png' + cert.certificate_id ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
-                      <ImageIcon className="w-4 h-4" />
-                    )}
-                    PNG
-                  </button>
-                  <button
-                    onClick={() => handleDownload(cert, 'html')}
-                    disabled={downloading === 'html' + cert.certificate_id}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gray-500/20 border border-gray-500/50 text-gray-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(128,128,128,0.3)] disabled:opacity-50"
-                  >
-                    {downloading === 'html' + cert.certificate_id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <FileText className="w-4 h-4" />
-                    )}
-                    HTML
-                  </button>
-                  <button
-                    onClick={() => handleDownload(cert, 'pdf')}
-                    disabled={downloading === 'pdf' + cert.certificate_id}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-green-500/20 border border-green-500/50 text-green-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(0,255,136,0.3)] disabled:opacity-50"
-                  >
-                    {downloading === 'pdf' + cert.certificate_id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
                       <Download className="w-4 h-4" />
                     )}
-                    PDF
+                    Download Certificate
                   </button>
                 </div>
               </div>
