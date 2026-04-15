@@ -37,7 +37,7 @@
     "@radix-ui/react-toggle": "1.1.10",
     "@radix-ui/react-toggle-group": "1.1.11",
     "@radix-ui/react-tooltip": "1.2.8",
-    "@sparticuz/chromium": "^128.0.0",
+    "@sparticuz/chromium": "^123.1.0",
     "@supabase/supabase-js": "^2.102.1",
     "@types/papaparse": "^5.5.2",
     "@vercel/analytics": "1.6.1",

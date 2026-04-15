@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase-server'
 import { getCertificateTemplate } from '@/lib/certificate-template'
-import puppeteer from 'puppeteer-core'
-import chromium from '@sparticuz/chromium'
 
 export async function GET(
   request: NextRequest,
@@ -32,6 +30,10 @@ export async function GET(
     }
 
     const html = getCertificateTemplate(cert.certificate_type, templateData)
+
+    // Dynamic import to avoid build-time issues
+    const puppeteer = await import('puppeteer-core')
+    const chromium = await import('@sparticuz/chromium')
 
     const browser = await puppeteer.launch({
       args: chromium.args,

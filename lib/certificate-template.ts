@@ -382,8 +382,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
 
 export async function generatePDF(template: string): Promise<Buffer> {
   try {
-    const puppeteer = require('puppeteer-core')
-    const chromium = require('@sparticuz/chromium')
+    const puppeteer = await import('puppeteer-core')
+    const chromium = await import('@sparticuz/chromium')
     
     const browser = await puppeteer.launch({
       args: chromium.args,
