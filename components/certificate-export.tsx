@@ -1,28 +1,21 @@
 'use client'
 
 import { useRef, useCallback, useState } from 'react'
-import { toPng } from 'html-to-image'
-import { jsPDF } from 'jspdf'
 
-async function waitForFonts(): Promise<void> {
-  if (document.fonts) {
-    try {
-      await document.fonts.ready
-      await new Promise<void>((resolve) => setTimeout(resolve, 1000))
-    } catch {
-      await new Promise<void>((resolve) => setTimeout(resolve, 2000))
-    }
-  }
-  
-  const fontLinks = [
-    'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700',
-    'https://fonts.googleapis.com/css2?family=Great+Vibes',
-    'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600',
-    'https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600'
-  ]
-  
-  await Promise.all(fontLinks.map(href => {
+const CERTIFICATE_FONTS = [
+  'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700',
+  'https://fonts.googleapis.com/css2?family=Great+Vibes',
+  'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600',
+  'https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600'
+]
+
+function preloadFonts(): Promise<void> {
+  const fontPromises = CERTIFICATE_FONTS.map(href => {
     return new Promise<void>((resolve) => {
+      if (typeof document === 'undefined') {
+        resolve()
+        return
+      }
       if (document.querySelector(`link[href="${href}"]`)) {
         resolve()
         return
@@ -34,12 +27,28 @@ async function waitForFonts(): Promise<void> {
       link.onerror = () => resolve()
       document.head.appendChild(link)
     })
-  }))
+  })
+  return Promise.all(fontPromises).then(() => {})
+}
+
+async function waitForFonts(): Promise<void> {
+  if (typeof document === 'undefined') return
   
+  try {
+    if (document.fonts?.ready) {
+      await document.fonts.ready
+    }
+  } catch {
+    // Fonts API not available
+  }
+  
+  await preloadFonts()
   await new Promise<void>((resolve) => setTimeout(resolve, 500))
 }
 
 async function waitForImages(container: HTMLElement): Promise<void> {
+  if (typeof document === 'undefined') return
+  
   const images = Array.from(container.querySelectorAll('img'))
   const promises = images.map((img) => {
     return new Promise<void>((resolve) => {
@@ -53,7 +62,7 @@ async function waitForImages(container: HTMLElement): Promise<void> {
     })
   })
   await Promise.all(promises)
-  await new Promise<void>((resolve) => setTimeout(resolve, 500))
+  await new Promise<void>((resolve) => setTimeout(resolve, 300))
 }
 
 async function waitForCertificateAssets(certificateElement: HTMLElement): Promise<void> {
@@ -62,26 +71,30 @@ async function waitForCertificateAssets(certificateElement: HTMLElement): Promis
   await new Promise<void>((resolve) => requestAnimationFrame(() => {
     requestAnimationFrame(() => resolve())
   }))
-  await new Promise<void>((resolve) => setTimeout(resolve, 300))
+  await new Promise<void>((resolve) => setTimeout(resolve, 200))
 }
 
 export async function getCertificateDataUrl(
   certificateElement: HTMLElement,
   options: { pixelRatio?: number } = {}
 ): Promise<string> {
+  if (typeof window === 'undefined') {
+    throw new Error('Export only works in browser')
+  }
+  
   const pixelRatio = options.pixelRatio || 2
 
   await waitForCertificateAssets(certificateElement)
 
-  const toPngOptions = {
+  const { toPng } = await import('html-to-image')
+  
+  const dataUrl = await toPng(certificateElement, {
     cacheBust: true,
     pixelRatio,
     skipAutoScale: true,
-    allowTaint: true,
     backgroundColor: '#0a0a0a'
-  }
+  })
 
-  const dataUrl = await toPng(certificateElement, toPngOptions)
   return dataUrl
 }
 
@@ -101,23 +114,20 @@ export async function downloadCertificatePDF(
   certificateElement: HTMLElement,
   certificateId: string
 ): Promise<void> {
-  const dataUrl = await getCertificateDataUrl(certificateElement, { pixelRatio: 3 })
+  // Use server-side API for PDF generation (more reliable)
+  const response = await fetch(`/api/certificates/download/${certificateId}?format=pdf`)
   
-  const img = new window.Image()
-  await new Promise<void>((resolve, reject) => {
-    img.onload = () => resolve()
-    img.onerror = reject
-    img.src = dataUrl
-  })
-
-  const pdf = new jsPDF({
-    orientation: 'landscape',
-    unit: 'px',
-    format: [img.width / 3, img.height / 3]
-  })
-
-  pdf.addImage(dataUrl, 'PNG', 0, 0, img.width / 3, img.height / 3)
-  pdf.save(`certificate-${certificateId}.pdf`)
+  if (!response.ok) {
+    throw new Error('Failed to generate PDF')
+  }
+  
+  const blob = await response.blob()
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `certificate-${certificateId}.pdf`
+  link.click()
+  URL.revokeObjectURL(url)
 }
 
 export function useCertificateExport(certificateId: string) {
@@ -135,7 +145,7 @@ export function useCertificateExport(certificateId: string) {
       await downloadCertificatePNG(certificateRef.current, certificateId)
     } catch (error: any) {
       console.error('PNG export error:', error)
-      setExportError(`Failed to export PNG: ${error.message || 'Unknown error'}`)
+      setExportError(error.message || 'Failed to export PNG')
     } finally {
       setIsExporting('none')
     }
@@ -151,7 +161,7 @@ export function useCertificateExport(certificateId: string) {
       await downloadCertificatePDF(certificateRef.current, certificateId)
     } catch (error: any) {
       console.error('PDF export error:', error)
-      setExportError(`Failed to export PDF: ${error.message || 'Unknown error'}`)
+      setExportError(error.message || 'Failed to export PDF')
     } finally {
       setIsExporting('none')
     }
