@@ -299,6 +299,8 @@ export async function getCertificates(filters: {
   maxScore?: number
   limit?: number
   offset?: number
+  sortBy?: string
+  sortOrder?: string
 }): Promise<{ data: CertificateRecord[], count: number }> {
   let query = supabaseServer
     .from('certificate_records')
@@ -315,9 +317,12 @@ export async function getCertificates(filters: {
   if (filters.minScore !== undefined) query = query.gte('score', filters.minScore)
   if (filters.maxScore !== undefined) query = query.lte('score', filters.maxScore)
 
+  const sortField = filters.sortBy || 'score'
+  const sortAsc = filters.sortOrder !== 'desc'
+
   if (filters.limit) query = query.limit(filters.limit).range(filters.offset || 0, (filters.offset || 0) + filters.limit! - 1)
 
-  const { data, count, error } = await query.order('score', { ascending: false })
+  const { data, count, error } = await query.order(sortField, { ascending: sortAsc })
 
   if (error) throw error
 

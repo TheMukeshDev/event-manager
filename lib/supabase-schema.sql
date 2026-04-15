@@ -92,18 +92,42 @@ ADD COLUMN IF NOT EXISTS template_id UUID REFERENCES certificate_templates(id),
 ADD COLUMN IF NOT EXISTS verification_count INTEGER DEFAULT 0,
 ADD COLUMN IF NOT EXISTS last_verified_at TIMESTAMP;
 
--- Certificate Templates table
+-- Certificate Templates table (enhanced)
 CREATE TABLE IF NOT EXISTS certificate_templates (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(255) NOT NULL,
   category VARCHAR(100) NOT NULL, -- 'excellence', 'appreciation', 'participation'
-  file_url VARCHAR(500) NOT NULL,
-  file_type VARCHAR(20) NOT NULL, -- 'png', 'jpg', 'jpeg', 'webp', 'pdf', 'html'
+  description TEXT,
+  background_url VARCHAR(500),
+  background_type VARCHAR(20), -- 'image', 'color', 'gradient'
+  background_color VARCHAR(20),
+  content_json JSONB, -- stores logo positions, text styles, layout config
   is_default BOOLEAN DEFAULT false,
-  uploaded_at TIMESTAMP DEFAULT now()
+  is_published BOOLEAN DEFAULT false,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
 );
 
 CREATE INDEX IF NOT EXISTS idx_certificate_templates_category ON certificate_templates(category);
+CREATE INDEX IF NOT EXISTS idx_certificate_templates_default ON certificate_templates(category, is_default);
+
+-- Certificate Assets table (logos, backgrounds, badges, signatures)
+CREATE TABLE IF NOT EXISTS certificate_assets (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(255) NOT NULL,
+  type VARCHAR(50) NOT NULL, -- 'logo', 'background', 'badge', 'signature', 'sponsor'
+  category VARCHAR(100), -- 'event-logo', 'college-logo', 'sponsor-logo', 'collaboration', 'seal'
+  file_url VARCHAR(500) NOT NULL,
+  file_type VARCHAR(20) NOT NULL, -- 'png', 'jpg', 'jpeg', 'webp', 'svg', 'gif'
+  width INTEGER,
+  height INTEGER,
+  file_size INTEGER,
+  is_favorite BOOLEAN DEFAULT false,
+  uploaded_at TIMESTAMP DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_certificate_assets_type ON certificate_assets(type);
+CREATE INDEX IF NOT EXISTS idx_certificate_assets_category ON certificate_assets(category);
 
 
 -- Admin Settings table

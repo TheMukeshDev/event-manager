@@ -19,6 +19,7 @@ interface ImportPreview {
   invalid: number
   records: ParsedRecord[]
   errors: string[]
+  existingCount?: number
 }
 
 export function CsvImportCard({ onClose, onComplete }: { onClose: () => void; onComplete: () => void }) {
@@ -28,6 +29,7 @@ export function CsvImportCard({ onClose, onComplete }: { onClose: () => void; on
   const [preview, setPreview] = useState<ImportPreview | null>(null)
   const [importing, setImporting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [updateMode, setUpdateMode] = useState(true) // Default: update existing records
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -96,7 +98,7 @@ export function CsvImportCard({ onClose, onComplete }: { onClose: () => void; on
       const response = await fetch('/api/admin/certificates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'import', data: { records: preview.records } })
+        body: JSON.stringify({ action: 'import', data: { records: preview.records, mode: updateMode ? 'upsert' : 'skip' } })
       })
       const data = await response.json()
 
@@ -201,6 +203,21 @@ export function CsvImportCard({ onClose, onComplete }: { onClose: () => void; on
               </button>
             </div>
 
+            <div className="flex items-center gap-3 mb-4">
+              <label className="flex items-center gap-2 px-3 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={updateMode}
+                  onChange={(e) => setUpdateMode(e.target.checked)}
+                  className="w-4 h-4 rounded bg-cyan-500/20 border-cyan-500/50"
+                />
+                <span className="text-sm text-cyan-300">Update existing</span>
+              </label>
+              <span className="text-xs text-gray-400">
+                {preview.existingCount || 0} existing records will be updated
+              </span>
+            </div>
+
             <div className="grid grid-cols-4 gap-3 mb-4">
               <div className="p-3 bg-gray-800/50 rounded-lg text-center">
                 <p className="text-2xl font-bold text-white">{preview.total}</p>
@@ -208,11 +225,11 @@ export function CsvImportCard({ onClose, onComplete }: { onClose: () => void; on
               </div>
               <div className="p-3 bg-green-500/10 rounded-lg border border-green-500/30 text-center">
                 <p className="text-2xl font-bold text-green-400">{preview.valid}</p>
-                <p className="text-xs text-green-300">Valid Rows</p>
+                <p className="text-xs text-green-300">New</p>
               </div>
               <div className="p-3 bg-red-500/10 rounded-lg border border-red-500/30 text-center">
                 <p className="text-2xl font-bold text-red-400">{preview.invalid}</p>
-                <p className="text-xs text-red-300">Invalid Rows</p>
+                <p className="text-xs text-red-300">Invalid</p>
               </div>
               <div className="p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/30 text-center">
                 <p className="text-2xl font-bold text-yellow-400">

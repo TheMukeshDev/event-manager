@@ -5,6 +5,49 @@ import { existsSync } from 'fs'
 import { join } from 'path'
 
 export async function POST(request: NextRequest) {
+  const contentType = request.headers.get('content-type') || ''
+  
+  // Handle JSON content save (from template editor)
+  if (contentType.includes('application/json')) {
+    try {
+      const body = await request.json()
+      const { name, category, description, content_json, background_url, background_type, background_color, is_default, is_published } = body
+      
+      // If setting as default, unset other defaults for this category
+      if (is_default) {
+        await supabaseServer
+          .from('certificate_templates')
+          .update({ is_default: false })
+          .eq('category', category)
+          .eq('is_default', true)
+      }
+
+      const { data, error } = await supabaseServer
+        .from('certificate_templates')
+        .insert({
+          name,
+          category,
+          description,
+          content_json,
+          background_url,
+          background_type,
+          background_color,
+          is_default: is_default || false,
+          is_published: is_published || false
+        })
+        .select()
+        .single()
+
+      if (error) throw error
+
+      return NextResponse.json({ success: true, template: data })
+    } catch (error: any) {
+      console.error('Error saving template:', error)
+      return NextResponse.json({ error: error.message || 'Failed to save template' }, { status: 500 })
+    }
+  }
+  
+  // Handle file upload (for backward compatibility)
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File | null

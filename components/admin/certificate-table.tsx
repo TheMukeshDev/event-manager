@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { 
   Eye, Send, Trash2, RefreshCw, Download, Mail, ChevronLeft, ChevronRight,
-  CheckCircle, XCircle, Award, AlertTriangle
+  CheckCircle, XCircle, Award, AlertTriangle, Save, X
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -49,6 +49,47 @@ export function CertificateTable({
   onPageChange
 }: CertificateTableProps) {
   const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const [editingCert, setEditingCert] = useState<CertificateRecord | null>(null)
+  const [editForm, setEditForm] = useState({ name: '', score: '', rank: '' })
+  const [saving, setSaving] = useState(false)
+
+  const handleEditStart = (cert: CertificateRecord) => {
+    setEditingCert(cert)
+    setEditForm({
+      name: cert.name,
+      score: cert.score?.toString() || '',
+      rank: cert.rank?.toString() || ''
+    })
+  }
+
+  const handleEditSave = async () => {
+    if (!editingCert) return
+    setSaving(true)
+    try {
+      const response = await fetch('/api/admin/certificates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'update-record',
+          data: {
+            id: editingCert.id,
+            name: editForm.name,
+            score: editForm.score ? parseInt(editForm.score) : null,
+            rank: editForm.rank ? (parseInt(editForm.rank) <= 50 ? parseInt(editForm.rank) : null) : null
+          }
+        })
+      })
+      const result = await response.json()
+      if (result.success) {
+        setEditingCert(null)
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error('Update failed:', error)
+    } finally {
+      setSaving(false)
+    }
+  }
 
   const handleSelectAll = () => {
     if (selectedIds.length === certificates.length) {
@@ -175,27 +216,64 @@ export function CertificateTable({
                   </td>
                   <td className="p-3 sm:p-4">
                     <div className="min-w-0">
-                      <p className="text-white text-sm truncate max-w-[120px] sm:max-w-[180px]">{cert.name}</p>
-                      <p className="text-gray-400 text-xs truncate max-w-[120px] sm:max-w-[180px]">{cert.email}</p>
+                      {editingCert?.id === cert.id ? (
+                        <div className="space-y-1">
+                          <input
+                            type="text"
+                            value={editForm.name}
+                            onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                            className="w-full px-2 py-1 text-sm rounded bg-black/50 border border-cyan-500/30 text-white"
+                            placeholder="Name"
+                          />
+                          <p className="text-gray-400 text-xs truncate">{cert.email}</p>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-white text-sm truncate max-w-[120px] sm:max-w-[180px]">{cert.name}</p>
+                          <p className="text-gray-400 text-xs truncate max-w-[120px] sm:max-w-[180px]">{cert.email}</p>
+                        </>
+                      )}
                     </div>
                   </td>
                   <td className="p-3 sm:p-4 text-gray-300 text-sm hidden md:table-cell">{cert.event}</td>
                   <td className="p-3 sm:p-4 hidden lg:table-cell">
-                    {cert.rank ? (
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        cert.rank === 1 ? 'bg-yellow-500/20 text-yellow-300' :
-                        cert.rank === 2 ? 'bg-purple-500/20 text-purple-300' :
-                        cert.rank === 3 ? 'bg-orange-500/20 text-orange-300' :
-                        'bg-gray-500/20 text-gray-300'
-                      }`}>
-                        #{cert.rank}
-                      </span>
+                    {editingCert?.id === cert.id ? (
+                      <input
+                        type="number"
+                        value={editForm.rank}
+                        onChange={(e) => setEditForm({ ...editForm, rank: e.target.value })}
+                        className="w-16 px-2 py-1 text-sm rounded bg-black/50 border border-cyan-500/30 text-white"
+                        placeholder="Rank"
+                        min="1"
+                        max="50"
+                      />
                     ) : (
-                      <span className="text-gray-500">-</span>
+                      cert.rank ? (
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          cert.rank === 1 ? 'bg-yellow-500/20 text-yellow-300' :
+                          cert.rank === 2 ? 'bg-purple-500/20 text-purple-300' :
+                          cert.rank === 3 ? 'bg-orange-500/20 text-orange-300' :
+                          'bg-gray-500/20 text-gray-300'
+                        }`}>
+                          #{cert.rank}
+                        </span>
+                      ) : (
+                        <span className="text-gray-500">-</span>
+                      )
                     )}
                   </td>
                   <td className="p-3 sm:p-4 text-gray-300 text-sm hidden lg:table-cell">
-                    {cert.score !== null ? `${cert.score}/20` : '-'}
+                    {editingCert?.id === cert.id ? (
+                      <input
+                        type="number"
+                        value={editForm.score}
+                        onChange={(e) => setEditForm({ ...editForm, score: e.target.value })}
+                        className="w-16 px-2 py-1 text-sm rounded bg-black/50 border border-cyan-500/30 text-white"
+                        placeholder="Score"
+                      />
+                    ) : (
+                      cert.score !== null ? `${cert.score}/20` : '-'
+                    )}
                   </td>
                   <td className="p-3 sm:p-4">
                     <span className={`px-2 py-1 rounded text-xs font-medium border ${getTypeBadge(cert.certificate_type)}`}>
@@ -219,33 +297,60 @@ export function CertificateTable({
                   </td>
                   <td className="p-3 sm:p-4">
                     <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => handleAction('preview', cert)}
-                        title="Preview"
-                        className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-cyan-300 hover:bg-cyan-500/20 transition-colors"
-                      >
-                        {actionLoading === cert.certificate_id ? (
-                          <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
-                        ) : (
-                          <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        )}
-                      </button>
-                      {!cert.sent_status && (
-                        <button
-                          onClick={() => handleAction('send', cert)}
-                          title="Send"
-                          className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-green-300 hover:bg-green-500/20 transition-colors"
-                        >
-                          <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        </button>
+                      {editingCert?.id === cert.id ? (
+                        <>
+                          <button
+                            onClick={handleEditSave}
+                            disabled={saving}
+                            title="Save"
+                            className="p-1.5 sm:p-2 rounded-lg text-green-400 hover:bg-green-500/20 transition-colors"
+                          >
+                            <Save className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </button>
+                          <button
+                            onClick={() => setEditingCert(null)}
+                            title="Cancel"
+                            className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-red-300 hover:bg-red-500/20 transition-colors"
+                          >
+                            <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => handleEditStart(cert)}
+                            title="Edit"
+                            className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-cyan-300 hover:bg-cyan-500/20 transition-colors"
+                          >
+                            <Save className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleAction('preview', cert)}
+                            title="Preview"
+                            className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-cyan-300 hover:bg-cyan-500/20 transition-colors"
+                          >
+                            {actionLoading === cert.certificate_id ? (
+                              <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
+                            ) : (
+                              <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                            )}
+                          </button>
+                          <button
+                            onClick={() => handleAction('send', cert)}
+                            title={cert.sent_status ? "Resend" : "Send"}
+                            className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-green-300 hover:bg-green-500/20 transition-colors"
+                          >
+                            <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleAction('delete', cert)}
+                            title="Delete"
+                            className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-red-300 hover:bg-red-500/20 transition-colors"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </button>
+                        </>
                       )}
-                      <button
-                        onClick={() => handleAction('delete', cert)}
-                        title="Delete"
-                        className="p-1.5 sm:p-2 rounded-lg text-gray-400 hover:text-red-300 hover:bg-red-500/20 transition-colors"
-                      >
-                        <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      </button>
                     </div>
                   </td>
                 </motion.tr>
