@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase-server'
-import { getCertificateTemplate } from '@/lib/certificate-template'
+import { getCertificateTemplate, generatePDF, generateImage } from '@/lib/certificate-template'
 
 export async function GET(
   request: NextRequest,
@@ -37,7 +37,7 @@ export async function GET(
 
     const html = getCertificateTemplate(cert.certificate_type, templateData)
 
-    if (format === 'html' || format === 'png' || format === 'pdf') {
+    if (format === 'html') {
       return new NextResponse(html, {
         headers: {
           'Content-Type': 'text/html',
@@ -46,9 +46,41 @@ export async function GET(
       })
     }
 
-    return new NextResponse(html, {
+    let buffer: Buffer
+    let contentType: string
+    let filename: string
+
+    try {
+      if (format === 'png' || format === 'image') {
+        buffer = await generateImage(html)
+        contentType = 'image/png'
+        filename = `certificate-${certificateId}.png`
+      } else if (format === 'pdf') {
+        buffer = await generatePDF(html)
+        contentType = 'application/pdf'
+        filename = `certificate-${certificateId}.pdf`
+      } else {
+        return new NextResponse(html, {
+          headers: {
+            'Content-Type': 'text/html'
+          }
+        })
+      }
+    } catch (genError: any) {
+      console.error('Generation failed, returning HTML:', genError.message)
+      return new NextResponse(html, {
+        headers: {
+          'Content-Type': 'text/html',
+          'Content-Disposition': `inline; filename="certificate-${certificateId}.html"`
+        }
+      })
+    }
+
+    return new NextResponse(buffer, {
       headers: {
-        'Content-Type': 'text/html'
+        'Content-Type': contentType,
+        'Content-Disposition': `attachment; filename="${filename}"`,
+        'Content-Length': buffer.length.toString()
       }
     })
   } catch (error: any) {
