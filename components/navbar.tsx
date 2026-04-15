@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ShieldCheck, Award } from 'lucide-react'
+import { Menu, X, Award } from 'lucide-react'
 import { EVENT_DATA } from '@/lib/event-data'
 
 const navItems = [
@@ -23,12 +23,6 @@ const specialItems = [
     href: '/download', 
     icon: Award,
     highlight: true 
-  },
-  { 
-    label: 'Verify Certificate', 
-    href: '/verify', 
-    icon: ShieldCheck,
-    highlight: false 
   },
 ]
 
