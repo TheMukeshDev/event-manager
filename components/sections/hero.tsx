@@ -122,17 +122,9 @@ export function HeroSection({ event }: HeroSectionProps) {
             variants={itemVariants}
             className="flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 justify-center items-center"
           >
-            <a
-              href={registrationUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="neon-button group inline-flex items-center justify-center text-sm sm:text-base w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 min-w-0"
-            >
-              <span className="flex items-center gap-2">
-                Register Now
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform shrink-0" />
-              </span>
-            </a>
+            <div className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-gray-600 text-gray-400 font-semibold inline-flex items-center gap-2 text-sm cursor-not-allowed">
+              Registration Closed
+            </div>
             <a
               href="https://chat.whatsapp.com/Hc1zaz52LdOAh6kM5NHREA"
               target="_blank"
@@ -142,8 +134,8 @@ export function HeroSection({ event }: HeroSectionProps) {
               <MessageCircle className="w-4 h-4 shrink-0" />
               <span className="truncate">Join WhatsApp</span>
             </a>
-            <a href="#certificate-verify" className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-gray-600 text-gray-300 font-semibold transition-all duration-300 hover:border-cyan-400 hover:text-cyan-300 text-sm w-full sm:w-auto justify-center min-w-0">
-              Verify Certificate
+            <a href="/download" className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-cyan-500 text-cyan-300 font-semibold transition-all duration-300 hover:border-cyan-400 hover:text-cyan-200 text-sm w-full sm:w-auto justify-center min-w-0">
+              Download Certificate
             </a>
           </motion.div>
 

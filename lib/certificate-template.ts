@@ -619,7 +619,8 @@ export async function generatePDF(template: string): Promise<Buffer> {
         '--disable-dev-shm-usage',
         '--disable-gpu',
         '--disable-web-security',
-        '--allow-file-access-from-files'
+        '--allow-file-access-from-files',
+        '--enable-features=NetworkService'
       ],
       defaultViewport: { width: 1920, height: 1080 },
       executablePath: await chromium.executablePath(),
@@ -628,11 +629,24 @@ export async function generatePDF(template: string): Promise<Buffer> {
 
     const page = await browser.newPage()
 
-    await page.setContent(template, { waitUntil: 'domcontentloaded', timeout: 30000 })
-    await page.waitForTimeout(2000)
-
-    await page.evaluate(async () => {
-      await waitForRender()
+    await page.setContent(template, { waitUntil: 'networkidle2', timeout: 30000 })
+    
+    // Wait for fonts and images to load
+    await page.evaluate(() => {
+      return new Promise<void>((resolve) => {
+        Promise.all([
+          document.fonts.ready,
+          ...Array.from(document.images).map(img => {
+            if (img.complete) return Promise.resolve<void>(undefined)
+            return new Promise<void>((res) => {
+              img.onload = () => res()
+              img.onerror = () => res()
+            })
+          })
+        ]).then(() => {
+          setTimeout(() => resolve(), 1000)
+        })
+      })
     })
 
     const pdf = await page.pdf({
@@ -664,7 +678,8 @@ export async function generateImage(template: string): Promise<Buffer> {
         '--disable-dev-shm-usage',
         '--disable-gpu',
         '--disable-web-security',
-        '--allow-file-access-from-files'
+        '--allow-file-access-from-files',
+        '--enable-features=NetworkService'
       ],
       defaultViewport: { width: 1920, height: 1080 },
       executablePath: await chromium.executablePath(),
@@ -673,11 +688,24 @@ export async function generateImage(template: string): Promise<Buffer> {
 
     const page = await browser.newPage()
 
-    await page.setContent(template, { waitUntil: 'domcontentloaded', timeout: 30000 })
-    await page.waitForTimeout(2000)
-
-    await page.evaluate(async () => {
-      await waitForRender()
+    await page.setContent(template, { waitUntil: 'networkidle2', timeout: 30000 })
+    
+    // Wait for fonts and images to load
+    await page.evaluate(() => {
+      return new Promise<void>((resolve) => {
+        Promise.all([
+          document.fonts.ready,
+          ...Array.from(document.images).map(img => {
+            if (img.complete) return Promise.resolve<void>(undefined)
+            return new Promise<void>((res) => {
+              img.onload = () => res()
+              img.onerror = () => res()
+            })
+          })
+        ]).then(() => {
+          setTimeout(() => resolve(), 1000)
+        })
+      })
     })
 
     const screenshot = await page.screenshot({
