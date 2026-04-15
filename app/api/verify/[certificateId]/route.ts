@@ -5,6 +5,14 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ certificateId: string }> }
 ) {
+  if (!supabaseServer) {
+    return NextResponse.json({
+      valid: false,
+      status: 'ERROR',
+      message: 'Database not configured'
+    }, { status: 503 })
+  }
+
   try {
     const { certificateId } = await params
 
@@ -22,7 +30,6 @@ export async function GET(
       })
     }
 
-    // Increment verification count
     const currentCount = cert.verification_count || 0
     await supabaseServer
       .from('certificate_records')

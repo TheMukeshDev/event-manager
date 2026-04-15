@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase-server'
-import { writeFile, mkdir } from 'fs/promises'
-import { existsSync } from 'fs'
-import { join } from 'path'
 
 export async function POST(request: NextRequest) {
+  if (!supabaseServer) {
+    return NextResponse.json({ success: false, error: 'Database not configured' }, { status: 503 })
+  }
+
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File | null
@@ -16,13 +17,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'No file provided' }, { status: 400 })
     }
 
-    // Validate file type
     const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/svg+xml']
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json({ success: false, error: 'Invalid file type. Allowed: PNG, JPG, JPEG, WEBP, SVG' }, { status: 400 })
     }
 
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json({ success: false, error: 'File too large. Max 5MB allowed.' }, { status: 400 })
     }
@@ -30,19 +29,28 @@ export async function POST(request: NextRequest) {
     const ext = file.name.split('.').pop()?.toLowerCase() || 'png'
     const fileType = ext === 'jpeg' ? 'jpg' : ext === 'svg' ? 'svg' : ext
 
-    const uploadDir = join(process.cwd(), 'public', 'uploads', 'assets')
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true })
-    }
-
-    // Generate unique filename
     const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileType}`
-    const filePath = join(uploadDir, uniqueName)
+    const filePath = `${category}/${uniqueName}`
 
     const buffer = Buffer.from(await file.arrayBuffer())
-    await writeFile(filePath, buffer)
+    
+    const { error: uploadError } = await supabaseServer.storage
+      .from('certificate-assets')
+      .upload(filePath, buffer, {
+        contentType: file.type,
+        upsert: false
+      })
 
-    const fileUrl = `/uploads/assets/${uniqueName}`
+    if (uploadError) {
+      console.error('Supabase upload error:', uploadError)
+      return NextResponse.json({ success: false, error: 'Failed to upload file to storage' }, { status: 500 })
+    }
+
+    const { data: urlData } = supabaseServer.storage
+      .from('certificate-assets')
+      .getPublicUrl(filePath)
+
+    const fileUrl = urlData.publicUrl
 
     const { data, error } = await supabaseServer
       .from('certificate_assets')
@@ -57,7 +65,10 @@ export async function POST(request: NextRequest) {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      console.error('Database insert error:', error)
+      return NextResponse.json({ success: false, error: 'Failed to save asset record' }, { status: 500 })
+    }
 
     return NextResponse.json({ success: true, asset: data })
   } catch (error: any) {
@@ -67,6 +78,10 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  if (!supabaseServer) {
+    return NextResponse.json({ success: false, error: 'Database not configured' }, { status: 503 })
+  }
+
   try {
     const { searchParams } = new URL(request.url)
     const type = searchParams.get('type')
@@ -84,11 +99,14 @@ export async function GET(request: NextRequest) {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {
+      console.error('Error fetching assets:', error)
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+    }
 
-    return NextResponse.json({ assets: data || [] })
+    return NextResponse.json({ success: true, assets: data || [] })
   } catch (error: any) {
     console.error('Error fetching assets:', error)
-    return NextResponse.json({ error: error.message || 'Failed to fetch assets' }, { status: 500 })
+    return NextResponse.json({ success: false, error: error.message || 'Failed to fetch assets' }, { status: 500 })
   }
 }

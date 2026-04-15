@@ -46,11 +46,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         totalImported: count || 0,
         totalCertificates: count || 0,
+        excellence: data.filter((c: CertificateRecord) => c.certificate_type === 'excellence').length,
+        appreciation: data.filter((c: CertificateRecord) => c.certificate_type === 'appreciation').length,
         participation: data.filter((c: CertificateRecord) => c.certificate_type === 'participation').length,
         winner: data.filter((c: CertificateRecord) => ['winner', 'runner-up', 'second-runner-up'].includes(c.certificate_type)).length,
         sent: data.filter((c: CertificateRecord) => c.sent_status).length,
         pending: data.filter((c: CertificateRecord) => !c.sent_status && c.status === 'valid').length,
-        failed: 0
+        failed: data.filter((c: CertificateRecord) => c.status === 'invalid').length,
+        verified: data.filter((c: CertificateRecord) => c.verification_count && c.verification_count > 0).length
       })
     }
 
@@ -66,13 +69,20 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  if (!supabaseServer) {
+    return NextResponse.json(
+      { success: false, error: 'Database not configured' },
+      { status: 503 }
+    )
+  }
+
   try {
     const body = await request.json()
     const { action, data } = body
 
     if (action === 'import') {
       const { records, mode } = data
-      const updateExisting = mode === 'upsert' // Default: update existing records
+      const updateExisting = mode === 'upsert'
 
       if (!records || !Array.isArray(records) || records.length === 0) {
         return NextResponse.json(
