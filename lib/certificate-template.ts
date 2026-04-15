@@ -85,17 +85,18 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
   const getGlowColor = () => {
     switch (certificateType) {
       case 'excellence':
-        return 'rgba(255, 215, 0, 0.06)'
+        return 'rgba(255, 215, 0, 0.05)'
       case 'appreciation':
-        return 'rgba(65, 105, 225, 0.06)'
+        return 'rgba(65, 105, 225, 0.05)'
       default:
-        return 'rgba(0, 206, 209, 0.06)'
+        return 'rgba(0, 206, 209, 0.05)'
     }
   }
 
   const borderColor = getBorderColor()
   const accentColor = getAccentColor()
   const glowColor = getGlowColor()
+  const title = getTitle()
   
   const verifyUrl = `${VERIFY_BASE_URL}/verify/${data.certificateId}`
   const qrCodeUrl = data.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}&format=png`
@@ -129,40 +130,40 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       height: 794px;
       background: linear-gradient(145deg, #0d0d0d 0%, #141414 50%, #0d0d0d 100%);
       position: relative;
-      padding: 40px 50px;
+      padding: 35px 45px;
     }
     
     .border {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
       border: 3px solid ${borderColor};
       pointer-events: none;
     }
     
     .inner-border {
       position: absolute;
-      top: 22px;
-      left: 22px;
-      right: 22px;
-      bottom: 22px;
-      border: 1px solid ${borderColor}30;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      border: 1px solid ${borderColor}25;
       pointer-events: none;
     }
     
     .corner {
       position: absolute;
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       border: 2px solid ${accentColor};
     }
     
-    .corner-tl { top: 3px; left: 3px; border-right: none; border-bottom: none; }
-    .corner-tr { top: 3px; right: 3px; border-left: none; border-bottom: none; }
-    .corner-bl { bottom: 3px; left: 3px; border-right: none; border-top: none; }
-    .corner-br { bottom: 3px; right: 3px; border-left: none; border-top: none; }
+    .corner-tl { top: 2px; left: 2px; border-right: none; border-bottom: none; }
+    .corner-tr { top: 2px; right: 2px; border-left: none; border-bottom: none; }
+    .corner-bl { bottom: 2px; left: 2px; border-right: none; border-top: none; }
+    .corner-br { bottom: 2px; right: 2px; border-left: none; border-top: none; }
     
     .content {
       position: relative;
@@ -170,17 +171,12 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       height: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: space-between;
-      padding: 20px 30px;
-      background: radial-gradient(circle at center top, ${glowColor} 0%, transparent 60%);
+      padding: 15px 25px;
+      background: radial-gradient(circle at 50% 15%, ${glowColor} 0%, transparent 50%);
     }
     
-    .top-logos {
-      position: absolute;
-      top: 35px;
-      left: 35px;
-      right: 35px;
+    .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
@@ -188,357 +184,308 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     .collab-logos {
       display: flex;
-      gap: 12px;
+      gap: 15px;
       align-items: center;
     }
     
     .logo-img {
-      max-height: 45px;
-      max-width: 90px;
+      max-height: 40px;
+      max-width: 85px;
       object-fit: contain;
     }
     
-    .unstop-logo {
+    .unstop-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
     }
     
     .unstop-logo-img {
-      max-height: 32px;
-      max-width: 70px;
+      max-height: 28px;
+      max-width: 65px;
       object-fit: contain;
-      margin-bottom: 3px;
     }
     
-    .unstop-text {
-      font-size: 8px;
-      color: #888;
+    .unstop-label {
+      font-size: 7px;
+      color: #777;
       letter-spacing: 1px;
       text-transform: uppercase;
+      margin-top: 2px;
     }
     
-    .logo-section {
+    .header {
       text-align: center;
-      margin-top: 10px;
+      padding: 10px 0;
     }
     
-    .org-name {
-      font-family: 'Source Sans 3', sans-serif;
-      font-size: 12px;
+    .org-label {
+      font-size: 11px;
       font-weight: 500;
-      color: #aaa;
+      color: #999;
       letter-spacing: 4px;
       text-transform: uppercase;
       margin-bottom: 8px;
     }
     
-    .main-logo {
-      font-family: 'Cinzel', serif;
-      font-size: 32px;
-      font-weight: 700;
-      color: ${accentColor};
-      letter-spacing: 6px;
-      text-transform: uppercase;
-      margin-bottom: 5px;
-      text-shadow: 0 0 20px ${accentColor}40;
-    }
-    
-    .main-logo-img {
-      max-height: 45px;
+    .org-logo {
+      max-height: 50px;
       margin-bottom: 6px;
     }
     
-    .tagline {
-      font-size: 10px;
-      color: #666;
-      letter-spacing: 2px;
+    .org-name {
+      font-family: 'Cinzel', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: ${accentColor};
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      text-shadow: 0 0 25px ${accentColor}35;
     }
     
-    .title {
+    .tagline {
+      font-size: 9px;
+      color: #555;
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+    
+    .main-title {
       font-family: 'Cinzel', serif;
-      font-size: 36px;
+      font-size: 34px;
       font-weight: 700;
       color: ${accentColor};
       text-transform: uppercase;
       letter-spacing: 4px;
-      margin-top: 15px;
-      margin-bottom: 4px;
       text-align: center;
+      margin-top: 12px;
     }
     
-    .certificate-type-badge {
-      display: inline-block;
-      padding: 4px 16px;
-      background: ${accentColor}12;
-      border: 1px solid ${accentColor}35;
-      border-radius: 20px;
+    .presented-to {
       font-size: 10px;
-      color: ${accentColor};
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    
-    .presented-text {
-      font-size: 11px;
       color: #888;
       letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 10px;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      text-align: center;
     }
     
-    .name {
+    .recipient-name {
       font-family: 'Great Vibes', cursive;
-      font-size: ${data.name.length > 18 ? '52' : '62'}px;
+      font-size: ${data.name.length > 18 ? '50' : '58'}px;
       font-weight: 400;
       color: #ffffff;
       text-align: center;
-      margin-bottom: 18px;
+      margin-bottom: 15px;
       line-height: 1.2;
-      max-width: 90%;
-      text-shadow: 0 0 30px rgba(255,255,255,0.15);
+      text-shadow: 0 0 25px rgba(255,255,255,0.12);
     }
     
-    .divider {
-      width: 200px;
+    .divider-line {
+      width: 220px;
       height: 1px;
       background: linear-gradient(90deg, transparent, ${accentColor}, transparent);
-      margin-bottom: 18px;
+      margin: 0 auto 15px;
     }
     
     .event-text {
-      font-size: 12px;
+      font-size: 11px;
       color: #999;
       letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
       text-align: center;
     }
     
     .event-name {
       font-family: 'Playfair Display', serif;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 600;
       color: #fff;
       letter-spacing: 2px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       text-align: center;
     }
     
-    .branding-section {
+    .branding-footer {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       margin-bottom: 15px;
     }
     
-    .organiser-text {
-      font-size: 10px;
+    .organised-by {
+      font-size: 9px;
       color: #aaa;
       letter-spacing: 1.5px;
       text-transform: uppercase;
     }
     
-    .organiser-text span {
+    .organised-by span {
       color: ${accentColor};
       font-weight: 600;
     }
     
-    .collab-text {
-      font-size: 9px;
-      color: #888;
+    .collaboration {
+      font-size: 8px;
+      color: #777;
       letter-spacing: 1px;
       text-align: center;
     }
     
-    .collab-text span {
+    .collaboration span {
       color: ${accentColor};
     }
     
-    .powered-text {
-      font-size: 9px;
-      color: #777;
+    .powered {
+      font-size: 8px;
+      color: #666;
       letter-spacing: 1px;
     }
     
-    .powered-text span {
+    .powered span {
       color: ${accentColor};
       font-weight: 500;
     }
     
-    .details {
+    .score-details {
       display: flex;
-      gap: 35px;
+      justify-content: center;
+      gap: 30px;
       margin-bottom: 20px;
     }
     
-    .detail-item {
+    .detail-box {
       text-align: center;
-      padding: 10px 22px;
+      padding: 8px 20px;
       background: ${accentColor}08;
-      border: 1px solid ${accentColor}25;
-      border-radius: 6px;
+      border: 1px solid ${accentColor}20;
+      border-radius: 5px;
     }
     
-    .detail-label {
-      font-size: 9px;
+    .detail-box-label {
+      font-size: 8px;
       color: #888;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
     
-    .detail-value {
+    .detail-box-value {
       font-family: 'Playfair Display', serif;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
       color: ${accentColor};
     }
     
-    .footer-main {
-      width: 100%;
+    .footer-section {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      margin-top: auto;
-      padding: 0 10px;
-    }
-    
-    .signature-section {
-      display: flex;
-      justify-content: space-between;
       width: 100%;
-      align-items: flex-end;
-      padding-bottom: 10px;
+      padding-top: 15px;
+      border-top: 1px solid ${accentColor}15;
     }
     
-    .signature-block {
+    .footer-block {
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 280px;
+      text-align: center;
+    }
+    
+    .footer-label {
+      font-size: 8px;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 4px;
+    }
+    
+    .footer-value {
+      font-size: 10px;
+      color: #bbb;
+      font-weight: 500;
+    }
+    
+    .signature-block {
+      min-width: 200px;
     }
     
     .signature-line {
-      width: 180px;
+      width: 150px;
       height: 1px;
       background: ${accentColor};
-      margin-bottom: 6px;
-      opacity: 0.6;
+      margin: 0 auto 5px;
+      opacity: 0.5;
     }
     
     .signature-title {
-      font-family: 'Cinzel', serif;
-      font-size: 12px;
+      font-size: 10px;
       color: ${accentColor};
       font-weight: 600;
       margin-bottom: 2px;
     }
     
     .signature-role {
-      font-size: 9px;
-      color: #aaa;
-      letter-spacing: 0.5px;
-      text-align: center;
+      font-size: 8px;
+      color: #999;
       line-height: 1.4;
     }
     
     .signature-name {
       font-family: 'Great Vibes', cursive;
-      font-size: 20px;
+      font-size: 18px;
       color: #fff;
-      margin-top: 4px;
+      margin-top: 3px;
     }
     
-    .cert-info-block {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      min-width: 200px;
+    .qr-block {
+      min-width: 140px;
     }
     
-    .qr-container {
-      background: #fff;
-      border: 3px solid ${accentColor};
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 0 25px ${accentColor}30, 0 4px 15px rgba(0,0,0,0.3);
+    .qr-frame {
+      background: #ffffff;
+      border: 2px solid ${accentColor};
+      border-radius: 8px;
+      padding: 8px;
+      box-shadow: 0 0 20px ${accentColor}25, 0 3px 10px rgba(0,0,0,0.25);
+      display: inline-block;
     }
     
-    .qr-image {
-      width: 90px;
-      height: 90px;
+    .qr-code {
+      width: 80px;
+      height: 80px;
       display: block;
     }
     
-    .qr-label {
-      font-size: 10px;
+    .qr-text {
+      font-size: 8px;
       color: ${accentColor};
       text-transform: uppercase;
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
       font-weight: 600;
       margin-top: 6px;
     }
     
-    .qr-sublabel {
-      font-size: 8px;
-      color: #888;
-      margin-top: 2px;
+    .qr-subtext {
+      font-size: 7px;
+      color: #777;
+      margin-top: 1px;
     }
     
-    .cert-id-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    
-    .cert-id-label {
+    .cert-id-display {
       font-size: 9px;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-    }
-    
-    .cert-id {
-      font-size: 10px;
-      color: #ccc;
+      color: #aaa;
       font-family: 'Source Sans 3', monospace;
-      letter-spacing: 2px;
-      padding: 5px 10px;
-      background: ${accentColor}10;
-      border: 1px solid ${accentColor}30;
-      border-radius: 4px;
-    }
-    
-    .date-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    
-    .date-label {
-      font-size: 9px;
-      color: #888;
-      text-transform: uppercase;
       letter-spacing: 1.5px;
-    }
-    
-    .date-value {
-      font-size: 11px;
-      color: #ccc;
-      font-weight: 500;
-    }
-    
-    @media (max-width: 1123px) {
-      .certificate {
-        transform: scale(0.9);
-        transform-origin: center;
-      }
+      padding: 4px 8px;
+      background: ${accentColor}08;
+      border: 1px solid ${accentColor}20;
+      border-radius: 3px;
+      margin-top: 8px;
     }
   </style>
 </head>
@@ -551,93 +498,82 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     <div class="corner corner-bl"></div>
     <div class="corner corner-br"></div>
     
-    <div class="top-logos">
-      <div class="collab-logos">
-        <img src="${csiLogoUrl}" alt="CSI" class="logo-img" onerror="this.style.display='none'" />
-        <img src="${collegeLogoUrl}" alt="BBSCET" class="logo-img" onerror="this.style.display='none'" />
-      </div>
-      <div class="unstop-logo">
-        <img src="${unstopLogoUrl}" alt="Unstop" class="unstop-logo-img" onerror="this.style.display='none'" />
-        <span class="unstop-text">Powered by</span>
-      </div>
-    </div>
-    
     <div class="content">
-      <div class="logo-section">
-        <div class="org-name">Organised by</div>
-        <img src="${techHubLogoUrl}" alt="Tech Hub BBS" class="main-logo-img" onerror="this.style.display='none'" />
-        <div class="main-logo">Tech Hub BBS</div>
+      <div class="top-bar">
+        <div class="collab-logos">
+          <img src="${csiLogoUrl}" alt="CSI" class="logo-img" onerror="this.style.display='none'" />
+          <img src="${collegeLogoUrl}" alt="BBSCET" class="logo-img" onerror="this.style.display='none'" />
+        </div>
+        <div class="unstop-wrapper">
+          <img src="${unstopLogoUrl}" alt="Unstop" class="unstop-logo-img" onerror="this.style.display='none'" />
+          <span class="unstop-label">Powered by</span>
+        </div>
+      </div>
+      
+      <div class="header">
+        <div class="org-label">Organised by</div>
+        <img src="${techHubLogoUrl}" alt="Tech Hub BBS" class="org-logo" onerror="this.style.display='none'" />
+        <div class="org-name">Tech Hub BBS</div>
         <div class="tagline">Empowering Innovation & Technical Excellence</div>
       </div>
       
       <div>
-        <div class="title">${getTitle()}</div>
-        <div class="certificate-type-badge">${getTitle()}</div>
-      </div>
-      
-      <div>
-        <div class="presented-text">This certificate is proudly presented to</div>
-        <div class="name">${data.name}</div>
-        <div class="divider"></div>
+        <div class="main-title">${title}</div>
+        
+        <div class="presented-to">This certificate is proudly presented to</div>
+        <div class="recipient-name">${data.name}</div>
+        <div class="divider-line"></div>
         
         <div class="event-text">${getBodyText()}</div>
         <div class="event-name">${data.event}</div>
       </div>
       
-      <div class="branding-section">
-        <p class="organiser-text">Organised by <span>Tech Hub BBS</span></p>
-        <p class="collab-text">In collaboration with <span>Computer Society of India</span> and <span>BBS Coding Club</span></p>
-        <p class="powered-text">Powered by <span>Unstop</span></p>
+      <div class="branding-footer">
+        <div class="organised-by">Organised by <span>Tech Hub BBS</span></div>
+        <div class="collaboration">In collaboration with <span>Computer Society of India</span> and <span>BBS Coding Club</span></div>
+        <div class="powered">Powered by <span>Unstop</span></div>
       </div>
       
-      <div class="details">
+      <div class="score-details">
         ${data.rank ? `
-        <div class="detail-item">
-          <div class="detail-label">Achieved Rank</div>
-          <div class="detail-value">#${data.rank}</div>
+        <div class="detail-box">
+          <div class="detail-box-label">Achieved Rank</div>
+          <div class="detail-box-value">#${data.rank}</div>
         </div>
         ` : ''}
         ${data.score !== null ? `
-        <div class="detail-item">
-          <div class="detail-label">Score</div>
-          <div class="detail-value">${data.score}/20</div>
+        <div class="detail-box">
+          <div class="detail-box-label">Score</div>
+          <div class="detail-box-value">${data.score}/20</div>
         </div>
         ` : ''}
       </div>
       
-      <div class="footer-main">
-        <div class="cert-info-block">
-          <div class="date-container">
-            <div class="date-label">Date of Issue</div>
-            <div class="date-value">${data.date}</div>
-          </div>
+      <div class="footer-section">
+        <div class="footer-block">
+          <div class="footer-label">Date of Issue</div>
+          <div class="footer-value">${data.date}</div>
         </div>
         
-        <div class="signature-section">
-          <div class="signature-block">
-            <div class="signature-line"></div>
-            <div class="signature-title">Digitally Signed by BBSCET</div>
-            <div class="signature-role">Director, BBSCET<br/>Prof. Ashutosh Shrivastava</div>
-          </div>
-          
-          <div class="signature-block">
-            <div class="signature-line"></div>
-            <div class="signature-title">Issued by Tech Hub BBS</div>
-            <div class="signature-role">President & Student Coordinator<br/>Mukesh Kumar</div>
-          </div>
+        <div class="footer-block signature-block">
+          <div class="signature-line"></div>
+          <div class="signature-title">Digitally Signed by BBSCET</div>
+          <div class="signature-role">Director, BBSCET<br/>Prof. Ashutosh Shrivastava</div>
         </div>
         
-        <div class="cert-info-block">
-          <div class="qr-container">
-            <img src="${qrCodeUrl}" alt="QR Code" class="qr-image" />
+        <div class="footer-block signature-block">
+          <div class="signature-line"></div>
+          <div class="signature-title">Issued by Tech Hub BBS</div>
+          <div class="signature-role">President & Student Coordinator<br/>Mukesh Kumar</div>
+        </div>
+        
+        <div class="footer-block qr-block">
+          <div class="qr-frame">
+            <img src="${qrCodeUrl}" alt="QR Code" class="qr-code" />
           </div>
-          <div class="qr-label">Scan to Verify</div>
-          <div class="qr-sublabel">Verify Authenticity Online</div>
-          
-          <div class="cert-id-container" style="margin-top: 10px;">
-            <div class="cert-id-label">Certificate ID</div>
-            <div class="cert-id">${data.certificateId}</div>
-          </div>
+          <div class="qr-text">Scan to Verify</div>
+          <div class="qr-subtext">Verify Authenticity Online</div>
+          <div class="cert-id-display">${data.certificateId}</div>
         </div>
       </div>
     </div>
