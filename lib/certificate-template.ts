@@ -194,53 +194,51 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     .header-section {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      padding-bottom: 6px;
+      align-items: center;
+      padding-bottom: 8px;
       border-bottom: 1px solid ${accentColor}12;
     }
     
     .corner-logo {
-      max-height: 40px;
-      max-width: 60px;
+      max-height: 45px;
+      max-width: 70px;
       object-fit: contain;
       opacity: 0.9;
     }
     
     .main-header {
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      text-align: center;
     }
     
     .bbs-main-logo {
-      max-height: 55px;
-      max-width: 120px;
+      max-height: 120px;
+      max-width: 250px;
       object-fit: contain;
-      filter: drop-shadow(0 0 6px ${accentColor}25) brightness(1.05);
-      margin-bottom: 2px;
+      filter: drop-shadow(0 0 10px ${accentColor}35) brightness(1.1);
+    }
+    
+    .right-techhub {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     
     .techhub-header-logo {
-      max-height: 38px;
-      max-width: 65px;
+      max-height: 40px;
+      max-width: 70px;
       object-fit: contain;
-      margin-bottom: 1px;
     }
     
     .techhub-header-name {
       font-family: 'Cinzel', serif;
-      font-size: 8px;
+      font-size: 6px;
       font-weight: 700;
       color: ${accentColor};
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
       text-transform: uppercase;
-    }
-    
-    .techhub-header-tagline {
-      font-size: 3.5px;
-      color: #555;
-      letter-spacing: 0.6px;
+      margin-top: 1px;
     }
     
     .main-content {
@@ -253,13 +251,13 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     .main-title {
       font-family: 'Cinzel', serif;
-      font-size: 18px;
+      font-size: 36px;
       font-weight: 700;
       color: ${accentColor};
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 4px;
       text-align: center;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
     
     .recipient-section {
@@ -267,55 +265,55 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .presented-to {
-      font-size: 6px;
+      font-size: 12px;
       color: #888;
-      letter-spacing: 1.2px;
+      letter-spacing: 2px;
       text-transform: uppercase;
     }
     
     .recipient-name {
       font-family: 'Great Vibes', cursive;
-      font-size: ${data.name.length > 18 ? '36' : '44'}px;
+      font-size: ${data.name.length > 18 ? '72' : '88'}px;
       font-weight: 400;
       color: #ffffff;
-      margin: 3px 0 5px;
+      margin: 6px 0 10px;
       line-height: 1.1;
-      text-shadow: 0 0 15px rgba(255,255,255,0.1);
+      text-shadow: 0 0 20px rgba(255,255,255,0.15);
     }
     
     .divider {
-      width: 140px;
-      height: 1px;
+      width: 280px;
+      height: 2px;
       background: linear-gradient(90deg, transparent, ${accentColor}, transparent);
-      margin: 0 auto 4px;
+      margin: 0 auto 8px;
     }
     
     .event-section {
       text-align: center;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
     
     .event-text {
-      font-size: 7px;
+      font-size: 14px;
       color: #999;
-      letter-spacing: 1.2px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
     
     .event-name {
       font-family: 'Playfair Display', serif;
-      font-size: 12px;
+      font-size: 24px;
       font-weight: 600;
       color: #fff;
-      letter-spacing: 0.8px;
+      letter-spacing: 1.5px;
     }
     
     .branding-line {
       text-align: center;
-      font-size: 4.5px;
+      font-size: 9px;
       color: #777;
-      letter-spacing: 0.6px;
+      letter-spacing: 1px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -330,7 +328,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .branding-logo {
-      height: 7px;
+      height: 12px;
       width: auto;
       vertical-align: middle;
     }
@@ -338,28 +336,28 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     .score-row {
       display: flex;
       justify-content: center;
-      gap: 12px;
+      gap: 20px;
     }
     
     .score-box {
       text-align: center;
-      padding: 2px 8px;
+      padding: 4px 16px;
       background: ${accentColor}06;
       border: 1px solid ${accentColor}15;
       border-radius: 3px;
     }
     
     .score-label {
-      font-size: 4.5px;
+      font-size: 9px;
       color: #777;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 1px;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
     }
     
     .score-value {
       font-family: 'Playfair Display', serif;
-      font-size: 10px;
+      font-size: 20px;
       font-weight: 600;
       color: ${accentColor};
     }
@@ -374,41 +372,41 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 5px 8px;
+      padding: 10px 16px;
       background: ${accentColor}08;
       border: 1px solid ${accentColor}20;
-      border-radius: 5px;
+      border-radius: 6px;
     }
     
     .qr-mini-box {
       background: #ffffff;
-      border: 1.5px solid ${accentColor};
-      border-radius: 3px;
-      padding: 2px;
-      box-shadow: 0 0 6px ${accentColor}12;
+      border: 2px solid ${accentColor};
+      border-radius: 4px;
+      padding: 3px;
+      box-shadow: 0 0 10px ${accentColor}15;
     }
     
     .qr-mini-img {
-      width: 40px;
-      height: 40px;
+      width: 80px;
+      height: 80px;
       display: block;
     }
     
     .qr-scan-label {
-      font-size: 4.5px;
+      font-size: 9px;
       color: ${accentColor};
       text-transform: uppercase;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.5px;
       font-weight: 600;
-      margin-top: 2px;
+      margin-top: 4px;
     }
     
     .qr-cert-id {
-      font-size: 5px;
+      font-size: 10px;
       color: #999;
       font-family: monospace;
-      letter-spacing: 0.4px;
-      margin-top: 1px;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
     }
     
     .footer-row {
@@ -439,21 +437,21 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .footer-label {
-      font-size: 4.5px;
+      font-size: 9px;
       color: #555;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 1px;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
     }
     
     .footer-value {
-      font-size: 5.5px;
+      font-size: 11px;
       color: #999;
       font-weight: 500;
     }
     
     .sig-line {
-      width: 70px;
+      width: 140px;
       height: 1px;
       background: ${accentColor};
       margin: 0 auto 1px;
@@ -461,15 +459,15 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .sig-title {
-      font-size: 4.5px;
+      font-size: 9px;
       color: ${accentColor};
       font-weight: 600;
     }
     
     .sig-role {
-      font-size: 3.5px;
+      font-size: 7px;
       color: #777;
-      line-height: 1.2;
+      line-height: 1.3;
     }
   </style>
 </head>
@@ -488,12 +486,12 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
         
         <div class="main-header">
           <img src="${bbsGroupLogoUrl}" alt="BBS Group" class="bbs-main-logo" onerror="this.style.display='none'" />
-          <img src="${techHubLogoUrl}" alt="Tech Hub BBS" class="techhub-header-logo" onerror="this.style.display='none'" />
-          <div class="techhub-header-name">Tech Hub BBS</div>
-          <div class="techhub-header-tagline">Empowering Innovation & Technical Excellence</div>
         </div>
         
-        <img src="${unstopLogoUrl}" alt="Unstop" class="corner-logo" onerror="this.style.display='none'" />
+        <div class="right-techhub">
+          <img src="${techHubLogoUrl}" alt="Tech Hub BBS" class="techhub-header-logo" onerror="this.style.display='none'" />
+          <div class="techhub-header-name">Tech Hub BBS</div>
+        </div>
       </div>
       
       <div class="main-content">
