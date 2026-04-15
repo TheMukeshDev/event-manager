@@ -8,7 +8,8 @@ interface ParsedRecord {
   name: string
   email: string
   rank: number | null
-  score: number | null
+  rawScore: string | null
+  normalizedScore: number | null
   event: string
   certificateType: string
 }
@@ -260,7 +261,7 @@ export function CsvImportCard({ onClose, onComplete }: { onClose: () => void; on
                     <th className="text-left p-2 text-gray-400 font-medium">Name</th>
                     <th className="text-left p-2 text-gray-400 font-medium">Email</th>
                     <th className="text-left p-2 text-gray-400 font-medium">Rank</th>
-                    <th className="text-left p-2 text-gray-400 font-medium">Score</th>
+                    <th className="text-left p-2 text-gray-400 font-medium">Score (Raw → Norm.)</th>
                     <th className="text-left p-2 text-gray-400 font-medium">Type</th>
                   </tr>
                 </thead>
@@ -270,7 +271,9 @@ export function CsvImportCard({ onClose, onComplete }: { onClose: () => void; on
                       <td className="p-2 text-white truncate max-w-[150px]">{record.name}</td>
                       <td className="p-2 text-gray-300 truncate max-w-[200px]">{record.email}</td>
                       <td className="p-2 text-gray-300">{record.rank || '-'}</td>
-                      <td className="p-2 text-gray-300">{record.score || '-'}</td>
+                      <td className="p-2 text-gray-300">
+                        {record.rawScore ? `${record.rawScore} → ${record.normalizedScore ?? 'N/A'}` : '-'}
+                      </td>
                       <td className="p-2">
                         <span className={`px-2 py-0.5 rounded text-xs font-medium ${
                           record.certificateType === 'winner' ? 'bg-yellow-500/20 text-yellow-300' :
