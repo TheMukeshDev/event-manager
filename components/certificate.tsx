@@ -362,7 +362,14 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="branding-section"
-              style={{ textAlign: 'center', marginBottom: 8 }}
+              style={{ 
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '4px',
+                marginBottom: 8,
+                lineHeight: 1.4
+              }}
             >
               <div
                 className="branding-line gold"
@@ -371,7 +378,8 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   color: accentColor,
                   fontWeight: 500,
                   letterSpacing: 0.8,
-                  lineHeight: 1.6
+                  lineHeight: 1.6,
+                  textAlign: 'center'
                 }}
               >
                 Organised by <strong>Tech Hub BBS</strong> in collaboration with{' '}
@@ -379,18 +387,22 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 <strong>BBS Coding Club</strong>
               </div>
               <div
-                className="branding-line"
                 style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '2px',
                   fontSize: 10,
                   color: '#888',
                   letterSpacing: 0.8,
-                  lineHeight: 1.6
+                  lineHeight: 1.4
                 }}
               >
-                <span
+                <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
+                    justifyContent: 'center',
                     gap: '8px',
                     whiteSpace: 'nowrap'
                   }}
@@ -401,15 +413,24 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     alt="Unstop"
                     className="branding-logo"
                     style={{
-                      maxHeight: 24,
-                      height: 22,
+                      maxHeight: 28,
                       width: 'auto',
                       objectFit: 'contain',
+                      display: 'inline-block',
+                      verticalAlign: 'middle',
                       filter: `drop-shadow(0 0 6px ${accentColor}35)`
                     }}
                   />
-                </span>
-                <span style={{ color: '#666', margin: '0 6px' }}>|</span> National Level Technical Quiz
+                </div>
+                <div
+                  style={{
+                    textAlign: 'center',
+                    width: '100%',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  National Level Technical Quiz
+                </div>
               </div>
             </div>
 
