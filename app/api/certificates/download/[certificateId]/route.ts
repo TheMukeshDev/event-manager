@@ -1,29 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase-server'
 import { getCertificateTemplate, generatePDF, generateImage } from '@/lib/certificate-template'
+import { generateQRCodeBase64 } from '@/lib/qr-generator'
+import { getLogosAsBase64 } from '@/lib/logo-loader'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ certificateId: string }> }
 ) {
+  let certificateId: string
+  let format: string
+
   try {
-    const { certificateId } = await params
+    const { certificateId: paramId } = await params
+    certificateId = paramId
+    
     const { searchParams } = new URL(request.url)
-    const format = searchParams.get('format') || 'html'
+    format = searchParams.get('format') || 'html'
+  } catch (error) {
+    return NextResponse.json({ error: 'Invalid request parameters' }, { status: 400 })
+  }
 
-    if (!supabaseServer) {
-      return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
-    }
+  if (!supabaseServer) {
+    return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
+  }
 
-    const { data: cert, error } = await supabaseServer
-      .from('certificate_records')
-      .select('*')
-      .eq('certificate_id', certificateId)
-      .single()
+  const { data: cert, error } = await supabaseServer
+    .from('certificate_records')
+    .select('*')
+    .eq('certificate_id', certificateId)
+    .single()
 
-    if (error || !cert) {
-      return NextResponse.json({ error: 'Certificate not found' }, { status: 404 })
-    }
+  if (error || !cert) {
+    return NextResponse.json({ error: 'Certificate not found' }, { status: 404 })
+  }
+
+  try {
+    const verifyUrl = `${process.env.NEXT_PUBLIC_VERIFY_BASE_URL || 'https://techhub-bbs.vercel.app'}/verify/${cert.certificate_id}`
+    
+    const [qrCodeBase64, logos] = await Promise.all([
+      generateQRCodeBase64(verifyUrl, 200),
+      Promise.resolve(getLogosAsBase64())
+    ])
 
     const templateData = {
       name: cert.name,
@@ -32,7 +50,9 @@ export async function GET(
       rank: cert.rank,
       date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
       certificateId: cert.certificate_id,
-      certificateType: cert.certificate_type
+      certificateType: cert.certificate_type,
+      qrCodeBase64,
+      logos
     }
 
     const html = getCertificateTemplate(cert.certificate_type, templateData)
@@ -62,12 +82,13 @@ export async function GET(
       } else {
         return new NextResponse(html, {
           headers: {
-            'Content-Type': 'text/html'
+            'Content-Type': 'text/html',
+            'Content-Disposition': `inline; filename="certificate-${certificateId}.html"`
           }
         })
       }
     } catch (genError: any) {
-      console.error('Generation failed, returning HTML:', genError.message)
+      console.error('Generation failed:', genError.message)
       return new NextResponse(html, {
         headers: {
           'Content-Type': 'text/html',

@@ -1,5 +1,7 @@
 import { supabaseServer } from './supabase-server'
 import { getCertificateTemplate } from './certificate-template'
+import { generateQRCodeBase64 } from './qr-generator'
+import { getLogosAsBase64 } from './logo-loader'
 
 if (!supabaseServer) {
   console.warn('Supabase server not configured - database operations will fail')
@@ -420,14 +422,23 @@ export async function generatePreviewHtml(certificateId: string): Promise<string
 
   if (!data) throw new Error('Certificate not found')
 
+  const verifyUrl = `${process.env.NEXT_PUBLIC_VERIFY_BASE_URL || 'https://techhub-bbs.vercel.app'}/verify/${data.certificate_id}`
+  
+  const [qrCodeBase64, logos] = await Promise.all([
+    generateQRCodeBase64(verifyUrl, 200),
+    Promise.resolve(getLogosAsBase64())
+  ])
+
   const templateData = {
     name: data.name,
-    event: data.event,
+    event: data.event || 'TechQuiz 2026',
     rank: data.rank,
     score: data.score,
     date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
     certificateId: data.certificate_id,
-    certificateType: data.certificate_type
+    certificateType: data.certificate_type,
+    qrCodeBase64,
+    logos
   }
 
   return getCertificateTemplate(data.certificate_type, templateData)
