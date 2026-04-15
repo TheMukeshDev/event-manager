@@ -97,13 +97,14 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
   const accentColor = getAccentColor()
   const glowColor = getGlowColor()
   const title = getTitle()
-  
+
   const verifyUrl = `${VERIFY_BASE_URL}/verify/${data.certificateId}`
   const qrCodeUrl = data.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}&format=png`
 
   const techHubLogoUrl = '/certificates/logos/techhubbs.png'
-  const bbsGroupLogoUrl = '/certificates/logos/bbslogo.png'
+  const bbsGroupLogoUrl = '/certificates/logos/bbsgroup.png'
   const csiLogoUrl = '/certificates/logos/csi.png'
+  const collegeLogoUrl = '/certificates/logos/bbslogo.png'
   const unstopLogoUrl = '/certificates/logos/unstop.png'
 
   return `<!DOCTYPE html>
@@ -219,8 +220,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .bbs-group-logo {
-      max-height: 65px;
-      max-width: 130px;
+      max-height: 95px;
+      max-width: 230px;
       object-fit: contain;
     }
     
@@ -640,18 +641,18 @@ export async function generatePDF(template: string): Promise<Buffer> {
   try {
     const puppeteer = await import('puppeteer-core')
     const chromium = await import('@sparticuz/chromium')
-    
+
     const browser = await puppeteer.launch({
       args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
       defaultViewport: { width: 1280, height: 720 },
       executablePath: await chromium.executablePath(),
       headless: true
     })
-    
+
     const page = await browser.newPage()
-    
+
     await page.setContent(template, { waitUntil: 'networkidle0', timeout: 30000 })
-    
+
     await page.evaluate(() => {
       return new Promise<void>((resolve) => {
         if (document.readyState === 'complete') {
@@ -661,16 +662,16 @@ export async function generatePDF(template: string): Promise<Buffer> {
         }
       })
     })
-    
+
     const pdf = await page.pdf({
       format: 'A4',
       printBackground: true,
       landscape: true,
       margin: { top: 0, bottom: 0, left: 0, right: 0 }
     })
-    
+
     await browser.close()
-    
+
     return Buffer.from(pdf)
   } catch (error) {
     console.error('PDF generation error:', error)
@@ -682,18 +683,18 @@ export async function generateImage(template: string): Promise<Buffer> {
   try {
     const puppeteer = await import('puppeteer-core')
     const chromium = await import('@sparticuz/chromium')
-    
+
     const browser = await puppeteer.launch({
       args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
       defaultViewport: { width: 1280, height: 720 },
       executablePath: await chromium.executablePath(),
       headless: true
     })
-    
+
     const page = await browser.newPage()
-    
+
     await page.setContent(template, { waitUntil: 'networkidle0', timeout: 30000 })
-    
+
     await page.evaluate(() => {
       return new Promise<void>((resolve) => {
         if (document.readyState === 'complete') {
@@ -703,15 +704,15 @@ export async function generateImage(template: string): Promise<Buffer> {
         }
       })
     })
-    
+
     const screenshot = await page.screenshot({
       type: 'png',
       fullPage: true,
       omitBackground: false
     })
-    
+
     await browser.close()
-    
+
     return Buffer.from(screenshot as string, 'base64')
   } catch (error) {
     console.error('Image generation error:', error)
