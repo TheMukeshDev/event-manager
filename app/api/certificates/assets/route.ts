@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase-server'
+import { writeFile, mkdir } from 'fs/promises'
+import { existsSync } from 'fs'
+import { join } from 'path'
 
 export async function POST(request: NextRequest) {
   if (!supabaseServer) {
@@ -30,27 +33,17 @@ export async function POST(request: NextRequest) {
     const fileType = ext === 'jpeg' ? 'jpg' : ext === 'svg' ? 'svg' : ext
 
     const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileType}`
-    const filePath = `${category}/${uniqueName}`
-
-    const buffer = Buffer.from(await file.arrayBuffer())
+    const uploadDir = join(process.cwd(), 'public', 'certificates', 'logos')
     
-    const { error: uploadError } = await supabaseServer.storage
-      .from('certificate-assets')
-      .upload(filePath, buffer, {
-        contentType: file.type,
-        upsert: false
-      })
-
-    if (uploadError) {
-      console.error('Supabase upload error:', uploadError)
-      return NextResponse.json({ success: false, error: 'Failed to upload file to storage' }, { status: 500 })
+    if (!existsSync(uploadDir)) {
+      await mkdir(uploadDir, { recursive: true })
     }
 
-    const { data: urlData } = supabaseServer.storage
-      .from('certificate-assets')
-      .getPublicUrl(filePath)
+    const filePath = join(uploadDir, uniqueName)
+    const buffer = Buffer.from(await file.arrayBuffer())
+    await writeFile(filePath, buffer)
 
-    const fileUrl = urlData.publicUrl
+    const fileUrl = `/certificates/logos/${uniqueName}`
 
     const { data, error } = await supabaseServer
       .from('certificate_assets')
