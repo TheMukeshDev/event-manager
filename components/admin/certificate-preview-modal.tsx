@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { X, Download, Send, Loader2, ExternalLink, RefreshCw, Image as ImageIcon, FileText, AlertCircle, CheckCircle } from 'lucide-react'
+import { X, Send, Loader2, ExternalLink, Download, AlertCircle } from 'lucide-react'
 import { Certificate } from '@/components/certificate'
 import { useCertificateExport } from '@/components/certificate-export'
 import { generateQRCodeBase64 } from '@/lib/qr-generator'
@@ -60,7 +60,6 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
     isExporting,
     exportError,
     downloadPNG,
-    downloadPDF,
     clearError
   } = useCertificateExport(certificate.certificate_id, certificate.name)
 
@@ -116,16 +115,6 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
     }
   }
 
-  const handleOpenFullPage = () => {
-    const previewWindow = window.open('', '_blank')
-    if (previewWindow && previewHtml) {
-      previewWindow.document.write(previewHtml)
-      previewWindow.document.close()
-    }
-  }
-
-  const isAnyExporting = isExporting !== 'none'
-
   if (viewMode === 'fullpage') {
     return (
       <div className="fixed inset-0 z-[100] bg-black">
@@ -179,19 +168,11 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
             </button>
             <button
               onClick={downloadPNG}
-              disabled={isAnyExporting || !qrCodeUrl}
+              disabled={isExporting || !qrCodeUrl}
               className="p-2 rounded-lg text-gray-400 hover:text-cyan-300 hover:bg-cyan-500/20 transition-colors disabled:opacity-50"
-              title="Download Image (PNG)"
+              title="Download Certificate"
             >
-              {isExporting === 'png' ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImageIcon className="w-5 h-5" />}
-            </button>
-            <button
-              onClick={downloadPDF}
-              disabled={isAnyExporting || !qrCodeUrl}
-              className="p-2 rounded-lg text-gray-400 hover:text-green-300 hover:bg-green-500/20 transition-colors disabled:opacity-50"
-              title="Download PDF"
-            >
-              {isExporting === 'pdf' ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
+              {isExporting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
             </button>
             {!certificate.sent_status && (
               <button
@@ -215,11 +196,11 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
         <div className="flex-1 overflow-auto bg-gray-900/50 p-4">
           {!qrCodeUrl || loading ? (
             <div className="flex flex-col items-center justify-center h-96">
-              <RefreshCw className="w-12 h-12 text-cyan-400 animate-spin mb-4" />
+              <Loader2 className="w-12 h-12 text-cyan-400 animate-spin mb-4" />
               <p className="text-gray-400">{loadingMessage}</p>
             </div>
           ) : (
-            <div className="flex justify-center">
+            <div className="flex justify-center overflow-auto">
               <Certificate
                 ref={certificateRef}
                 name={certificate.name}
@@ -260,39 +241,17 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
           <div className="flex gap-2">
             <button
               onClick={downloadPNG}
-              disabled={isAnyExporting || !qrCodeUrl}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition-colors text-sm disabled:opacity-50"
+              disabled={isExporting || !qrCodeUrl}
+              className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-cyan-500 text-white hover:bg-cyan-400 transition-colors text-sm disabled:opacity-50"
             >
-              {isExporting === 'png' ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
-              PNG
-            </button>
-            <button
-              onClick={downloadPDF}
-              disabled={isAnyExporting || !qrCodeUrl}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-green-500/30 text-green-300 hover:bg-green-500/20 transition-colors text-sm disabled:opacity-50"
-            >
-              {isExporting === 'pdf' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-              PDF
-            </button>
-            <button
-              onClick={() => {
-                const previewWindow = window.open('', '_blank')
-                if (previewWindow && previewHtml) {
-                  previewWindow.document.write(previewHtml)
-                  previewWindow.document.close()
-                }
-              }}
-              disabled={!previewHtml}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-500/30 text-gray-300 hover:bg-gray-500/20 transition-colors text-sm disabled:opacity-50"
-            >
-              <FileText className="w-4 h-4" />
-              HTML
+              {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              Download Certificate
             </button>
             {!certificate.sent_status && (
               <button
                 onClick={handleSend}
                 disabled={sending}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500 text-white hover:bg-purple-400 transition-colors text-sm disabled:opacity-50"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-purple-500 text-white hover:bg-purple-400 transition-colors text-sm disabled:opacity-50"
               >
                 {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 Send Now

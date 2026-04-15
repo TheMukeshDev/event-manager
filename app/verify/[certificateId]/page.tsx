@@ -1,10 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { CheckCircle, XCircle, AlertTriangle, Loader2, Award, User, Calendar, Hash, Download, Image as ImageIcon, FileText, Instagram, Linkedin, Share2, ArrowRight, Search } from 'lucide-react'
+import { CheckCircle, XCircle, AlertTriangle, Loader2, Award, User, Calendar, Hash, Download, Instagram, Linkedin, ArrowRight, Search } from 'lucide-react'
+import { Certificate } from '@/components/certificate'
+import { downloadCertificatePNG } from '@/components/certificate-export'
+import { generateQRCodeBase64 } from '@/lib/qr-generator'
 
 interface CertificateData {
   certificateId: string
@@ -20,6 +23,17 @@ interface CertificateData {
 const INSTAGRAM_URL = 'https://www.instagram.com/tech.hub.bbs'
 const LINKEDIN_URL = 'https://www.linkedin.com/company/tech-hub-bbs'
 
+function getTitle(certificateType: string): string {
+  switch (certificateType) {
+    case 'excellence': return 'CERTIFICATE OF EXCELLENCE'
+    case 'appreciation': return 'CERTIFICATE OF APPRECIATION'
+    case 'winner': return 'WINNER CERTIFICATE'
+    case 'runner-up': return 'RUNNER-UP CERTIFICATE'
+    case 'second-runner-up': return 'SECOND RUNNER-UP CERTIFICATE'
+    default: return 'CERTIFICATE OF PARTICIPATION'
+  }
+}
+
 export default function VerifyCertificatePage() {
   const params = useParams()
   const certificateId = params.certificateId as string
@@ -29,6 +43,8 @@ export default function VerifyCertificatePage() {
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState<string>('UNKNOWN')
   const [downloading, setDownloading] = useState(false)
+  const [qrCodeUrl, setQrCodeUrl] = useState<string>('')
+  const certificateRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!certificateId) {
@@ -45,6 +61,10 @@ export default function VerifyCertificatePage() {
         if (data.certificate) {
           setCertificate(data.certificate)
           setStatus(data.status)
+          
+          const verifyUrl = `${process.env.NEXT_PUBLIC_VERIFY_BASE_URL || 'https://techhub-bbs.vercel.app'}/verify/${certificateId}`
+          const qrBase64 = await generateQRCodeBase64(verifyUrl, 200)
+          setQrCodeUrl(qrBase64)
         } else {
           setError(data.message || 'Certificate not found')
           setStatus(data.status || 'NOT_FOUND')
@@ -60,28 +80,14 @@ export default function VerifyCertificatePage() {
     verifyCertificate()
   }, [certificateId])
 
-  const handleDownload = async (format: 'pdf' | 'png' | 'html') => {
+  const handleDownload = async () => {
+    if (!certificateRef.current || !certificate) return
+    
     try {
       setDownloading(true)
-      const response = await fetch(`/api/certificates/download/${certificateId}?format=${format}`)
-      
-      if (!response.ok) {
-        throw new Error(`Failed to generate ${format.toUpperCase()}`)
-      }
-      
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      const firstName = certificate?.recipientName?.trim().split(' ')[0] || 'Certificate'
-      a.download = `${firstName}-Tech-Hub-BBS.${format === 'html' ? 'html' : format}`
-      a.target = '_blank'
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      URL.revokeObjectURL(url)
-    } catch (error) {
-      console.error(`Error downloading ${format.toUpperCase()}:`, error)
+      await downloadCertificatePNG(certificateRef.current, certificate.certificateId, certificate.recipientName)
+    } catch (err) {
+      console.error('Error downloading certificate:', err)
     } finally {
       setDownloading(false)
     }
@@ -159,7 +165,6 @@ export default function VerifyCertificatePage() {
 
   return (
     <div className="min-h-screen bg-black py-12 px-4">
-      {/* Header */}
       <div className="max-w-lg mx-auto mb-8 flex items-center justify-between">
         <Link
           href="/"
@@ -258,60 +263,42 @@ export default function VerifyCertificatePage() {
             </p>
           </div>
 
-          {/* Download Section */}
-          <div className="flex gap-2 mt-4">
-            <button
-              onClick={() => handleDownload('png')}
-              disabled={downloading}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] disabled:opacity-50"
-            >
-              <ImageIcon className="w-4 h-4" />
-              PNG
-            </button>
-            <button
-              onClick={() => handleDownload('html')}
-              disabled={downloading}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gray-500/20 border border-gray-500/50 text-gray-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(128,128,128,0.3)] disabled:opacity-50"
-            >
-              <FileText className="w-4 h-4" />
-              HTML
-            </button>
-            <button
-              onClick={() => handleDownload('pdf')}
-              disabled={downloading}
-              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-green-500/20 border border-green-500/50 text-green-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(0,255,136,0.3)] disabled:opacity-50"
-            >
+          <button
+            onClick={handleDownload}
+            disabled={downloading || !qrCodeUrl}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] disabled:opacity-50"
+          >
+            {downloading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
               <Download className="w-4 h-4" />
-              PDF
-            </button>
-          </div>
+            )}
+            Download Certificate
+          </button>
 
-          {/* Share Section - Only for Valid Certificates */}
           {isValid && (
             <div className="mt-6 pt-6 border-t border-gray-700">
               <p className="text-center text-gray-400 text-sm mb-4">
                 Share your achievement and follow us!
               </p>
               
-              {/* Social Media Buttons */}
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={shareOnInstagram}
                   className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 text-white font-medium transition-all hover:shadow-[0_0_20px_rgba(225,48,108,0.4)]"
                 >
                   <Instagram className="w-5 h-5" />
-                  Follow on Instagram
+                  Instagram
                 </button>
                 <button
                   onClick={shareOnLinkedIn}
                   className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-blue-600 text-white font-medium transition-all hover:shadow-[0_0_20px_rgba(10,102,194,0.4)]"
                 >
                   <Linkedin className="w-5 h-5" />
-                  Connect on LinkedIn
+                  LinkedIn
                 </button>
               </div>
 
-              {/* Social Links Preview */}
               <div className="mt-4 flex items-center justify-center gap-6 text-sm">
                 <a
                   href={INSTAGRAM_URL}
@@ -336,6 +323,24 @@ export default function VerifyCertificatePage() {
           )}
         </div>
       </motion.div>
+
+      <div className="hidden">
+        <div ref={certificateRef}>
+          {certificate && qrCodeUrl && (
+            <Certificate
+              name={certificate.recipientName}
+              event={certificate.eventName}
+              certificateType={certificate.certificateType}
+              title={getTitle(certificate.certificateType)}
+              date={certificate.issueDate}
+              rank={certificate.rank}
+              score={certificate.score}
+              certificateId={certificate.certificateId}
+              qrCodeUrl={qrCodeUrl}
+            />
+          )}
+        </div>
+      </div>
     </div>
   )
 }

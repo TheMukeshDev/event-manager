@@ -2,6 +2,9 @@
 
 import { forwardRef, useEffect } from 'react'
 
+export const CERTIFICATE_WIDTH = 1600
+export const CERTIFICATE_HEIGHT = 900
+
 interface CertificateProps {
   name: string
   event: string
@@ -96,9 +99,9 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
         ref={ref}
         className="certificate"
         style={{
-          width: '100%',
-          maxWidth: 960,
-          aspectRatio: '16 / 9',
+          width: CERTIFICATE_WIDTH,
+          height: CERTIFICATE_HEIGHT,
+          maxWidth: 'none',
           background: 'linear-gradient(145deg, #0d0d0d 0%, #141414 50%, #0d0d0d 100%)',
           position: 'relative',
           overflow: 'hidden',
@@ -362,13 +365,12 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="branding-section"
-              style={{ 
+              style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '4px',
-                marginBottom: 8,
-                lineHeight: 1.4
+                gap: 4,
+                marginBottom: 8
               }}
             >
               <div
@@ -378,7 +380,6 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   color: accentColor,
                   fontWeight: 500,
                   letterSpacing: 0.8,
-                  lineHeight: 1.6,
                   textAlign: 'center'
                 }}
               >
@@ -391,11 +392,10 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '2px',
+                  gap: 2,
                   fontSize: 10,
                   color: '#888',
-                  letterSpacing: 0.8,
-                  lineHeight: 1.4
+                  letterSpacing: 0.8
                 }}
               >
                 <div
@@ -403,7 +403,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '8px',
+                    gap: 8,
                     whiteSpace: 'nowrap'
                   }}
                 >
@@ -413,11 +413,11 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     alt="Unstop"
                     className="branding-logo"
                     style={{
-                      maxHeight: 28,
+                      height: 28,
                       width: 'auto',
                       objectFit: 'contain',
-                      display: 'inline-block',
-                      verticalAlign: 'middle',
+                      display: 'block',
+                      flexShrink: 0,
                       filter: `drop-shadow(0 0 6px ${accentColor}35)`
                     }}
                   />
