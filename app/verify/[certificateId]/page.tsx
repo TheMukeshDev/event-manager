@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { CheckCircle, XCircle, AlertTriangle, Loader2, Award, User, Calendar, Hash, Download, Image as ImageIcon } from 'lucide-react'
+import { CheckCircle, XCircle, AlertTriangle, Loader2, Award, User, Calendar, Hash, Download, Image as ImageIcon, FileText } from 'lucide-react'
 
 interface CertificateData {
   certificateId: string
@@ -56,7 +56,7 @@ export default function VerifyCertificatePage() {
     verifyCertificate()
   }, [certificateId])
 
-  const handleDownload = async (format: 'pdf' | 'png') => {
+  const handleDownload = async (format: 'pdf' | 'png' | 'html') => {
     try {
       setDownloading(true)
       const response = await fetch(`/api/certificates/download/${certificateId}?format=${format}`)
@@ -69,7 +69,8 @@ export default function VerifyCertificatePage() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `certificate-${certificateId}.${format}`
+      a.download = `certificate-${certificateId}.${format === 'html' ? 'html' : format}`
+      a.target = '_blank'
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -223,6 +224,14 @@ export default function VerifyCertificatePage() {
             >
               <ImageIcon className="w-4 h-4" />
               Download PNG
+            </button>
+            <button
+              onClick={() => handleDownload('html')}
+              disabled={downloading}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gray-500/20 border border-gray-500/50 text-gray-300 font-medium transition-all hover:shadow-[0_0_20px_rgba(128,128,128,0.3)] disabled:opacity-50"
+            >
+              <FileText className="w-4 h-4" />
+              Download HTML
             </button>
             <button
               onClick={() => handleDownload('pdf')}

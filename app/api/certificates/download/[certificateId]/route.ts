@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseServer } from '@/lib/supabase-server'
-import { getCertificateTemplate, generatePDF, generateImage } from '@/lib/certificate-template'
+import { getCertificateTemplate } from '@/lib/certificate-template'
 
 export async function GET(
   request: NextRequest,
@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { certificateId } = await params
     const { searchParams } = new URL(request.url)
-    const format = searchParams.get('format') || 'pdf'
+    const format = searchParams.get('format') || 'html'
 
     if (!supabaseServer) {
       return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
@@ -37,25 +37,18 @@ export async function GET(
 
     const html = getCertificateTemplate(cert.certificate_type, templateData)
 
-    let buffer: Buffer
-    let contentType: string
-    let filename: string
-
-    if (format === 'png' || format === 'image') {
-      buffer = await generateImage(html)
-      contentType = 'image/png'
-      filename = `certificate-${certificateId}.png`
-    } else {
-      buffer = await generatePDF(html)
-      contentType = 'application/pdf'
-      filename = `certificate-${certificateId}.pdf`
+    if (format === 'html' || format === 'png' || format === 'pdf') {
+      return new NextResponse(html, {
+        headers: {
+          'Content-Type': 'text/html',
+          'Content-Disposition': `inline; filename="certificate-${certificateId}.html"`
+        }
+      })
     }
 
-    return new NextResponse(buffer, {
+    return new NextResponse(html, {
       headers: {
-        'Content-Type': contentType,
-        'Content-Disposition': `attachment; filename="${filename}"`,
-        'Content-Length': buffer.length.toString()
+        'Content-Type': 'text/html'
       }
     })
   } catch (error: any) {

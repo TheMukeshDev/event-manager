@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Download, Send, Loader2, ExternalLink, RefreshCw, Image as ImageIcon } from 'lucide-react'
+import { X, Download, Send, Loader2, ExternalLink, RefreshCw, Image as ImageIcon, FileText } from 'lucide-react'
 
 interface CertificateRecord {
   id: string
@@ -30,7 +30,7 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [viewMode, setViewMode] = useState<'modal' | 'fullpage'>('modal')
-  const [downloading, setDownloading] = useState<'none' | 'pdf' | 'png'>('none')
+  const [downloading, setDownloading] = useState<'none' | 'pdf' | 'png' | 'html'>('none')
 
   useEffect(() => {
     async function fetchPreview() {
@@ -76,7 +76,7 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
     }
   }
 
-  const handleDownload = async (format: 'pdf' | 'png') => {
+  const handleDownload = async (format: 'pdf' | 'png' | 'html') => {
     try {
       setDownloading(format)
       const response = await fetch(`/api/certificates/download/${certificate.certificate_id}?format=${format}`)
@@ -89,7 +89,8 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `certificate-${certificate.certificate_id}.${format}`
+      a.download = `certificate-${certificate.certificate_id}.${format === 'html' ? 'html' : format}`
+      a.target = '_blank'
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -255,6 +256,14 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
             >
               {downloading === 'pdf' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
               PDF
+            </button>
+            <button
+              onClick={() => handleDownload('html')}
+              disabled={downloading !== 'none'}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-500/30 text-gray-300 hover:bg-gray-500/20 transition-colors text-sm disabled:opacity-50"
+            >
+              {downloading === 'html' ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+              HTML
             </button>
             {!certificate.sent_status && (
               <button

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { FileCheck, Download, Loader2, CheckCircle, XCircle, AlertTriangle, Image as ImageIcon } from 'lucide-react'
+import { FileCheck, Download, Loader2, CheckCircle, XCircle, AlertTriangle, Image as ImageIcon, FileText } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export function CertificateSection() {
@@ -39,7 +39,7 @@ export function CertificateSection() {
     }
   }
 
-  const handleDownload = async (format: 'pdf' | 'png') => {
+  const handleDownload = async (format: 'pdf' | 'png' | 'html') => {
     try {
       setDownloading(true)
       const response = await fetch(`/api/certificates/download/${certificateId}?format=${format}`)
@@ -52,7 +52,8 @@ export function CertificateSection() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `certificate-${certificateId}.${format}`
+      a.download = `certificate-${certificateId}.${format === 'html' ? 'html' : format}`
+      a.target = '_blank'
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -220,7 +221,19 @@ export function CertificateSection() {
                   className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] disabled:opacity-50"
                 >
                   {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
-                  Download PNG
+                  PNG
+                </motion.button>
+                <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleDownload('html')}
+                  disabled={downloading}
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-gray-500/20 border border-gray-500/50 text-gray-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(128,128,128,0.3)] disabled:opacity-50"
+                >
+                  {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+                  HTML
                 </motion.button>
                 <motion.button
                   initial={{ opacity: 0, y: 10 }}
@@ -232,7 +245,7 @@ export function CertificateSection() {
                   className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-green-500/20 border border-green-500/50 text-green-300 font-semibold transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,255,136,0.3)] disabled:opacity-50"
                 >
                   {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                  Download PDF
+                  PDF
                 </motion.button>
               </div>
             )}
