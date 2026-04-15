@@ -102,9 +102,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
   const qrCodeUrl = data.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}&format=png`
 
   const techHubLogoUrl = '/certificates/logos/techhubbs.png'
-  const bbsGroupLogoUrl = '/certificates/logos/bbsgroup.png'
+  const bbsGroupLogoUrl = '/certificates/logos/bbslogo.png'
   const csiLogoUrl = '/certificates/logos/csi.png'
-  const collegeLogoUrl = '/certificates/logos/bbslogo.png'
   const unstopLogoUrl = '/certificates/logos/unstop.png'
 
   return `<!DOCTYPE html>
@@ -214,13 +213,14 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     .center-header {
       display: flex;
+      align-items: center;
       justify-content: center;
       flex: 1;
     }
     
     .bbs-group-logo {
-      max-height: 70px;
-      max-width: 140px;
+      max-height: 65px;
+      max-width: 130px;
       object-fit: contain;
     }
     
