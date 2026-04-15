@@ -195,39 +195,95 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     .top-row {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-    }
-    
-    .left-logos {
-      display: flex;
-      gap: 10px;
       align-items: center;
+      padding: 0.8% 0;
+      border-bottom: 1px solid ${accentColor}15;
     }
     
-    .logo-img {
-      max-height: 60px;
-      max-width: 120px;
+    .left-header {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+    
+    .csi-logo {
+      max-height: 65px;
+      max-width: 85px;
       object-fit: contain;
     }
     
-    .right-unstop {
+    .center-header {
+      display: flex;
+      justify-content: center;
+      flex: 1;
+    }
+    
+    .bbs-group-logo {
+      max-height: 70px;
+      max-width: 140px;
+      object-fit: contain;
+    }
+    
+    .right-header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      flex: 1;
+    }
+    
+    .techhub-logo {
+      max-height: 65px;
+      max-width: 100px;
+      object-fit: contain;
+    }
+    
+    .middle-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8% 0;
+    }
+    
+    .qr-verification-box {
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: 8px 12px;
+      background: ${accentColor}06;
+      border: 1px solid ${accentColor}18;
+      border-radius: 5px;
+      margin-right: 2%;
     }
     
-    .unstop-logo-img {
-      max-height: 40px;
-      max-width: 80px;
-      object-fit: contain;
+    .qr-mini-box {
+      background: #ffffff;
+      border: 1.5px solid ${accentColor};
+      border-radius: 3px;
+      padding: 3px;
+      box-shadow: 0 0 10px ${accentColor}15;
     }
     
-    .unstop-label {
-      font-size: 5px;
-      color: #555;
-      letter-spacing: 0.8px;
+    .qr-mini-img {
+      width: 50px;
+      height: 50px;
+      display: block;
+    }
+    
+    .qr-scan-label {
+      font-size: 6px;
+      color: ${accentColor};
       text-transform: uppercase;
-      margin-top: 1px;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    
+    .qr-cert-id {
+      font-size: 7px;
+      color: #999;
+      font-family: monospace;
+      letter-spacing: 0.6px;
+      margin-top: 2px;
     }
     
     .center-header {
@@ -330,11 +386,22 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       color: #777;
       letter-spacing: 0.8px;
       margin: 0.5% 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
     }
     
     .branding-line span {
       color: ${accentColor};
       font-weight: 500;
+    }
+    
+    .branding-logo {
+      height: 10px;
+      width: auto;
+      vertical-align: middle;
     }
     
     .score-row {
@@ -371,8 +438,9 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      padding-top: 0.5%;
-      border-top: 1px solid ${accentColor}10;
+      padding-top: 0.3%;
+      margin-top: 0.3%;
+      border-top: 1px solid ${accentColor}08;
     }
     
     .footer-col {
@@ -383,49 +451,49 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .footer-col.left {
-      min-width: 90px;
+      min-width: 80px;
     }
     
     .footer-col.center {
-      min-width: 180px;
+      min-width: 150px;
     }
     
     .footer-col.right {
-      min-width: 110px;
+      min-width: 100px;
     }
     
     .footer-label {
-      font-size: 6px;
-      color: #666;
+      font-size: 5px;
+      color: #555;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 2px;
+      letter-spacing: 0.6px;
+      margin-bottom: 1px;
     }
     
     .footer-value {
-      font-size: 8px;
-      color: #bbb;
+      font-size: 7px;
+      color: #999;
       font-weight: 500;
     }
     
     .sig-line {
-      width: 120px;
+      width: 90px;
       height: 1px;
       background: ${accentColor};
-      margin: 0 auto 3px;
+      margin: 0 auto 2px;
       opacity: 0.4;
     }
     
     .sig-title {
-      font-size: 8px;
+      font-size: 6px;
       color: ${accentColor};
       font-weight: 600;
     }
     
     .sig-role {
-      font-size: 6px;
-      color: #999;
-      line-height: 1.3;
+      font-size: 5px;
+      color: #777;
+      line-height: 1.2;
     }
     
     .qr-section {
@@ -488,21 +556,16 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     <div class="certificate-content">
       <div class="top-row">
-        <div class="left-logos">
-          <img src="${csiLogoUrl}" alt="CSI" class="logo-img" onerror="this.style.display='none'" />
-          <img src="${collegeLogoUrl}" alt="BBSCET" class="logo-img" onerror="this.style.display='none'" />
+        <div class="left-header">
+          <img src="${csiLogoUrl}" alt="CSI" class="csi-logo" onerror="this.style.display='none'" />
         </div>
         
         <div class="center-header">
           <img src="${bbsGroupLogoUrl}" alt="BBS Group" class="bbs-group-logo" onerror="this.style.display='none'" />
-          <img src="${techHubLogoUrl}" alt="Tech Hub BBS" class="techhub-logo" onerror="this.style.display='none'" />
-          <div class="techhub-name">Tech Hub BBS</div>
-          <div class="techhub-tagline">Empowering Innovation & Technical Excellence</div>
         </div>
         
-        <div class="right-unstop">
-          <img src="${unstopLogoUrl}" alt="Unstop" class="unstop-logo-img" onerror="this.style.display='none'" />
-          <span class="unstop-label">Powered by</span>
+        <div class="right-header">
+          <img src="${techHubLogoUrl}" alt="Tech Hub BBS" class="techhub-logo" onerror="this.style.display='none'" />
         </div>
       </div>
       
@@ -520,7 +583,18 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       </div>
       
       <div class="branding-line">
-        Organised by <span>Tech Hub BBS</span> &nbsp;|&nbsp; In collaboration with <span>Computer Society of India</span> and <span>BBS Coding Club</span> &nbsp;|&nbsp; Powered by <span>Unstop</span>
+        Organised by <span>Tech Hub BBS</span> &nbsp;|&nbsp; In collaboration with <span>Computer Society of India</span> and <span>BBS Coding Club</span> &nbsp;|&nbsp; Powered by <img src="${unstopLogoUrl}" alt="Unstop" class="branding-logo" />
+      </div>
+      
+      <div class="middle-section">
+        <div style="flex: 1;"></div>
+        <div class="qr-verification-box">
+          <div class="qr-mini-box">
+            <img src="${qrCodeUrl}" alt="QR" class="qr-mini-img" />
+          </div>
+          <div class="qr-scan-label">Scan to Verify</div>
+          <div class="qr-cert-id">${data.certificateId}</div>
+        </div>
       </div>
       
       <div class="score-row">
@@ -554,15 +628,6 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
           <div class="sig-line"></div>
           <div class="sig-title">Issued by Tech Hub BBS</div>
           <div class="sig-role">President & Student Coordinator<br/>Mukesh Kumar</div>
-          
-          <div class="qr-section">
-            <div class="qr-box">
-              <img src="${qrCodeUrl}" alt="QR" class="qr-img" />
-            </div>
-            <div class="qr-text">Scan to Verify</div>
-            <div class="qr-sub">Verify Authenticity Online</div>
-            <div class="cert-id-box">${data.certificateId}</div>
-          </div>
         </div>
       </div>
     </div>
