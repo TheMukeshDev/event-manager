@@ -332,11 +332,11 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .branding-logo {
-      height: 11px;
+      height: 22px;
       width: auto;
       vertical-align: middle;
-      margin: 0 3px;
-      filter: drop-shadow(0 0 5px ${accentColor}30);
+      margin: 0 4px;
+      filter: drop-shadow(0 0 6px ${accentColor}35);
     }
     
     .score-row {
