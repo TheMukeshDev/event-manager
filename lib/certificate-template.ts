@@ -103,7 +103,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
   const accentColor = getAccentColor()
   const glowColor = getGlowColor()
   const title = getTitle()
-  const recipientNameFontSize = data.name.length > 18 ? '72' : '88'
+  const recipientNameFontSize = data.name.length > 18 ? '130' : '158'
 
   const techHubLogo = data.logos?.techHub || '/certificates/logos/techhubbs.png'
   const bbsGroupLogo = data.logos?.bbsGroup || '/certificates/logos/bbslogo.png'
@@ -134,8 +134,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .certificate {
-      width: 1600px;
-      height: 900px;
+      width: 2880px;
+      height: 1620px;
       max-width: none;
       background: linear-gradient(145deg, #0d0d0d 0%, #141414 50%, #0d0d0d 100%);
       position: relative;
@@ -148,7 +148,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       left: 0.6%;
       right: 0.6%;
       bottom: 0.6%;
-      border: 2.5px solid ${borderColor};
+      border: 4px solid ${borderColor};
       pointer-events: none;
     }
     
@@ -158,15 +158,15 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       left: 1.5%;
       right: 1.5%;
       bottom: 1.5%;
-      border: 1px solid ${borderColor}18;
+      border: 2px solid ${borderColor}18;
       pointer-events: none;
     }
     
     .corner {
       position: absolute;
-      width: 32px;
-      height: 32px;
-      border: 1.5px solid ${accentColor};
+      width: 58px;
+      height: 58px;
+      border: 3px solid ${accentColor};
     }
     
     .corner-tl { top: 0.15%; left: 0.15%; border-right: none; border-bottom: none; }
@@ -190,15 +190,16 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 8px;
+      padding-bottom: 14px;
       border-bottom: 1px solid ${accentColor}12;
     }
     
     .corner-logo {
-      max-height: 45px;
-      max-width: 70px;
+      height: 81px;
+      width: auto;
+      max-width: 126px;
       object-fit: contain;
-      filter: drop-shadow(0 0 8px ${accentColor}30) brightness(1.1) contrast(1.05);
+      filter: drop-shadow(0 0 14px ${accentColor}30) brightness(1.1) contrast(1.05);
     }
     
     .main-header {
@@ -208,10 +209,11 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .bbs-main-logo {
-      max-height: 100px;
-      max-width: 200px;
+      height: 180px;
+      width: auto;
+      max-width: 360px;
       object-fit: contain;
-      filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)) brightness(1.2) contrast(1.1);
+      filter: drop-shadow(0 0 27px rgba(255, 215, 0, 0.5)) brightness(1.2) contrast(1.1);
     }
     
     .right-techhub {
@@ -221,20 +223,21 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .techhub-header-logo {
-      max-height: 45px;
-      max-width: 80px;
+      height: 81px;
+      width: auto;
+      max-width: 144px;
       object-fit: contain;
-      filter: drop-shadow(0 0 10px ${accentColor}40) brightness(1.15) contrast(1.1);
+      filter: drop-shadow(0 0 18px ${accentColor}40) brightness(1.15) contrast(1.1);
     }
     
     .techhub-header-name {
       font-family: 'Cinzel', 'Times New Roman', serif;
-      font-size: 6px;
+      font-size: 11px;
       font-weight: 700;
       color: ${accentColor};
-      letter-spacing: 1px;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
-      margin-top: 1px;
+      margin-top: 2px;
     }
     
     .main-content {
@@ -247,13 +250,13 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     .main-title {
       font-family: 'Cinzel', 'Times New Roman', serif;
-      font-size: 36px;
+      font-size: 65px;
       font-weight: 700;
       color: ${accentColor};
       text-transform: uppercase;
-      letter-spacing: 4px;
+      letter-spacing: 7px;
       text-align: center;
-      margin-bottom: 8px;
+      margin-bottom: 14px;
     }
     
     .recipient-section {
@@ -261,9 +264,9 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .presented-to {
-      font-size: 12px;
+      font-size: 22px;
       color: #888;
-      letter-spacing: 2px;
+      letter-spacing: 3.6px;
       text-transform: uppercase;
     }
     
@@ -272,51 +275,51 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       font-size: ${recipientNameFontSize}px;
       font-weight: 400;
       color: #ffffff;
-      margin: 6px 0 10px;
+      margin: 11px 0 18px;
       line-height: 1.1;
-      text-shadow: 0 0 20px rgba(255,255,255,0.15);
+      text-shadow: 0 0 36px rgba(255,255,255,0.15);
     }
     
     .divider {
-      width: 280px;
-      height: 2px;
+      width: 504px;
+      height: 4px;
       background: linear-gradient(90deg, transparent, ${accentColor}, transparent);
-      margin: 0 auto 8px;
+      margin: 0 auto 14px;
     }
     
     .event-section {
       text-align: center;
-      margin-bottom: 8px;
+      margin-bottom: 14px;
     }
     
     .event-text {
-      font-size: 14px;
+      font-size: 25px;
       color: #999;
-      letter-spacing: 2px;
+      letter-spacing: 3.6px;
       text-transform: uppercase;
-      margin-bottom: 4px;
+      margin-bottom: 7px;
     }
     
     .event-name {
       font-family: 'Playfair Display', 'Georgia', serif;
-      font-size: 24px;
+      font-size: 43px;
       font-weight: 600;
       color: #fff;
-      letter-spacing: 1.5px;
+      letter-spacing: 2.7px;
     }
     
     .branding-section {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
-      margin-bottom: 8px;
+      gap: 7px;
+      margin-bottom: 14px;
     }
     
     .branding-line {
-      font-size: 10px;
+      font-size: 18px;
       color: #888;
-      letter-spacing: 0.8px;
+      letter-spacing: 1.4px;
       text-align: center;
     }
     
@@ -329,17 +332,17 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 14px;
       white-space: nowrap;
     }
     
     .branding-logo {
-      height: 28px;
+      height: 50px;
       width: auto;
       object-fit: contain;
       display: block;
       flex-shrink: 0;
-      filter: drop-shadow(0 0 6px ${accentColor}35);
+      filter: drop-shadow(0 0 11px ${accentColor}35);
     }
     
     .branding-quiz {
@@ -351,28 +354,28 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     .score-row {
       display: flex;
       justify-content: center;
-      gap: 20px;
+      gap: 36px;
     }
     
     .score-box {
       text-align: center;
-      padding: 4px 16px;
+      padding: 7px 29px;
       background: ${accentColor}06;
-      border: 1px solid ${accentColor}15;
-      border-radius: 3px;
+      border: 2px solid ${accentColor}15;
+      border-radius: 5px;
     }
     
     .score-label {
-      font-size: 9px;
+      font-size: 16px;
       color: #777;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 2px;
+      letter-spacing: 1.8px;
+      margin-bottom: 4px;
     }
     
     .score-value {
       font-family: 'Playfair Display', 'Georgia', serif;
-      font-size: 20px;
+      font-size: 36px;
       font-weight: 600;
       color: ${accentColor};
     }
@@ -380,55 +383,55 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     .qr-floating {
       position: absolute;
       right: 2%;
-      bottom: 50px;
+      bottom: 90px;
     }
     
     .qr-verification-box {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 10px 16px;
+      padding: 18px 29px;
       background: ${accentColor}08;
-      border: 1px solid ${accentColor}20;
-      border-radius: 6px;
+      border: 2px solid ${accentColor}20;
+      border-radius: 11px;
     }
     
     .qr-mini-box {
       background: #ffffff;
-      border: 2px solid ${accentColor};
-      border-radius: 4px;
-      padding: 3px;
-      box-shadow: 0 0 10px ${accentColor}15;
+      border: 3px solid ${accentColor};
+      border-radius: 7px;
+      padding: 5px;
+      box-shadow: 0 0 18px ${accentColor}15;
     }
     
     .qr-mini-img {
-      width: 80px;
-      height: 80px;
+      width: 144px;
+      height: 144px;
       display: block;
     }
     
     .qr-scan-label {
-      font-size: 9px;
+      font-size: 16px;
       color: ${accentColor};
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.9px;
       font-weight: 600;
-      margin-top: 4px;
+      margin-top: 7px;
     }
     
     .qr-cert-id {
-      font-size: 10px;
+      font-size: 18px;
       color: #999;
       font-family: monospace;
-      letter-spacing: 0.5px;
-      margin-top: 2px;
+      letter-spacing: 0.9px;
+      margin-top: 4px;
     }
     
     .footer-row {
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      padding: 6px 0 2px;
+      padding: 11px 0 4px;
       border-top: 1px solid ${accentColor}08;
     }
     
@@ -440,47 +443,47 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     }
     
     .footer-col.left {
-      min-width: 70px;
+      min-width: 126px;
     }
     
     .footer-col.center {
-      min-width: 130px;
+      min-width: 234px;
     }
     
     .footer-col.right {
-      min-width: 100px;
+      min-width: 180px;
     }
     
     .footer-label {
-      font-size: 9px;
+      font-size: 16px;
       color: #555;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 2px;
+      letter-spacing: 1.8px;
+      margin-bottom: 4px;
     }
     
     .footer-value {
-      font-size: 11px;
+      font-size: 20px;
       color: #999;
       font-weight: 500;
     }
     
     .sig-line {
-      width: 140px;
-      height: 1px;
+      width: 252px;
+      height: 2px;
       background: ${accentColor};
-      margin: 0 auto 1px;
+      margin: 0 auto 2px;
       opacity: 0.4;
     }
     
     .sig-title {
-      font-size: 9px;
+      font-size: 16px;
       color: ${accentColor};
       font-weight: 600;
     }
     
     .sig-role {
-      font-size: 7px;
+      font-size: 13px;
       color: #777;
       line-height: 1.3;
     }
@@ -627,8 +630,8 @@ export async function generatePDF(template: string): Promise<Buffer> {
     const puppeteer = await import('puppeteer-core')
     const chromium = await import('@sparticuz/chromium')
 
-    const CERT_WIDTH = 1600
-    const CERT_HEIGHT = 900
+    const CERT_WIDTH = 2880
+    const CERT_HEIGHT = 1620
 
     const browser = await puppeteer.launch({
       args: [
@@ -689,8 +692,8 @@ export async function generateImage(template: string): Promise<Buffer> {
     const puppeteer = await import('puppeteer-core')
     const chromium = await import('@sparticuz/chromium')
 
-    const CERT_WIDTH = 1600
-    const CERT_HEIGHT = 900
+    const CERT_WIDTH = 2880
+    const CERT_HEIGHT = 1620
 
     const browser = await puppeteer.launch({
       args: [

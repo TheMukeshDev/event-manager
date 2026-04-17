@@ -4,9 +4,17 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Search, Award, Loader2, ArrowRight, Download, Mail, AlertCircle } from 'lucide-react'
-import { Certificate, CERTIFICATE_WIDTH, CERTIFICATE_HEIGHT } from '@/components/certificate'
-import { downloadCertificatePNG, CERTIFICATE_WIDTH as EXPORT_WIDTH, CERTIFICATE_HEIGHT as EXPORT_HEIGHT } from '@/components/certificate-export'
+import dynamic from 'next/dynamic'
+import { downloadCertificatePNG } from '@/components/certificate-export'
 import { generateQRCodeBase64 } from '@/lib/qr-generator'
+
+const ScaledCertificate = dynamic(
+  () => import('@/components/certificate-wrapper').then((mod) => mod.ScaledCertificate),
+  { ssr: false, loading: () => <div className="bg-gray-800 animate-pulse rounded-lg" style={{ width: '100%', aspectRatio: '16/9' }} /> }
+)
+
+const CERTIFICATE_WIDTH = 2880
+const CERTIFICATE_HEIGHT = 1620
 
 interface Certificate {
   certificate_id: string
@@ -34,13 +42,27 @@ function getTitle(certificateType: string): string {
   }
 }
 
+function buildCertificateData(cert: Certificate, qrCodeUrl: string) {
+  return {
+    name: cert.name,
+    event: cert.event || 'TechQuiz 2026',
+    certificateType: cert.certificate_type,
+    title: getTitle(cert.certificate_type),
+    date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+    rank: cert.rank,
+    score: cert.score,
+    certificateId: cert.certificate_id,
+    qrCodeUrl,
+  }
+}
+
 export default function DownloadCertificatePage() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [certificates, setCertificates] = useState<CertificateWithQR[]>([])
   const [downloading, setDownloading] = useState<string | null>(null)
-  const certificateRefs = useRef<Map<string, HTMLDivElement>>(new Map())
+  const exportRefs = useRef<Map<string, HTMLDivElement>>(new Map())
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -78,7 +100,7 @@ export default function DownloadCertificatePage() {
   }
 
   const handleDownloadPNG = async (certificate: CertificateWithQR) => {
-    const certElement = certificateRefs.current.get(certificate.certificate_id)
+    const certElement = exportRefs.current.get(certificate.certificate_id)
     if (!certElement) {
       console.error('Certificate element not found')
       return
@@ -229,19 +251,13 @@ export default function DownloadCertificatePage() {
                 <div className="hidden">
                   <div
                     ref={(el) => {
-                      if (el) certificateRefs.current.set(cert.certificate_id, el)
+                      if (el) exportRefs.current.set(cert.certificate_id, el)
                     }}
                   >
-                    <Certificate
-                      name={cert.name}
-                      event={cert.event || 'TechQuiz 2026'}
-                      certificateType={cert.certificate_type}
-                      title={cert.title}
-                      date={new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                      rank={cert.rank}
-                      score={cert.score}
-                      certificateId={cert.certificate_id}
-                      qrCodeUrl={cert.qrCodeUrl}
+                    <ScaledCertificate
+                      certificate={buildCertificateData(cert, cert.qrCodeUrl)}
+                      containerWidth={CERTIFICATE_WIDTH}
+                      containerHeight={CERTIFICATE_HEIGHT}
                     />
                   </div>
                 </div>
