@@ -52,7 +52,7 @@ export function HeroSection({ event }: HeroSectionProps) {
               {isLive ? (
                 <>
                   <Radio className="w-3 h-3 sm:w-4 sm:h-4 text-red-400 animate-pulse shrink-0" />
-                  <span className="text-xs sm:text-sm font-semibold text-red-400">LIVE</span>
+                  <span className="text-xs sm:text-sm font-semibold text-red-400">END</span>
                 </>
               ) : (
                 <>
@@ -122,9 +122,14 @@ export function HeroSection({ event }: HeroSectionProps) {
             variants={itemVariants}
             className="flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 justify-center items-center"
           >
-            <div className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-gray-600 text-gray-400 font-semibold inline-flex items-center gap-2 text-sm cursor-not-allowed">
-              Registration Closed
-            </div>
+            <a
+              href="https://unstop.com/quiz/techquiz-2026-c-programming-computer-awareness-quiz-beginner-friendly-bbs-college-of-engineering-and-technology-bbs-1670803/online-assessment/417001"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-cyan-600 text-cyan-300 font-semibold transition-all duration-300 hover:border-cyan-400 hover:text-cyan-200 inline-flex items-center gap-2 text-sm"
+            >
+              View Result
+            </a>
             <a
               href="https://chat.whatsapp.com/Hc1zaz52LdOAh6kM5NHREA"
               target="_blank"

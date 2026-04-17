@@ -71,16 +71,17 @@ export function Navbar() {
             {/* Logo */}
             <motion.a
               href="#home"
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-2 font-bold z-[101]"
+              whileHover={{ scale: 1.02 }}
+              className="flex items-center gap-3 font-bold z-[101] py-1"
               onClick={handleNavClick}
             >
               <img
-                src="/icon.png"
+                src="/logo.png"
                 alt="Tech Hub BBS Logo"
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg shrink-0"
+                className="h-9 w-auto sm:h-10 shrink-0"
+                style={{ maxWidth: 'none', filter: 'drop-shadow(0 0 8px rgba(6, 182, 212, 0.4))' }}
               />
-              <span className="gradient-cyan-green text-xs sm:text-sm">{EVENT_DATA.shortName}</span>
+              <span className="gradient-cyan-green text-sm font-semibold">{EVENT_DATA.shortName}</span>
             </motion.a>
 
             {/* Desktop Menu */}
