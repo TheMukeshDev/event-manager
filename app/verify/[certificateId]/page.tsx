@@ -1,13 +1,21 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { CheckCircle, XCircle, AlertTriangle, Loader2, Award, User, Calendar, Hash, Download, Instagram, Linkedin, ArrowRight, Search } from 'lucide-react'
-import { Certificate } from '@/components/certificate'
+import dynamic from 'next/dynamic'
 import { downloadCertificatePNG } from '@/components/certificate-export'
 import { generateQRCodeBase64 } from '@/lib/qr-generator'
+
+const ScaledCertificate = dynamic(
+  () => import('@/components/certificate-wrapper').then((mod) => mod.ScaledCertificate),
+  { ssr: false, loading: () => <div className="bg-gray-800 animate-pulse rounded-lg" style={{ width: '100%', aspectRatio: '16/9' }} /> }
+)
+
+const CERTIFICATE_WIDTH = 2880
+const CERTIFICATE_HEIGHT = 1620
 
 interface CertificateData {
   certificateId: string
@@ -34,6 +42,20 @@ function getTitle(certificateType: string): string {
   }
 }
 
+function buildCertificateData(cert: CertificateData, qrCodeUrl: string) {
+  return {
+    name: cert.recipientName,
+    event: cert.eventName,
+    certificateType: cert.certificateType,
+    title: getTitle(cert.certificateType),
+    date: cert.issueDate,
+    rank: cert.rank,
+    score: cert.score,
+    certificateId: cert.certificateId,
+    qrCodeUrl,
+  }
+}
+
 export default function VerifyCertificatePage() {
   const params = useParams()
   const certificateId = params.certificateId as string
@@ -44,7 +66,9 @@ export default function VerifyCertificatePage() {
   const [status, setStatus] = useState<string>('UNKNOWN')
   const [downloading, setDownloading] = useState(false)
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('')
-  const certificateRef = useRef<HTMLDivElement>(null)
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
+  const exportRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!certificateId) {
@@ -80,12 +104,28 @@ export default function VerifyCertificatePage() {
     verifyCertificate()
   }, [certificateId])
 
+  useEffect(() => {
+    const updateSize = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect()
+        setContainerSize({ width: rect.width, height: rect.height })
+      }
+    }
+    
+    updateSize()
+    const ro = new ResizeObserver(updateSize)
+    if (containerRef.current) {
+      ro.observe(containerRef.current)
+    }
+    return () => ro.disconnect()
+  }, [certificate, qrCodeUrl])
+
   const handleDownload = async () => {
-    if (!certificateRef.current || !certificate) return
+    if (!exportRef.current || !certificate) return
     
     try {
       setDownloading(true)
-      await downloadCertificatePNG(certificateRef.current, certificate.certificateId, certificate.recipientName)
+      await downloadCertificatePNG(exportRef.current, certificate.certificateId, certificate.recipientName)
     } catch (err) {
       console.error('Error downloading certificate:', err)
     } finally {
@@ -162,6 +202,8 @@ export default function VerifyCertificatePage() {
       </div>
     )
   }
+
+  const certData = certificate && qrCodeUrl ? buildCertificateData(certificate, qrCodeUrl) : null
 
   return (
     <div className="min-h-screen bg-black py-12 px-4">
@@ -324,22 +366,21 @@ export default function VerifyCertificatePage() {
         </div>
       </motion.div>
 
-      <div className="hidden">
-        <div ref={certificateRef}>
-          {certificate && qrCodeUrl && (
-            <Certificate
-              name={certificate.recipientName}
-              event={certificate.eventName}
-              certificateType={certificate.certificateType}
-              title={getTitle(certificate.certificateType)}
-              date={certificate.issueDate}
-              rank={certificate.rank}
-              score={certificate.score}
-              certificateId={certificate.certificateId}
-              qrCodeUrl={qrCodeUrl}
+      <div 
+        className="hidden" 
+        ref={containerRef}
+      >
+        {certData && (
+          <div
+            ref={(el) => { if (el) exportRef.current = el }}
+          >
+            <ScaledCertificate
+              certificate={certData}
+              containerWidth={CERTIFICATE_WIDTH}
+              containerHeight={CERTIFICATE_HEIGHT}
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -2,8 +2,8 @@
 
 import { useRef, useCallback, useState } from 'react'
 
-export const CERTIFICATE_WIDTH = 1600
-export const CERTIFICATE_HEIGHT = 900
+export const CERTIFICATE_WIDTH = 2880
+export const CERTIFICATE_HEIGHT = 1620
 
 const CERTIFICATE_FONTS = [
   'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700',
@@ -46,7 +46,7 @@ async function waitForFonts(): Promise<void> {
   } catch {}
 
   await preloadFonts()
-  await new Promise<void>((resolve) => setTimeout(resolve, 300))
+  await new Promise<void>((resolve) => setTimeout(resolve, 500))
 }
 
 async function waitForImages(container: HTMLElement): Promise<void> {
@@ -65,7 +65,7 @@ async function waitForImages(container: HTMLElement): Promise<void> {
     })
   })
   await Promise.all(promises)
-  await new Promise<void>((resolve) => setTimeout(resolve, 200))
+  await new Promise<void>((resolve) => setTimeout(resolve, 300))
 }
 
 async function waitForCertificateAssets(certificateElement: HTMLElement): Promise<void> {
@@ -74,7 +74,7 @@ async function waitForCertificateAssets(certificateElement: HTMLElement): Promis
   await new Promise<void>((resolve) => requestAnimationFrame(() => {
     requestAnimationFrame(() => resolve())
   }))
-  await new Promise<void>((resolve) => setTimeout(resolve, 200))
+  await new Promise<void>((resolve) => setTimeout(resolve, 300))
 }
 
 export async function getCertificateDataUrl(
@@ -85,17 +85,15 @@ export async function getCertificateDataUrl(
     throw new Error('Export only works in browser')
   }
   
-  const pixelRatio = options.pixelRatio || 1
-
   await waitForCertificateAssets(certificateElement)
 
   const { toPng } = await import('html-to-image')
   
   const dataUrl = await toPng(certificateElement, {
     cacheBust: true,
-    pixelRatio,
+    pixelRatio: 1,
     skipAutoScale: true,
-    backgroundColor: '#0a0a0a',
+    backgroundColor: '#0d0d0d',
     width: CERTIFICATE_WIDTH,
     height: CERTIFICATE_HEIGHT
   })
