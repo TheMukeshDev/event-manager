@@ -34,7 +34,7 @@ interface CertificateExportWrapperProps {
   className?: string
 }
 
-const CertificateExportWrapper = forwardRef<HTMLDivElement, CertificateExportWrapperProps>(
+export const CertificateExportWrapper = forwardRef<HTMLDivElement, CertificateExportWrapperProps>(
   function CertificateExportWrapper({ certificate, exportRef, className = '' }, ref) {
     const internalRef = useRef<HTMLDivElement>(null)
     const resolvedRef = exportRef || ref || internalRef
@@ -46,7 +46,9 @@ const CertificateExportWrapper = forwardRef<HTMLDivElement, CertificateExportWra
         style={{
           width: CERTIFICATE_WIDTH,
           height: CERTIFICATE_HEIGHT,
-          maxWidth: 'none',
+          maxWidth: CERTIFICATE_WIDTH,
+          maxHeight: CERTIFICATE_HEIGHT,
+          transform: 'none',
           aspectRatio: `${CERTIFICATE_WIDTH} / ${CERTIFICATE_HEIGHT}`,
           position: 'relative',
           overflow: 'hidden',
@@ -69,8 +71,6 @@ const CertificateExportWrapper = forwardRef<HTMLDivElement, CertificateExportWra
     )
   }
 )
-
-export { CertificateExportWrapper }
 
 interface ScaledCertificateProps {
   certificate: CertificateData
