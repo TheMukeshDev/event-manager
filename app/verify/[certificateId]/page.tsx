@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -9,13 +9,53 @@ import dynamic from 'next/dynamic'
 import { downloadCertificatePNG } from '@/components/certificate-export'
 import { generateQRCodeBase64 } from '@/lib/qr-generator'
 
-const ScaledCertificate = dynamic(
-  () => import('@/components/certificate-wrapper').then((mod) => mod.ScaledCertificate),
-  { ssr: false, loading: () => <div className="bg-gray-800 animate-pulse rounded-lg" style={{ width: '100%', aspectRatio: '16/9' }} /> }
+const CertificateExportWrapper = dynamic(
+  () => import('@/components/certificate-wrapper').then((mod) => mod.CertificateExportWrapper),
+  { ssr: false }
 )
 
 const CERTIFICATE_WIDTH = 2880
 const CERTIFICATE_HEIGHT = 1620
+
+const CERTIFICATE_FONTS = [
+  'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700',
+  'https://fonts.googleapis.com/css2?family=Great+Vibes',
+  'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600',
+  'https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600'
+]
+
+async function preloadFonts(): Promise<void> {
+  if (typeof document === 'undefined') return
+  for (const href of CERTIFICATE_FONTS) {
+    if (!document.querySelector(`link[href="${href}"]`)) {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = href
+      document.head.appendChild(link)
+    }
+  }
+  try {
+    if (document.fonts?.ready) await document.fonts.ready
+  } catch {}
+  await new Promise<void>((resolve) => setTimeout(resolve, 500))
+}
+
+async function waitForImages(container: HTMLElement): Promise<void> {
+  if (typeof document === 'undefined') return
+  const images = Array.from(container.querySelectorAll('img'))
+  const promises = images.map((img) => {
+    return new Promise<void>((resolve) => {
+      if (img.complete && img.naturalHeight !== 0) resolve()
+      else {
+        img.onload = () => resolve()
+        img.onerror = () => resolve()
+        setTimeout(() => resolve(), 3000)
+      }
+    })
+  })
+  await Promise.all(promises)
+  await new Promise<void>((resolve) => setTimeout(resolve, 300))
+}
 
 interface CertificateData {
   certificateId: string
@@ -66,8 +106,6 @@ export default function VerifyCertificatePage() {
   const [status, setStatus] = useState<string>('UNKNOWN')
   const [downloading, setDownloading] = useState(false)
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('')
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 })
-  const containerRef = useRef<HTMLDivElement>(null)
   const exportRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -104,27 +142,15 @@ export default function VerifyCertificatePage() {
     verifyCertificate()
   }, [certificateId])
 
-  useEffect(() => {
-    const updateSize = () => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect()
-        setContainerSize({ width: rect.width, height: rect.height })
-      }
-    }
-    
-    updateSize()
-    const ro = new ResizeObserver(updateSize)
-    if (containerRef.current) {
-      ro.observe(containerRef.current)
-    }
-    return () => ro.disconnect()
-  }, [certificate, qrCodeUrl])
-
   const handleDownload = async () => {
     if (!exportRef.current || !certificate) return
     
     try {
       setDownloading(true)
+      await preloadFonts()
+      await waitForImages(exportRef.current)
+      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
+      await new Promise<void>((resolve) => setTimeout(resolve, 300))
       await downloadCertificatePNG(exportRef.current, certificate.certificateId, certificate.recipientName)
     } catch (err) {
       console.error('Error downloading certificate:', err)
@@ -366,20 +392,12 @@ export default function VerifyCertificatePage() {
         </div>
       </motion.div>
 
-      <div 
-        className="hidden" 
-        ref={containerRef}
-      >
+      <div className="hidden">
         {certData && (
-          <div
-            ref={(el) => { if (el) exportRef.current = el }}
-          >
-            <ScaledCertificate
-              certificate={certData}
-              containerWidth={CERTIFICATE_WIDTH}
-              containerHeight={CERTIFICATE_HEIGHT}
-            />
-          </div>
+          <CertificateExportWrapper
+            ref={exportRef}
+            certificate={certData}
+          />
         )}
       </div>
     </div>
