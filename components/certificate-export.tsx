@@ -1,15 +1,9 @@
 'use client'
 
 import { useRef, useCallback, useState } from 'react'
-import dynamic from 'next/dynamic'
 
 export const CERTIFICATE_WIDTH = 2880
 export const CERTIFICATE_HEIGHT = 1620
-
-const CertificateExportWrapper = dynamic(
-  () => import('./certificate-wrapper').then((mod) => mod.CertificateExportWrapper),
-  { ssr: false }
-)
 
 const CERTIFICATE_FONTS = [
   'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700',
@@ -160,31 +154,4 @@ export async function generateAndDownloadCertificate(
   recipientName: string
 ): Promise<void> {
   await downloadCertificatePNG(container, certificateId, recipientName)
-}
-
-interface CertificateExportProps {
-  certificate: {
-    name: string
-    event: string
-    certificateType: string
-    title: string
-    date: string
-    rank: number | null
-    score: number | null
-    certificateId: string
-    qrCodeUrl: string
-  }
-  onExportReady?: (element: HTMLDivElement | null) => void
-}
-
-export function CertificateExport({ certificate, onExportReady }: CertificateExportProps) {
-  const exportRef = useRef<HTMLDivElement>(null)
-
-  return (
-    <CertificateExportWrapper
-      ref={exportRef}
-      certificate={certificate}
-      exportRef={exportRef}
-    />
-  )
 }

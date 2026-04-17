@@ -14,49 +14,6 @@ const CertificateExportWrapper = dynamic(
   { ssr: false }
 )
 
-const CERTIFICATE_WIDTH = 2880
-const CERTIFICATE_HEIGHT = 1620
-
-const CERTIFICATE_FONTS = [
-  'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700',
-  'https://fonts.googleapis.com/css2?family=Great+Vibes',
-  'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600',
-  'https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600'
-]
-
-async function preloadFonts(): Promise<void> {
-  if (typeof document === 'undefined') return
-  for (const href of CERTIFICATE_FONTS) {
-    if (!document.querySelector(`link[href="${href}"]`)) {
-      const link = document.createElement('link')
-      link.rel = 'stylesheet'
-      link.href = href
-      document.head.appendChild(link)
-    }
-  }
-  try {
-    if (document.fonts?.ready) await document.fonts.ready
-  } catch {}
-  await new Promise<void>((resolve) => setTimeout(resolve, 500))
-}
-
-async function waitForImages(container: HTMLElement): Promise<void> {
-  if (typeof document === 'undefined') return
-  const images = Array.from(container.querySelectorAll('img'))
-  const promises = images.map((img) => {
-    return new Promise<void>((resolve) => {
-      if (img.complete && img.naturalHeight !== 0) resolve()
-      else {
-        img.onload = () => resolve()
-        img.onerror = () => resolve()
-        setTimeout(() => resolve(), 3000)
-      }
-    })
-  })
-  await Promise.all(promises)
-  await new Promise<void>((resolve) => setTimeout(resolve, 300))
-}
-
 interface CertificateData {
   certificateId: string
   recipientName: string
@@ -147,10 +104,6 @@ export default function VerifyCertificatePage() {
     
     try {
       setDownloading(true)
-      await preloadFonts()
-      await waitForImages(exportRef.current)
-      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
-      await new Promise<void>((resolve) => setTimeout(resolve, 300))
       await downloadCertificatePNG(exportRef.current, certificate.certificateId, certificate.recipientName)
     } catch (err) {
       console.error('Error downloading certificate:', err)
