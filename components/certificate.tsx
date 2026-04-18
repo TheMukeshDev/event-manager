@@ -557,36 +557,18 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="footer-col center"
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 210 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 260 }}
             >
               <div
                 className="sig-line"
                 style={{
-                  width: 210,
-                  height: 1,
+                  width: 220,
+                  height: 2,
                   background: accentColor,
-                  margin: '0 auto 5px',
-                  opacity: 0.25
+                  margin: '0 auto 6px',
+                  opacity: 0.5
                 }}
               />
-              <div
-                className="sig-title"
-                style={{ fontSize: 15, color: accentColor, fontWeight: 600, letterSpacing: 1 }}
-              >
-                BBSCET
-              </div>
-              <div
-                className="sig-role"
-                style={{ fontSize: 12, color: '#666', lineHeight: 1.4 }}
-              >
-                Authorized Signature
-              </div>
-            </div>
-
-            <div
-              className="footer-col right"
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 340, gap: 10 }}
-            >
               <div
                 style={{
                   display: 'flex',
@@ -617,12 +599,20 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   Director, BBSCET
                 </div>
               </div>
+            </div>
+
+            <div
+              className="footer-col right"
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 280, gap: 8 }}
+            >
               <div
+                className="sig-line"
                 style={{
-                  width: 200,
-                  height: 1,
-                  background: `${accentColor}30`,
-                  margin: '5px 0 8px'
+                  width: 180,
+                  height: 2,
+                  background: accentColor,
+                  margin: '0 auto 6px',
+                  opacity: 0.5
                 }}
               />
               <div
@@ -651,7 +641,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     textTransform: 'uppercase'
                   }}
                 >
-                  Founder & Event Lead, Tech Hub BBS
+                  Founder & Event Lead<br />Tech Hub BBS
                 </div>
               </div>
             </div>
