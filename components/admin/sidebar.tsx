@@ -13,7 +13,8 @@ import {
   X,
   Home,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  Calendar
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useAdminAuth } from './admin-auth-context'
@@ -26,6 +27,7 @@ interface SidebarLink {
 
 const sidebarLinks: SidebarLink[] = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: BarChart3 },
+  { href: '/admin/events', label: 'Events', icon: Calendar },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/sponsors', label: 'Sponsors', icon: Building2 },

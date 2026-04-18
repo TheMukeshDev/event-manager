@@ -28,13 +28,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { data: existing } = await supabaseServer
+    const { data: existing, error: findError } = await supabaseServer
       .from('users')
       .select('id, email, role')
       .eq('email', email.toLowerCase())
-      .maybe()
 
-    if (existing && existing.length > 0) {
+    if (findError) {
+      console.error('Error finding user:', findError)
+    }
+
+    if (!findError && existing && existing.length > 0) {
       const user = existing[0]
       if (user.role === 'admin') {
         return NextResponse.json(
