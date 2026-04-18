@@ -197,7 +197,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             bottom: '1.5%',
             display: 'flex',
             flexDirection: 'column',
-            padding: '0.08% 1.8% 0.5%',
+            padding: '0.08% 1.8% 0.3%',
             background: `radial-gradient(circle at 50% 10%, ${glowColor} 0%, transparent 40%)`
           }}
         >
@@ -532,7 +532,8 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               justifyContent: 'space-between',
               alignItems: 'flex-end',
               padding: '8px 0 0px',
-              borderTop: `1px solid ${accentColor}10`
+              borderTop: `1px solid ${accentColor}10`,
+              marginTop: -30
             }}
           >
             <div
@@ -646,7 +647,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
           <div
             className="qr-floating"
-            style={{ position: 'absolute', right: 40, bottom: 160 }}
+            style={{ position: 'absolute', right: 40, bottom: 130 }}
           >
             <div
               className="qr-verification-box"
