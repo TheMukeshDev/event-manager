@@ -531,49 +531,49 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'flex-end',
-              padding: '8px 0 0px',
+              padding: '4px 0 0px',
               borderTop: `1px solid ${accentColor}10`,
-              marginTop: -30
+              marginTop: -10
             }}
           >
             <div
               className="footer-col left"
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 160 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 140 }}
             >
-              <div
-                className="footer-label"
-                style={{
-                  fontSize: 16,
-                  color: '#666',
-                  textTransform: 'uppercase',
-                  letterSpacing: 2.2,
-                  marginBottom: 4
-                }}
-              >
-                Date of Issue
-              </div>
-              <div
-                className="footer-value"
-                style={{ fontSize: 20, color: '#aaa', fontWeight: 500 }}
-              >
+<div
+              className="footer-label"
+              style={{
+                fontSize: 16,
+                color: '#666',
+                textTransform: 'uppercase',
+                letterSpacing: 2.2,
+                marginBottom: 2
+              }}
+            >
+              Date of Issue
+            </div>
+            <div
+              className="footer-value"
+              style={{ fontSize: 20, color: '#aaa', fontWeight: 500 }}
+            >
                 {date}
               </div>
             </div>
 
             <div
               className="footer-col center"
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 280 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 260 }}
             >
               <img
                 src="/certificates/logos/sign.png"
                 alt="Signature"
                 className="director-signature"
                 style={{
-                  width: 300,
+                  width: 280,
                   height: 'auto',
-                  maxHeight: 120,
+                  maxHeight: 100,
                   objectFit: 'contain',
-                  marginBottom: 20,
+                  marginBottom: 12,
                   filter: `brightness(1.5) contrast(1.3) drop-shadow(0 0 8px rgba(255,255,255,0.4))`
                 }}
               />
@@ -582,7 +582,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 3
+                  gap: 2
                 }}
               >
                 <div
@@ -611,14 +611,14 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="footer-col right"
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 260, gap: 6 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 220, gap: 4 }}
             >
               <div
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 2
+                  gap: 1
                 }}
               >
                 <div
@@ -647,7 +647,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
           <div
             className="qr-floating"
-            style={{ position: 'absolute', right: 40, bottom: 130 }}
+            style={{ position: 'absolute', right: 40, bottom: 85 }}
           >
             <div
               className="qr-verification-box"
@@ -655,19 +655,19 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                padding: 14,
+                padding: 10,
                 background: `${accentColor}10`,
-                border: `5px solid ${accentColor}40`,
-                borderRadius: 8
+                border: `4px solid ${accentColor}40`,
+                borderRadius: 6
               }}
             >
               <div
                 className="qr-mini-box"
                 style={{
                   background: '#ffffff',
-                  border: `4px solid ${accentColor}`,
-                  borderRadius: 6,
-                  padding: 6,
+                  border: `3px solid ${accentColor}`,
+                  borderRadius: 5,
+                  padding: 4,
                   boxShadow: `0 0 20px ${accentColor}25`
                 }}
               >
@@ -675,7 +675,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   src={qrCodeUrl}
                   alt="QR"
                   className="qr-mini-img"
-                  style={{ width: 150, height: 150, display: 'block' }}
+                  style={{ width: 130, height: 130, display: 'block' }}
                 />
               </div>
               <div
@@ -685,7 +685,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   color: '#888',
                   textTransform: 'uppercase',
                   letterSpacing: 1.2,
-                  marginTop: 8,
+                  marginTop: 6,
                   fontWeight: 400
                 }}
               >
