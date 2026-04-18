@@ -341,16 +341,16 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="event-section"
-              style={{ textAlign: 'center', marginBottom: 22 }}
+              style={{ textAlign: 'center', marginBottom: 28 }}
             >
               <div
                 className="event-text"
                 style={{
-                  fontSize: 35,
-                  color: '#999',
-                  letterSpacing: 5.5,
+                  fontSize: 40,
+                  color: '#aaa',
+                  letterSpacing: 6,
                   textTransform: 'uppercase',
-                  marginBottom: 12
+                  marginBottom: 16
                 }}
               >
                 {bodyText}
@@ -359,10 +359,10 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 className="event-name"
                 style={{
                   fontFamily: "'Playfair Display', 'Georgia', serif",
-                  fontSize: 62,
+                  fontSize: 78,
                   fontWeight: 600,
                   color: '#fff',
-                  letterSpacing: 4
+                  letterSpacing: 5
                 }}
               >
                 {event}
@@ -379,31 +379,31 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 marginBottom: 12
               }}
             >
-              <div
-                className="branding-line gold"
-                style={{
-                  fontSize: 19,
-                  color: accentColor,
-                  fontWeight: 500,
-                  letterSpacing: 1.5,
-                  textAlign: 'center'
-                }}
-              >
+<div
+              className="branding-line gold"
+              style={{
+                fontSize: 22,
+                color: '#FFD700',
+                fontWeight: 500,
+                letterSpacing: 1.8,
+                textAlign: 'center'
+              }}
+            >
                 Organised by <strong>Tech Hub BBS</strong> in collaboration with{' '}
                 <strong>Computer Society of India (CSI)</strong> &amp;{' '}
                 <strong>BBS Coding Club</strong>
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 6,
-                  fontSize: 19,
-                  color: '#888',
-                  letterSpacing: 1.5
-                }}
-              >
+<div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 8,
+                fontSize: 21,
+                color: '#999',
+                letterSpacing: 1.8
+              }}
+            >
                 <div
                   style={{
                     display: 'flex',

@@ -74,13 +74,15 @@ const fallbackOverview: PublicOverview = {
 
 export async function getPublicOverview(): Promise<PublicOverview> {
   try {
-    const eventResponse = await supabaseServer
-      .from('events')
-      .select('*')
-      .eq('is_published', true)
-      .order('date', { ascending: true })
-      .limit(1)
-      .single()
+    const eventResponse = supabaseServer
+      ? await supabaseServer
+          .from('events')
+          .select('*')
+          .eq('is_published', true)
+          .order('date', { ascending: true })
+          .limit(1)
+          .single()
+      : { data: null }
 
     const event = {
       ...EVENT_DATA,
@@ -97,15 +99,15 @@ export async function getPublicOverview(): Promise<PublicOverview> {
     }
 
     const [tracksResponse, timelineResponse, prizesResponse, sponsorsResponse, faqsResponse, organizersResponse, teamResponse, ambassadorsResponse, adminSettingsResponse] = await Promise.all([
-      supabaseServer.from('event_tracks').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
-      supabaseServer.from('timeline_items').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
-      supabaseServer.from('prizes').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
-      supabaseServer.from('sponsors').select('*').eq('event_id', event.id).order('sort_order', { ascending: true }),
-      supabaseServer.from('faqs').select('*').eq('event_id', event.id).order('sort_order', { ascending: true }),
-      supabaseServer.from('organizers').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
-      supabaseServer.from('team_members').select('*').eq('event_id', event.id).order('display_order', { ascending: true }),
-      supabaseServer.from('ambassadors').select('*').eq('event_id', event.id).order('total_referrals', { ascending: false }),
-      supabaseServer.from('admin_settings').select('sponsor_cta_visible, sponsor_cta_whatsapp_number, sponsor_cta_default_message').single(),
+      supabaseServer ? supabaseServer.from('event_tracks').select('*').eq('event_id', event.id).order('display_order', { ascending: true }) : Promise.resolve({ data: null }),
+      supabaseServer ? supabaseServer.from('timeline_items').select('*').eq('event_id', event.id).order('display_order', { ascending: true }) : Promise.resolve({ data: null }),
+      supabaseServer ? supabaseServer.from('prizes').select('*').eq('event_id', event.id).order('display_order', { ascending: true }) : Promise.resolve({ data: null }),
+      supabaseServer ? supabaseServer.from('sponsors').select('*').eq('event_id', event.id).order('sort_order', { ascending: true }) : Promise.resolve({ data: null }),
+      supabaseServer ? supabaseServer.from('faqs').select('*').eq('event_id', event.id).order('sort_order', { ascending: true }) : Promise.resolve({ data: null }),
+      supabaseServer ? supabaseServer.from('organizers').select('*').eq('event_id', event.id).order('display_order', { ascending: true }) : Promise.resolve({ data: null }),
+      supabaseServer ? supabaseServer.from('team_members').select('*').eq('event_id', event.id).order('display_order', { ascending: true }) : Promise.resolve({ data: null }),
+      supabaseServer ? supabaseServer.from('ambassadors').select('*').eq('event_id', event.id).order('total_referrals', { ascending: false }) : Promise.resolve({ data: null }),
+      supabaseServer ? supabaseServer.from('admin_settings').select('sponsor_cta_visible, sponsor_cta_whatsapp_number, sponsor_cta_default_message').single() : Promise.resolve({ data: null }),
     ])
 
     return {
@@ -126,10 +128,10 @@ export async function getPublicOverview(): Promise<PublicOverview> {
           }))
         : EVENT_DATA.contacts,
       highlights: EVENT_DATA.highlights,
-      adminSettings: {
-    ...fallbackOverview.adminSettings,
-    ...adminSettingsResponse.data,
-  },
+adminSettings: {
+      ...fallbackOverview.adminSettings,
+      ...(adminSettingsResponse.data ?? {}),
+    },
     }
   } catch (error) {
     console.error('Public data fetch failed:', error)
