@@ -191,13 +191,13 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             className="certificate-content"
             style={{
               position: 'absolute',
-              top: '1.2%',
+              top: '1.0%',
               left: '1.5%',
               right: '1.5%',
-              bottom: '1.2%',
+              bottom: '0.9%',
               display: 'flex',
               flexDirection: 'column',
-              padding: '0.15% 1.8% 0',
+              padding: '0.12% 1.8% 0',
               background: `radial-gradient(circle at 50% 10%, ${glowColor} 0%, transparent 40%)`
             }}
           >
@@ -217,11 +217,11 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               alt="CSI"
               className="corner-logo"
               style={{
-                height: 160,
+                height: 180,
                 width: 'auto',
-                maxWidth: 240,
+                maxWidth: 260,
                 objectFit: 'contain',
-                filter: `drop-shadow(0 0 12px ${accentColor}35) brightness(1.2) contrast(1.12) saturate(1.08)`
+                filter: `drop-shadow(0 0 10px ${accentColor}35) brightness(1.25) contrast(1.15) saturate(1.1)`
               }}
             />
 
@@ -234,7 +234,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 width: 'auto',
                 maxWidth: 840,
                 objectFit: 'contain',
-                filter: `drop-shadow(0 0 20px rgba(255, 215, 0, 0.4)) brightness(1.25) contrast(1.1) saturate(1.05)`
+                filter: `drop-shadow(0 0 14px rgba(255, 215, 0, 0.35)) brightness(1.25) contrast(1.1) saturate(1.05)`
               }}
             />
 
@@ -340,7 +340,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="event-section"
-              style={{ textAlign: 'center', marginBottom: 10 }}
+              style={{ textAlign: 'center', marginBottom: 12 }}
             >
               <div
                 className="event-text"
@@ -374,8 +374,8 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: 4,
-                marginBottom: 6
+                gap: 6,
+                marginBottom: 10
               }}
             >
               <div
@@ -397,7 +397,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 3,
+                  gap: 5,
                   fontSize: 18,
                   color: '#888',
                   letterSpacing: 1.4
@@ -418,12 +418,12 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     alt="Unstop"
                     className="branding-logo"
                     style={{
-                      height: 50,
+                      height: 55,
                       width: 'auto',
                       objectFit: 'contain',
                       display: 'block',
                       flexShrink: 0,
-                      filter: `drop-shadow(0 0 11px ${accentColor}35)`
+                      filter: `drop-shadow(0 0 10px ${accentColor}35) brightness(1.15) contrast(1.08)`
                     }}
                   />
                 </div>
@@ -442,7 +442,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             {(rank !== null || score !== null) && (
               <div
                 className="score-row"
-                style={{ display: 'flex', justifyContent: 'center', gap: 28, marginBottom: 8 }}
+                style={{ display: 'flex', justifyContent: 'center', gap: 32, marginBottom: 10 }}
               >
                 {rank !== null && (
                   <div
@@ -526,7 +526,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'flex-end',
-              padding: '6px 0 0px',
+              padding: '4px 0 0px',
               borderTop: `1px solid ${accentColor}08`
             }}
           >
