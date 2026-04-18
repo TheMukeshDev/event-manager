@@ -187,29 +187,29 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
           }}
         />
 
-<div
-            className="certificate-content"
-            style={{
-              position: 'absolute',
-              top: '1.0%',
-              left: '1.5%',
-              right: '1.5%',
-              bottom: '0.9%',
-              display: 'flex',
-              flexDirection: 'column',
-              padding: '0.12% 1.8% 0',
-              background: `radial-gradient(circle at 50% 10%, ${glowColor} 0%, transparent 40%)`
-            }}
-          >
+        <div
+          className="certificate-content"
+          style={{
+            position: 'absolute',
+            top: '0.7%',
+            left: '1.5%',
+            right: '1.5%',
+            bottom: '1.5%',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '0.08% 1.8% 0',
+            background: `radial-gradient(circle at 50% 10%, ${glowColor} 0%, transparent 40%)`
+          }}
+        >
           <div
             className="header-section"
             style={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              paddingBottom: 6,
-              borderBottom: `1px solid ${accentColor}12`,
-              gap: 16
+              paddingBottom: 4,
+              borderBottom: `1px solid ${accentColor}10`,
+              gap: 12
             }}
           >
             <img
@@ -285,14 +285,14 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               className="main-title"
               style={{
                 fontFamily: "'Cinzel', 'Times New Roman', serif",
-                fontSize: 75,
+                fontSize: 82,
                 fontWeight: 700,
                 color: accentColor,
                 textTransform: 'uppercase',
-                letterSpacing: 9,
+                letterSpacing: 10,
                 textAlign: 'center',
-                marginBottom: 12,
-                textShadow: `0 0 30px ${accentColor}25`
+                marginBottom: 14,
+                textShadow: `0 0 32px ${accentColor}30`
               }}
             >
               {title}
@@ -300,16 +300,16 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="recipient-section"
-              style={{ textAlign: 'center', padding: '4px 0' }}
+              style={{ textAlign: 'center', padding: '5px 0' }}
             >
               <div
                 className="presented-to"
                 style={{
-                  fontSize: 22,
+                  fontSize: 23,
                   color: '#888',
-                  letterSpacing: 3.6,
+                  letterSpacing: 3.8,
                   textTransform: 'uppercase',
-                  marginBottom: 6
+                  marginBottom: 7
                 }}
               >
                 This certificate is proudly presented to
@@ -321,9 +321,9 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   fontSize: recipientNameFontSize,
                   fontWeight: 400,
                   color: '#ffffff',
-                  margin: '12px 0 14px',
+                  margin: '14px 0 16px',
                   lineHeight: 1.2,
-                  textShadow: '0 0 36px rgba(255,255,255,0.15)'
+                  textShadow: '0 0 40px rgba(255,255,255,0.18)'
                 }}
               >
                 {name}
@@ -331,26 +331,26 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               <div
                 className="divider"
                 style={{
-                  width: 504,
+                  width: 520,
                   height: 4,
                   background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
-                  margin: '0 auto 14px'
+                  margin: '0 auto 16px'
                 }}
               />
             </div>
 
             <div
               className="event-section"
-              style={{ textAlign: 'center', marginBottom: 12 }}
+              style={{ textAlign: 'center', marginBottom: 14 }}
             >
               <div
                 className="event-text"
                 style={{
-                  fontSize: 25,
+                  fontSize: 27,
                   color: '#999',
-                  letterSpacing: 3.6,
+                  letterSpacing: 3.8,
                   textTransform: 'uppercase',
-                  marginBottom: 5
+                  marginBottom: 6
                 }}
               >
                 {bodyText}
@@ -359,33 +359,33 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 className="event-name"
                 style={{
                   fontFamily: "'Playfair Display', 'Georgia', serif",
-                  fontSize: 43,
+                  fontSize: 46,
                   fontWeight: 600,
                   color: '#fff',
-                  letterSpacing: 2.7
+                  letterSpacing: 2.8
                 }}
               >
                 {event}
               </div>
             </div>
 
-<div
+            <div
               className="branding-section"
               style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: 6,
-                marginBottom: 10
+                gap: 8,
+                marginBottom: 12
               }}
             >
               <div
                 className="branding-line gold"
                 style={{
-                  fontSize: 18,
+                  fontSize: 19,
                   color: accentColor,
                   fontWeight: 500,
-                  letterSpacing: 1.4,
+                  letterSpacing: 1.5,
                   textAlign: 'center'
                 }}
               >
@@ -398,10 +398,10 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 5,
-                  fontSize: 18,
+                  gap: 6,
+                  fontSize: 19,
                   color: '#888',
-                  letterSpacing: 1.4
+                  letterSpacing: 1.5
                 }}
               >
                 <div
@@ -443,14 +443,14 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             {(rank !== null || score !== null) && (
               <div
                 className="score-row"
-                style={{ display: 'flex', justifyContent: 'center', gap: 32, marginBottom: 16 }}
+                style={{ display: 'flex', justifyContent: 'center', gap: 36, marginBottom: 18 }}
               >
                 {rank !== null && (
                   <div
                     className="score-box"
                     style={{
                       textAlign: 'center',
-                      padding: '7px 29px',
+                      padding: '8px 32px',
                       background: `${accentColor}06`,
                       border: `2px solid ${accentColor}15`,
                       borderRadius: 5
@@ -459,11 +459,11 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     <div
                       className="score-label"
                       style={{
-                        fontSize: 16,
+                        fontSize: 17,
                         color: '#777',
                         textTransform: 'uppercase',
-                        letterSpacing: 1.8,
-                        marginBottom: 4
+                        letterSpacing: 2,
+                        marginBottom: 5
                       }}
                     >
                       Achieved Rank
@@ -472,7 +472,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                       className="score-value"
                       style={{
                         fontFamily: "'Playfair Display', 'Georgia', serif",
-                        fontSize: 36,
+                        fontSize: 38,
                         fontWeight: 600,
                         color: accentColor
                       }}
@@ -486,7 +486,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     className="score-box"
                     style={{
                       textAlign: 'center',
-                      padding: '7px 29px',
+                      padding: '8px 32px',
                       background: `${accentColor}06`,
                       border: `2px solid ${accentColor}15`,
                       borderRadius: 5
@@ -495,11 +495,11 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     <div
                       className="score-label"
                       style={{
-                        fontSize: 16,
+                        fontSize: 17,
                         color: '#777',
                         textTransform: 'uppercase',
-                        letterSpacing: 1.8,
-                        marginBottom: 4
+                        letterSpacing: 2,
+                        marginBottom: 5
                       }}
                     >
                       Score
@@ -508,7 +508,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                       className="score-value"
                       style={{
                         fontFamily: "'Playfair Display', 'Georgia', serif",
-                        fontSize: 36,
+                        fontSize: 38,
                         fontWeight: 600,
                         color: accentColor
                       }}
@@ -659,7 +659,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
           <div
             className="qr-floating"
-            style={{ position: 'absolute', right: '1.8%', bottom: 38 }}
+            style={{ position: 'absolute', right: 20, bottom: 28 }}
           >
             <div
               className="qr-verification-box"
@@ -667,50 +667,51 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                padding: '12px 20px',
-                background: `${accentColor}08`,
-                border: `2px solid ${accentColor}20`,
-                borderRadius: 11
+                padding: 14,
+                background: `${accentColor}10`,
+                border: `5px solid ${accentColor}40`,
+                borderRadius: 8
               }}
             >
               <div
                 className="qr-mini-box"
                 style={{
                   background: '#ffffff',
-                  border: `3px solid ${accentColor}`,
-                  borderRadius: 7,
-                  padding: 5,
-                  boxShadow: `0 0 18px ${accentColor}15`
+                  border: `4px solid ${accentColor}`,
+                  borderRadius: 6,
+                  padding: 6,
+                  boxShadow: `0 0 20px ${accentColor}25`
                 }}
               >
                 <img
                   src={qrCodeUrl}
                   alt="QR"
                   className="qr-mini-img"
-                  style={{ width: 144, height: 144, display: 'block' }}
+                  style={{ width: 150, height: 150, display: 'block' }}
                 />
               </div>
               <div
-                className="qr-scan-label"
+                className="qr-cert-id-label"
                 style={{
-                  fontSize: 16,
-                  color: accentColor,
+                  fontSize: 11,
+                  color: '#888',
                   textTransform: 'uppercase',
-                  letterSpacing: 0.9,
-                  fontWeight: 600,
-                  marginTop: 5
+                  letterSpacing: 1.2,
+                  marginTop: 8,
+                  fontWeight: 400
                 }}
               >
-                Scan to Verify
+                Certificate ID
               </div>
               <div
                 className="qr-cert-id"
                 style={{
-                  fontSize: 18,
-                  color: '#999',
+                  fontSize: 16,
+                  color: '#fff',
                   fontFamily: 'monospace',
-                  letterSpacing: 0.9,
-                  marginTop: 3
+                  letterSpacing: 0.8,
+                  marginTop: 2,
+                  fontWeight: 500
                 }}
               >
                 {certificateId}
