@@ -527,28 +527,28 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               justifyContent: 'space-between',
               alignItems: 'flex-end',
               padding: '4px 0 0px',
-              borderTop: `1px solid ${accentColor}08`
+              borderTop: `1px solid ${accentColor}12`
             }}
           >
             <div
               className="footer-col left"
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 126 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 140 }}
             >
               <div
                 className="footer-label"
                 style={{
-                  fontSize: 16,
-                  color: '#555',
+                  fontSize: 14,
+                  color: '#666',
                   textTransform: 'uppercase',
-                  letterSpacing: 1.8,
-                  marginBottom: 4
+                  letterSpacing: 2,
+                  marginBottom: 3
                 }}
               >
                 Date of Issue
               </div>
               <div
                 className="footer-value"
-                style={{ fontSize: 20, color: '#999', fontWeight: 500 }}
+                style={{ fontSize: 18, color: '#aaa', fontWeight: 500 }}
               >
                 {date}
               </div>
@@ -556,57 +556,102 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="footer-col center"
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 234 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 200 }}
             >
               <div
                 className="sig-line"
                 style={{
-                  width: 252,
-                  height: 2,
+                  width: 200,
+                  height: 1,
                   background: accentColor,
-                  margin: '0 auto 2px',
-                  opacity: 0.4
+                  margin: '0 auto 4px',
+                  opacity: 0.25
                 }}
               />
               <div
                 className="sig-title"
-                style={{ fontSize: 16, color: accentColor, fontWeight: 600 }}
+                style={{ fontSize: 14, color: accentColor, fontWeight: 600, letterSpacing: 1 }}
               >
                 BBSCET
               </div>
               <div
                 className="sig-role"
-                style={{ fontSize: 13, color: '#777', lineHeight: 1.3 }}
+                style={{ fontSize: 12, color: '#666', lineHeight: 1.4 }}
               >
-                Director,<br /> DR. Ashutosh Shrivastava
+                Authorized Signature
               </div>
             </div>
 
             <div
               className="footer-col right"
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 180 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 320, gap: 8 }}
             >
               <div
-                className="sig-line"
                 style={{
-                  width: 252,
-                  height: 2,
-                  background: accentColor,
-                  margin: '0 auto 2px',
-                  opacity: 0.4
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 1
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 20,
+                    color: '#fff',
+                    fontWeight: 600,
+                    textShadow: `0 0 20px ${accentColor}30`
+                  }}
+                >
+                  Dr. Ashutosh Shrivastava
+                </div>
+                <div
+                  style={{
+                    fontSize: 13,
+                    color: accentColor,
+                    fontWeight: 500,
+                    letterSpacing: 1.5,
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  Director, BBSCET
+                </div>
+              </div>
+              <div
+                style={{
+                  width: 180,
+                  height: 1,
+                  background: `${accentColor}30`,
+                  margin: '4px 0 6px'
                 }}
               />
               <div
-                className="sig-title"
-                style={{ fontSize: 16, color: accentColor, fontWeight: 600 }}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 1
+                }}
               >
-                Issued by Tech Hub BBS
-              </div>
-              <div
-                className="sig-role"
-                style={{ fontSize: 13, color: '#777', lineHeight: 1.3 }}
-              >
-                President & Coordinator<br />Mukesh Kumar
+                <div
+                  style={{
+                    fontSize: 17,
+                    color: '#ddd',
+                    fontWeight: 500
+                  }}
+                >
+                  Mukesh Kumar
+                </div>
+                <div
+                  style={{
+                    fontSize: 12,
+                    color: '#888',
+                    fontWeight: 400,
+                    letterSpacing: 1.2,
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  Founder & Event Lead, Tech Hub BBS
+                </div>
               </div>
             </div>
           </div>
