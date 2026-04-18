@@ -88,7 +88,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
     const accentColor = getAccentColor(certificateType)
     const glowColor = getGlowColor(certificateType)
     const bodyText = getBodyText(certificateType)
-    const recipientNameFontSize = name.length > 18 ? 115 : 135
+    const recipientNameFontSize = name.length > 18 ? 110 : 130
 
     useEffect(() => {
       preloadFonts()
@@ -187,20 +187,20 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
           }}
         />
 
-        <div
-          className="certificate-content"
-          style={{
-            position: 'absolute',
-            top: '1.5%',
-            left: '1.5%',
-            right: '1.5%',
-            bottom: '1.5%',
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '0.2% 1.8% 0',
-            background: `radial-gradient(circle at 50% 10%, ${glowColor} 0%, transparent 40%)`
-          }}
-        >
+<div
+            className="certificate-content"
+            style={{
+              position: 'absolute',
+              top: '1.2%',
+              left: '1.5%',
+              right: '1.5%',
+              bottom: '1.2%',
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '0.15% 1.8% 0',
+              background: `radial-gradient(circle at 50% 10%, ${glowColor} 0%, transparent 40%)`
+            }}
+          >
           <div
             className="header-section"
             style={{
@@ -217,11 +217,11 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               alt="CSI"
               className="corner-logo"
               style={{
-                height: 130,
+                height: 160,
                 width: 'auto',
-                maxWidth: 200,
+                maxWidth: 240,
                 objectFit: 'contain',
-                filter: `drop-shadow(0 0 14px ${accentColor}30) brightness(1.15) contrast(1.1) saturate(1.05)`
+                filter: `drop-shadow(0 0 12px ${accentColor}35) brightness(1.2) contrast(1.12) saturate(1.08)`
               }}
             />
 
@@ -230,11 +230,11 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               alt="BBS Group"
               className="bbs-main-logo"
               style={{
-                height: 450,
+                height: 420,
                 width: 'auto',
-                maxWidth: 900,
+                maxWidth: 840,
                 objectFit: 'contain',
-                filter: `drop-shadow(0 0 27px rgba(255, 215, 0, 0.5)) brightness(1.3) contrast(1.15) saturate(1.1)`
+                filter: `drop-shadow(0 0 20px rgba(255, 215, 0, 0.4)) brightness(1.25) contrast(1.1) saturate(1.05)`
               }}
             />
 
@@ -247,11 +247,11 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 alt="Tech Hub BBS"
                 className="techhub-header-logo"
                 style={{
-                  height: 260,
+                  height: 160,
                   width: 'auto',
-                  maxWidth: 460,
+                  maxWidth: 280,
                   objectFit: 'contain',
-                  filter: `drop-shadow(0 0 18px ${accentColor}40) brightness(1.25) contrast(1.15) saturate(1.1)`
+                  filter: `drop-shadow(0 0 14px ${accentColor}35) brightness(1.2) contrast(1.12) saturate(1.08)`
                 }}
               />
               <div
@@ -339,7 +339,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="event-section"
-              style={{ textAlign: 'center', marginBottom: 4 }}
+              style={{ textAlign: 'center', marginBottom: 6 }}
             >
               <div
                 className="event-text"
@@ -368,15 +368,15 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             </div>
 
 <div
-            className="branding-section"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 3,
-              marginBottom: 4
-            }}
-          >
+              className="branding-section"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 4,
+                marginBottom: 6
+              }}
+            >
               <div
                 className="branding-line gold"
                 style={{
@@ -441,7 +441,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             {(rank !== null || score !== null) && (
               <div
                 className="score-row"
-                style={{ display: 'flex', justifyContent: 'center', gap: 24 }}
+                style={{ display: 'flex', justifyContent: 'center', gap: 28, marginBottom: 8 }}
               >
                 {rank !== null && (
                   <div
@@ -525,7 +525,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'flex-end',
-              padding: '4px 0 0px',
+              padding: '6px 0 0px',
               borderTop: `1px solid ${accentColor}08`
             }}
           >
