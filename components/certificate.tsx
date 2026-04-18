@@ -291,7 +291,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 textTransform: 'uppercase',
                 letterSpacing: 7,
                 textAlign: 'center',
-                marginBottom: 4
+                marginBottom: 10
               }}
             >
               {title}
@@ -299,7 +299,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="recipient-section"
-              style={{ textAlign: 'center' }}
+              style={{ textAlign: 'center', padding: '4px 0' }}
             >
               <div
                 className="presented-to"
@@ -307,7 +307,8 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   fontSize: 22,
                   color: '#888',
                   letterSpacing: 3.6,
-                  textTransform: 'uppercase'
+                  textTransform: 'uppercase',
+                  marginBottom: 6
                 }}
               >
                 This certificate is proudly presented to
@@ -319,8 +320,8 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   fontSize: recipientNameFontSize,
                   fontWeight: 400,
                   color: '#ffffff',
-                  margin: '6px 0 8px',
-                  lineHeight: 1.1,
+                  margin: '12px 0 14px',
+                  lineHeight: 1.2,
                   textShadow: '0 0 36px rgba(255,255,255,0.15)'
                 }}
               >
@@ -332,14 +333,14 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   width: 504,
                   height: 4,
                   background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
-                  margin: '0 auto 10px'
+                  margin: '0 auto 14px'
                 }}
               />
             </div>
 
             <div
               className="event-section"
-              style={{ textAlign: 'center', marginBottom: 6 }}
+              style={{ textAlign: 'center', marginBottom: 10 }}
             >
               <div
                 className="event-text"
