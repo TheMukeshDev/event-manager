@@ -1,4 +1,4 @@
-# Tech Hub BBS - Premium Event Platform Homepage
+## Premium Event Platform Homepage
 
 A stunning, production-ready homepage for college events built with Next.js 16, Tailwind CSS, and Framer Motion. Features a dark neon design with smooth animations, glassmorphism effects, and a fully responsive layout.
 
