@@ -178,7 +178,7 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
 
   if (viewMode === 'fullpage') {
     return (
-      <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
+      <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center p-4 md:p-8">
         <button
           onClick={() => setViewMode('modal')}
           className="fixed top-4 right-4 z-[101] p-2 rounded-lg bg-gray-800 text-white hover:bg-gray-700"
@@ -191,7 +191,7 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
             <p className="text-gray-400">{loadingMessage}</p>
           </div>
         ) : certData ? (
-          <div className="flex items-center justify-center p-8">
+          <div className="flex items-center justify-center w-full h-full overflow-auto">
             <CertificateExportWrapper
               ref={exportRef}
               certificate={certData}

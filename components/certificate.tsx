@@ -187,29 +187,29 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
           }}
         />
 
-<div
-            className="certificate-content"
-            style={{
-              position: 'absolute',
-              top: '1.0%',
-              left: '1.5%',
-              right: '1.5%',
-              bottom: '0.9%',
-              display: 'flex',
-              flexDirection: 'column',
-              padding: '0.12% 1.8% 0',
-              background: `radial-gradient(circle at 50% 10%, ${glowColor} 0%, transparent 40%)`
-            }}
-          >
+        <div
+          className="certificate-content"
+          style={{
+            position: 'absolute',
+            top: '0.7%',
+            left: '1.5%',
+            right: '1.5%',
+            bottom: '1.5%',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '0.08% 1.8% 0',
+            background: `radial-gradient(circle at 50% 10%, ${glowColor} 0%, transparent 40%)`
+          }}
+        >
           <div
             className="header-section"
             style={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              paddingBottom: 6,
-              borderBottom: `1px solid ${accentColor}12`,
-              gap: 16
+              paddingBottom: 4,
+              borderBottom: `1px solid ${accentColor}10`,
+              gap: 12
             }}
           >
             <img
@@ -369,7 +369,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               </div>
             </div>
 
-<div
+            <div
               className="branding-section"
               style={{
                 display: 'flex',
@@ -659,7 +659,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
           <div
             className="qr-floating"
-            style={{ position: 'absolute', right: '1.8%', bottom: 38 }}
+            style={{ position: 'absolute', right: 20, bottom: 28 }}
           >
             <div
               className="qr-verification-box"
@@ -667,50 +667,51 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                padding: '12px 20px',
-                background: `${accentColor}08`,
-                border: `2px solid ${accentColor}20`,
-                borderRadius: 11
+                padding: 14,
+                background: `${accentColor}10`,
+                border: `5px solid ${accentColor}40`,
+                borderRadius: 8
               }}
             >
               <div
                 className="qr-mini-box"
                 style={{
                   background: '#ffffff',
-                  border: `3px solid ${accentColor}`,
-                  borderRadius: 7,
-                  padding: 5,
-                  boxShadow: `0 0 18px ${accentColor}15`
+                  border: `4px solid ${accentColor}`,
+                  borderRadius: 6,
+                  padding: 6,
+                  boxShadow: `0 0 20px ${accentColor}25`
                 }}
               >
                 <img
                   src={qrCodeUrl}
                   alt="QR"
                   className="qr-mini-img"
-                  style={{ width: 144, height: 144, display: 'block' }}
+                  style={{ width: 150, height: 150, display: 'block' }}
                 />
               </div>
               <div
-                className="qr-scan-label"
+                className="qr-cert-id-label"
                 style={{
-                  fontSize: 16,
-                  color: accentColor,
+                  fontSize: 11,
+                  color: '#888',
                   textTransform: 'uppercase',
-                  letterSpacing: 0.9,
-                  fontWeight: 600,
-                  marginTop: 5
+                  letterSpacing: 1.2,
+                  marginTop: 8,
+                  fontWeight: 400
                 }}
               >
-                Scan to Verify
+                Certificate ID
               </div>
               <div
                 className="qr-cert-id"
                 style={{
-                  fontSize: 18,
-                  color: '#999',
+                  fontSize: 16,
+                  color: '#fff',
                   fontFamily: 'monospace',
-                  letterSpacing: 0.9,
-                  marginTop: 3
+                  letterSpacing: 0.8,
+                  marginTop: 2,
+                  fontWeight: 500
                 }}
               >
                 {certificateId}

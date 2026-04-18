@@ -91,7 +91,7 @@ export function ScaledCertificate({
 }: ScaledCertificateProps) {
   const scaleX = containerWidth / CERTIFICATE_WIDTH
   const scaleY = containerHeight / CERTIFICATE_HEIGHT
-  const scale = Math.min(scaleX, scaleY)
+  const scale = Math.min(scaleX, scaleY, 1)
 
   const scaledWidth = CERTIFICATE_WIDTH * scale
   const scaledHeight = CERTIFICATE_HEIGHT * scale
@@ -103,6 +103,7 @@ export function ScaledCertificate({
         width: scaledWidth,
         height: scaledHeight,
         position: 'relative',
+        flexShrink: 0,
         ...style
       }}
     >
