@@ -285,14 +285,14 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               className="main-title"
               style={{
                 fontFamily: "'Cinzel', 'Times New Roman', serif",
-                fontSize: 75,
+                fontSize: 82,
                 fontWeight: 700,
                 color: accentColor,
                 textTransform: 'uppercase',
-                letterSpacing: 9,
+                letterSpacing: 10,
                 textAlign: 'center',
-                marginBottom: 12,
-                textShadow: `0 0 30px ${accentColor}25`
+                marginBottom: 14,
+                textShadow: `0 0 32px ${accentColor}30`
               }}
             >
               {title}
@@ -300,16 +300,16 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="recipient-section"
-              style={{ textAlign: 'center', padding: '4px 0' }}
+              style={{ textAlign: 'center', padding: '5px 0' }}
             >
               <div
                 className="presented-to"
                 style={{
-                  fontSize: 22,
+                  fontSize: 23,
                   color: '#888',
-                  letterSpacing: 3.6,
+                  letterSpacing: 3.8,
                   textTransform: 'uppercase',
-                  marginBottom: 6
+                  marginBottom: 7
                 }}
               >
                 This certificate is proudly presented to
@@ -321,9 +321,9 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   fontSize: recipientNameFontSize,
                   fontWeight: 400,
                   color: '#ffffff',
-                  margin: '12px 0 14px',
+                  margin: '14px 0 16px',
                   lineHeight: 1.2,
-                  textShadow: '0 0 36px rgba(255,255,255,0.15)'
+                  textShadow: '0 0 40px rgba(255,255,255,0.18)'
                 }}
               >
                 {name}
@@ -331,26 +331,26 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               <div
                 className="divider"
                 style={{
-                  width: 504,
+                  width: 520,
                   height: 4,
                   background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
-                  margin: '0 auto 14px'
+                  margin: '0 auto 16px'
                 }}
               />
             </div>
 
             <div
               className="event-section"
-              style={{ textAlign: 'center', marginBottom: 12 }}
+              style={{ textAlign: 'center', marginBottom: 14 }}
             >
               <div
                 className="event-text"
                 style={{
-                  fontSize: 25,
+                  fontSize: 27,
                   color: '#999',
-                  letterSpacing: 3.6,
+                  letterSpacing: 3.8,
                   textTransform: 'uppercase',
-                  marginBottom: 5
+                  marginBottom: 6
                 }}
               >
                 {bodyText}
@@ -359,10 +359,10 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 className="event-name"
                 style={{
                   fontFamily: "'Playfair Display', 'Georgia', serif",
-                  fontSize: 43,
+                  fontSize: 46,
                   fontWeight: 600,
                   color: '#fff',
-                  letterSpacing: 2.7
+                  letterSpacing: 2.8
                 }}
               >
                 {event}
@@ -375,17 +375,17 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: 6,
-                marginBottom: 10
+                gap: 8,
+                marginBottom: 12
               }}
             >
               <div
                 className="branding-line gold"
                 style={{
-                  fontSize: 18,
+                  fontSize: 19,
                   color: accentColor,
                   fontWeight: 500,
-                  letterSpacing: 1.4,
+                  letterSpacing: 1.5,
                   textAlign: 'center'
                 }}
               >
@@ -398,10 +398,10 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 5,
-                  fontSize: 18,
+                  gap: 6,
+                  fontSize: 19,
                   color: '#888',
-                  letterSpacing: 1.4
+                  letterSpacing: 1.5
                 }}
               >
                 <div
