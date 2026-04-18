@@ -603,24 +603,14 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="footer-col right"
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 300, gap: 10 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 260, gap: 6 }}
             >
-              <div
-                className="sig-line"
-                style={{
-                  width: 200,
-                  height: 2,
-                  background: accentColor,
-                  margin: '0 auto 8px',
-                  opacity: 0.5
-                }}
-              />
               <div
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 3
+                  gap: 2
                 }}
               >
                 <div
@@ -649,7 +639,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
           <div
             className="qr-floating"
-            style={{ position: 'absolute', right: 20, bottom: 90 }}
+            style={{ position: 'absolute', right: 20, bottom: 75 }}
           >
             <div
               className="qr-verification-box"
