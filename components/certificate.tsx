@@ -194,7 +194,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             top: '0.7%',
             left: '1.5%',
             right: '1.5%',
-            bottom: '1.5%',
+            bottom: '2.0%',
             display: 'flex',
             flexDirection: 'column',
             padding: '0.08% 1.8% 0',
