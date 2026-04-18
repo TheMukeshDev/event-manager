@@ -285,13 +285,14 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               className="main-title"
               style={{
                 fontFamily: "'Cinzel', 'Times New Roman', serif",
-                fontSize: 65,
+                fontSize: 75,
                 fontWeight: 700,
                 color: accentColor,
                 textTransform: 'uppercase',
-                letterSpacing: 7,
+                letterSpacing: 9,
                 textAlign: 'center',
-                marginBottom: 10
+                marginBottom: 12,
+                textShadow: `0 0 30px ${accentColor}25`
               }}
             >
               {title}
@@ -442,7 +443,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             {(rank !== null || score !== null) && (
               <div
                 className="score-row"
-                style={{ display: 'flex', justifyContent: 'center', gap: 32, marginBottom: 10 }}
+                style={{ display: 'flex', justifyContent: 'center', gap: 32, marginBottom: 16 }}
               >
                 {rank !== null && (
                   <div
@@ -526,7 +527,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'flex-end',
-              padding: '4px 0 0px',
+              padding: '2px 0 0px',
               borderTop: `1px solid ${accentColor}12`
             }}
           >
@@ -658,7 +659,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
           <div
             className="qr-floating"
-            style={{ position: 'absolute', right: '2%', bottom: 55 }}
+            style={{ position: 'absolute', right: '1.8%', bottom: 38 }}
           >
             <div
               className="qr-verification-box"
