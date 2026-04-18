@@ -443,14 +443,14 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             {(rank !== null || score !== null) && (
               <div
                 className="score-row"
-                style={{ display: 'flex', justifyContent: 'center', gap: 32, marginBottom: 16 }}
+                style={{ display: 'flex', justifyContent: 'center', gap: 36, marginBottom: 18 }}
               >
                 {rank !== null && (
                   <div
                     className="score-box"
                     style={{
                       textAlign: 'center',
-                      padding: '7px 29px',
+                      padding: '8px 32px',
                       background: `${accentColor}06`,
                       border: `2px solid ${accentColor}15`,
                       borderRadius: 5
@@ -459,11 +459,11 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     <div
                       className="score-label"
                       style={{
-                        fontSize: 16,
+                        fontSize: 17,
                         color: '#777',
                         textTransform: 'uppercase',
-                        letterSpacing: 1.8,
-                        marginBottom: 4
+                        letterSpacing: 2,
+                        marginBottom: 5
                       }}
                     >
                       Achieved Rank
@@ -472,7 +472,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                       className="score-value"
                       style={{
                         fontFamily: "'Playfair Display', 'Georgia', serif",
-                        fontSize: 36,
+                        fontSize: 38,
                         fontWeight: 600,
                         color: accentColor
                       }}
@@ -486,7 +486,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     className="score-box"
                     style={{
                       textAlign: 'center',
-                      padding: '7px 29px',
+                      padding: '8px 32px',
                       background: `${accentColor}06`,
                       border: `2px solid ${accentColor}15`,
                       borderRadius: 5
@@ -495,11 +495,11 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     <div
                       className="score-label"
                       style={{
-                        fontSize: 16,
+                        fontSize: 17,
                         color: '#777',
                         textTransform: 'uppercase',
-                        letterSpacing: 1.8,
-                        marginBottom: 4
+                        letterSpacing: 2,
+                        marginBottom: 5
                       }}
                     >
                       Score
@@ -508,7 +508,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                       className="score-value"
                       style={{
                         fontFamily: "'Playfair Display', 'Georgia', serif",
-                        fontSize: 36,
+                        fontSize: 38,
                         fontWeight: 600,
                         color: accentColor
                       }}
