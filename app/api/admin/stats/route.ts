@@ -3,16 +3,19 @@ import { getStats } from '@/lib/admin-stats'
 
 export async function GET() {
   try {
-    const stats = getStats()
+    const stats = await getStats()
     return NextResponse.json(stats)
   } catch (error) {
     console.error('Error fetching stats:', error)
     return NextResponse.json({
       totalUsers: 0,
+      totalAdmins: 0,
       totalAmbassadors: 0,
       totalSponsors: 0,
       totalCertificates: 0,
       validCertificates: 0,
+      sentCertificates: 0,
+      pendingCertificates: 0,
       revokedCertificates: 0,
       recentSignups: [],
       ambassadorReferrals: [],
