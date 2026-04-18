@@ -45,13 +45,13 @@ export async function getStats(): Promise<AdminStats> {
       supabaseServer.from('sponsors').select('id', { count: 'exact', head: true }),
       supabaseServer.from('certificate_records').select('*', { count: 'exact' }),
       supabaseServer.from('users').select('created_at').order('created_at', { ascending: false }).limit(100),
-      supabaseServer.from('users').select('id').eq('role', 'admin'),
+      supabaseServer.from('users').select('id, email, role').eq('role', 'admin'),
       supabaseServer.from('ambassadors').select('id', { count: 'exact', head: true }),
       supabaseServer.from('ambassadors').select('full_name, valid_referral_count').order('valid_referral_count', { ascending: false }).limit(10)
     ])
 
     const totalUsers = usersResult.count || 0
-    const totalAdmins = adminsResult.data?.length || 0
+    const totalAdmins = adminsResult.data?.length || adminsResult.count || 0
     const totalAmbassadors = ambassadorsResult.count || 0
     const totalSponsors = sponsorsResult.count || 0
     const certsData = certsResult.data || []

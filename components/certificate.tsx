@@ -187,20 +187,20 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
           }}
         />
 
-          <div
-            className="certificate-content"
-            style={{
-              position: 'absolute',
-              top: '1.5%',
-              left: '1.5%',
-              right: '1.5%',
-              bottom: '1.5%',
-              display: 'flex',
-              flexDirection: 'column',
-              padding: '0.3% 1.8% 0',
-              background: `radial-gradient(circle at 50% 10%, ${glowColor} 0%, transparent 40%)`
-            }}
-          >
+        <div
+          className="certificate-content"
+          style={{
+            position: 'absolute',
+            top: '1.5%',
+            left: '1.5%',
+            right: '1.5%',
+            bottom: '1.5%',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '0.3% 1.8% 0',
+            background: `radial-gradient(circle at 50% 10%, ${glowColor} 0%, transparent 40%)`
+          }}
+        >
           <div
             className="header-section"
             style={{
@@ -571,13 +571,13 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 className="sig-title"
                 style={{ fontSize: 16, color: accentColor, fontWeight: 600 }}
               >
-                Digitally Signed by BBSCET
+                BBSCET
               </div>
               <div
                 className="sig-role"
                 style={{ fontSize: 13, color: '#777', lineHeight: 1.3 }}
               >
-                Director, BBSCET<br />Prof. Ashutosh Shrivastava
+                Director,<br /> DR. Ashutosh Shrivastava
               </div>
             </div>
 
@@ -614,18 +614,18 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             className="qr-floating"
             style={{ position: 'absolute', right: '2%', bottom: 55 }}
           >
-              <div
-                className="qr-verification-box"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  padding: '12px 20px',
-                  background: `${accentColor}08`,
-                  border: `2px solid ${accentColor}20`,
-                  borderRadius: 11
-                }}
-              >
+            <div
+              className="qr-verification-box"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: '12px 20px',
+                background: `${accentColor}08`,
+                border: `2px solid ${accentColor}20`,
+                borderRadius: 11
+              }}
+            >
               <div
                 className="qr-mini-box"
                 style={{

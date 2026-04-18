@@ -2,48 +2,36 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Save, Link as LinkIcon, MessageCircle, FileText, Hash, Loader2 } from 'lucide-react'
+import { Save, User, Users, Trophy, Link as LinkIcon, Loader2, ExternalLink } from 'lucide-react'
 
-interface AdminSettings {
-  registration_link: string
-  whatsapp_community_link: string
-  is_whatsapp_join_mandatory: boolean
-  certificate_rules_text: string
-  certificate_id_prefix: string
-  sponsor_cta_whatsapp_number: string
-  sponsor_cta_default_message: string
-  sponsor_cta_visible: boolean
+interface PlatformSettings {
   campus_ambassador_enabled: boolean
-  referral_threshold: number
+  leaderboard_visible: boolean
   reward_title: string
   reward_description: string
   use_external_proof_form: boolean
   external_proof_form_link: string
-  leaderboard_visible: boolean
+  sponsor_cta_visible: boolean
+  sponsor_cta_whatsapp_number: string
+  sponsor_cta_default_message: string
   ambassador_share_message: string
 }
 
-const defaultSettings: AdminSettings = {
-  registration_link: '',
-  whatsapp_community_link: 'https://chat.whatsapp.com/placeholder',
-  is_whatsapp_join_mandatory: true,
-  certificate_rules_text: 'Certificates are issued only to valid registered participants.',
-  certificate_id_prefix: 'BBSCET-TQ-2026',
-  sponsor_cta_whatsapp_number: '919771894062',
-  sponsor_cta_default_message: 'Hello, I am interested in sponsoring your event.',
-  sponsor_cta_visible: true,
+const defaultPlatformSettings: PlatformSettings = {
   campus_ambassador_enabled: true,
-  referral_threshold: 10,
-  reward_title: 'Certificate of Appreciation',
-  reward_description: 'Bring 10 valid referrals and unlock rewards.',
+  leaderboard_visible: true,
+  reward_title: 'Certificate of Appreciation + Google Swag',
+  reward_description: 'Bring 10 valid referrals and unlock rewards and recognition.',
   use_external_proof_form: true,
   external_proof_form_link: '',
-  leaderboard_visible: true,
+  sponsor_cta_visible: true,
+  sponsor_cta_whatsapp_number: '919771894062',
+  sponsor_cta_default_message: 'Hello, I am interested in sponsoring your event. Please share details.',
   ambassador_share_message: 'Hi! Join the Tech Hub BBS challenge using my referral link:',
 }
 
 export default function SettingsPage() {
-  const [settings, setSettings] = useState<AdminSettings>(defaultSettings)
+  const [settings, setSettings] = useState<PlatformSettings>(defaultPlatformSettings)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
@@ -54,7 +42,7 @@ export default function SettingsPage() {
         const response = await fetch('/api/admin/settings')
         if (response.ok) {
           const data = await response.json()
-          setSettings({ ...defaultSettings, ...data })
+          setSettings({ ...defaultPlatformSettings, ...data })
         }
       } catch (error) {
         console.error('Failed to load settings:', error)
@@ -89,7 +77,7 @@ export default function SettingsPage() {
     }
   }
 
-  const handleChange = (field: keyof AdminSettings, value: string | number | boolean) => {
+  const handleChange = (field: keyof PlatformSettings, value: string | number | boolean) => {
     setSettings(prev => ({ ...prev, [field]: value }))
   }
 
@@ -109,133 +97,16 @@ export default function SettingsPage() {
         className="mb-6 sm:mb-8"
       >
         <h1 className="text-2xl sm:text-3xl font-bold gradient-cyan-green mb-2">Settings</h1>
-        <p className="text-gray-400">Configure event settings and links</p>
+        <p className="text-gray-400">Configure platform-level settings</p>
       </motion.div>
 
-      <motion.form
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         onSubmit={handleSubmit}
         className="glass-dark rounded-lg p-4 sm:p-6 space-y-6"
       >
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="sm:col-span-2">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <LinkIcon className="w-4 h-4" />
-              Registration Link
-            </label>
-            <input
-              type="url"
-              value={settings.registration_link}
-              onChange={(e) => handleChange('registration_link', e.target.value)}
-              placeholder="https://example.com/register"
-              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors text-sm"
-            />
-          </div>
-
-          <div className="sm:col-span-2">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <MessageCircle className="w-4 h-4" />
-              WhatsApp Community Link
-            </label>
-            <input
-              type="url"
-              value={settings.whatsapp_community_link}
-              onChange={(e) => handleChange('whatsapp_community_link', e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-green-500/30 text-white placeholder-gray-500 focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400 transition-colors text-sm"
-            />
-          </div>
-
-          <div className="sm:col-span-2">
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={settings.is_whatsapp_join_mandatory}
-                onChange={(e) => handleChange('is_whatsapp_join_mandatory', e.target.checked)}
-                className="w-4 h-4 cursor-pointer accent-cyan-500"
-              />
-              <span className="text-gray-300 text-sm">WhatsApp join is mandatory</span>
-            </label>
-          </div>
-
-          <div className="sm:col-span-2">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <FileText className="w-4 h-4" />
-              Certificate Rules Text
-            </label>
-            <textarea
-              value={settings.certificate_rules_text}
-              onChange={(e) => handleChange('certificate_rules_text', e.target.value)}
-              rows={3}
-              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors resize-none text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              <Hash className="w-4 h-4" />
-              Certificate ID Prefix
-            </label>
-            <input
-              type="text"
-              value={settings.certificate_id_prefix}
-              onChange={(e) => handleChange('certificate_id_prefix', e.target.value)}
-              placeholder="BBSCET-TQ-2026"
-              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-300 mb-2">
-              Referral Threshold
-            </label>
-            <input
-              type="number"
-              min={1}
-              value={settings.referral_threshold}
-              onChange={(e) => handleChange('referral_threshold', Number(e.target.value))}
-              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors text-sm"
-            />
-          </div>
-        </div>
-
-        <div className="border-t border-slate-800 pt-6">
-          <h2 className="text-lg font-semibold text-white mb-4">Sponsor CTA</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="text-sm font-medium text-gray-300 mb-2 block">WhatsApp Number</label>
-              <input
-                type="text"
-                value={settings.sponsor_cta_whatsapp_number}
-                onChange={(e) => handleChange('sponsor_cta_whatsapp_number', e.target.value)}
-                placeholder="919771894062"
-                className="w-full px-4 py-3 rounded-lg bg-black/50 border border-green-500/30 text-white placeholder-gray-500 focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400 transition-colors text-sm"
-              />
-            </div>
-            <div>
-              <label className="flex items-center gap-3 cursor-pointer h-full pt-2">
-                <input
-                  type="checkbox"
-                  checked={settings.sponsor_cta_visible}
-                  onChange={(e) => handleChange('sponsor_cta_visible', e.target.checked)}
-                  className="w-4 h-4 cursor-pointer accent-cyan-500"
-                />
-                <span className="text-gray-300 text-sm">Show sponsor CTA</span>
-              </label>
-            </div>
-            <div className="sm:col-span-2">
-              <label className="text-sm font-medium text-gray-300 mb-2 block">Default Message</label>
-              <textarea
-                value={settings.sponsor_cta_default_message}
-                onChange={(e) => handleChange('sponsor_cta_default_message', e.target.value)}
-                rows={2}
-                className="w-full px-4 py-3 rounded-lg bg-black/50 border border-green-500/30 text-white placeholder-gray-500 focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400 transition-colors resize-none text-sm"
-              />
-            </div>
-          </div>
-        </div>
-
         <div className="border-t border-slate-800 pt-6">
           <h2 className="text-lg font-semibold text-white mb-4">Ambassador Program</h2>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -262,7 +133,10 @@ export default function SettingsPage() {
               </label>
             </div>
             <div className="sm:col-span-2">
-              <label className="text-sm font-medium text-gray-300 mb-2 block">Reward Title</label>
+              <label className="text-sm font-medium text-gray-300 mb-2 block">
+                <Users className="w-4 h-4 inline mr-2" />
+                Reward Title
+              </label>
               <input
                 type="text"
                 value={settings.reward_title}
@@ -271,7 +145,10 @@ export default function SettingsPage() {
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-sm font-medium text-gray-300 mb-2 block">Reward Description</label>
+              <label className="text-sm font-medium text-gray-300 mb-2 block">
+                <Trophy className="w-4 h-4 inline mr-2" />
+                Reward Description
+              </label>
               <textarea
                 value={settings.reward_description}
                 onChange={(e) => handleChange('reward_description', e.target.value)}
@@ -279,7 +156,93 @@ export default function SettingsPage() {
                 className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors resize-none text-sm"
               />
             </div>
+            <div className="sm:col-span-2">
+              <label className="text-sm font-medium text-gray-300 mb-2 block">
+                <LinkIcon className="w-4 h-4 inline mr-2" />
+                Ambassador Share Message
+              </label>
+              <textarea
+                value={settings.ambassador_share_message}
+                onChange={(e) => handleChange('ambassador_share_message', e.target.value)}
+                rows={2}
+                className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors resize-none text-sm"
+              />
+            </div>
           </div>
+        </div>
+
+        <div className="border-t border-slate-800 pt-6">
+          <h2 className="text-lg font-semibold text-white mb-4">External Proof Form</h2>
+          <div className="grid gap-4">
+            <div>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={settings.use_external_proof_form}
+                  onChange={(e) => handleChange('use_external_proof_form', e.target.checked)}
+                  className="w-4 h-4 cursor-pointer accent-cyan-500"
+                />
+                <span className="text-gray-300 text-sm">Use external proof form link</span>
+              </label>
+            </div>
+            {settings.use_external_proof_form && (
+              <div>
+                <label className="text-sm font-medium text-gray-300 mb-2 block">
+                  <ExternalLink className="w-4 h-4 inline mr-2" />
+                  Form Link
+                </label>
+                <input
+                  type="url"
+                  value={settings.external_proof_form_link}
+                  onChange={(e) => handleChange('external_proof_form_link', e.target.value)}
+                  placeholder="https://forms.gle/your-proof-form"
+                  className="w-full px-4 py-3 rounded-lg bg-black/50 border border-cyan-500/30 text-white placeholder-gray-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition-colors text-sm"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="border-t border-slate-800 pt-6">
+          <h2 className="text-lg font-semibold text-white mb-4">Sponsor CTA</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={settings.sponsor_cta_visible}
+                  onChange={(e) => handleChange('sponsor_cta_visible', e.target.checked)}
+                  className="w-4 h-4 cursor-pointer accent-cyan-500"
+                />
+                <span className="text-gray-300 text-sm">Show sponsor CTA</span>
+              </label>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-300 mb-2 block">WhatsApp Number</label>
+              <input
+                type="text"
+                value={settings.sponsor_cta_whatsapp_number}
+                onChange={(e) => handleChange('sponsor_cta_whatsapp_number', e.target.value)}
+                placeholder="919771894062"
+                className="w-full px-4 py-3 rounded-lg bg-black/50 border border-green-500/30 text-white placeholder-gray-500 focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400 transition-colors text-sm"
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="text-sm font-medium text-gray-300 mb-2 block">Default Message</label>
+              <textarea
+                value={settings.sponsor_cta_default_message}
+                onChange={(e) => handleChange('sponsor_cta_default_message', e.target.value)}
+                rows={2}
+                className="w-full px-4 py-3 rounded-lg bg-black/50 border border-green-500/30 text-white placeholder-gray-500 focus:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-400 transition-colors resize-none text-sm"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-slate-800 pt-6">
+          <p className="text-xs text-gray-500">
+            Note: Event-specific settings (registration link, WhatsApp group, certificate rules, etc.) are now managed in the <a href="/admin/events" className="text-cyan-400 hover:underline">Events</a> page.
+          </p>
         </div>
 
         {message && (
@@ -300,7 +263,7 @@ export default function SettingsPage() {
             {saving ? 'Saving...' : 'Save Settings'}
           </span>
         </motion.button>
-      </motion.form>
+      </motion.div>
     </div>
   )
 }
