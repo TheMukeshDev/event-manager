@@ -532,7 +532,8 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               justifyContent: 'space-between',
               alignItems: 'flex-end',
               padding: '8px 0 0px',
-              borderTop: `1px solid ${accentColor}10`
+              borderTop: `1px solid ${accentColor}10`,
+              marginTop: -30
             }}
           >
             <div
