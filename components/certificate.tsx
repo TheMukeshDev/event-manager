@@ -88,7 +88,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
     const accentColor = getAccentColor(certificateType)
     const glowColor = getGlowColor(certificateType)
     const bodyText = getBodyText(certificateType)
-    const recipientNameFontSize = name.length > 18 ? 110 : 130
+    const recipientNameFontSize = name.length > 18 ? 115 : 135
 
     useEffect(() => {
       preloadFonts()
@@ -194,7 +194,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             top: '0.7%',
             left: '1.5%',
             right: '1.5%',
-            bottom: '1.5%',
+            bottom: '2.0%',
             display: 'flex',
             flexDirection: 'column',
             padding: '0.08% 1.8% 0',
@@ -533,23 +533,23 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
           >
             <div
               className="footer-col left"
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 140 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 150 }}
             >
               <div
                 className="footer-label"
                 style={{
-                  fontSize: 14,
+                  fontSize: 15,
                   color: '#666',
                   textTransform: 'uppercase',
                   letterSpacing: 2,
-                  marginBottom: 3
+                  marginBottom: 4
                 }}
               >
                 Date of Issue
               </div>
               <div
                 className="footer-value"
-                style={{ fontSize: 18, color: '#aaa', fontWeight: 500 }}
+                style={{ fontSize: 19, color: '#aaa', fontWeight: 500 }}
               >
                 {date}
               </div>
@@ -557,21 +557,21 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="footer-col center"
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 200 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 210 }}
             >
               <div
                 className="sig-line"
                 style={{
-                  width: 200,
+                  width: 210,
                   height: 1,
                   background: accentColor,
-                  margin: '0 auto 4px',
+                  margin: '0 auto 5px',
                   opacity: 0.25
                 }}
               />
               <div
                 className="sig-title"
-                style={{ fontSize: 14, color: accentColor, fontWeight: 600, letterSpacing: 1 }}
+                style={{ fontSize: 15, color: accentColor, fontWeight: 600, letterSpacing: 1 }}
               >
                 BBSCET
               </div>
@@ -585,29 +585,29 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
             <div
               className="footer-col right"
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 320, gap: 8 }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 340, gap: 10 }}
             >
               <div
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 1
+                  gap: 2
                 }}
               >
                 <div
                   style={{
-                    fontSize: 20,
+                    fontSize: 21,
                     color: '#fff',
                     fontWeight: 600,
-                    textShadow: `0 0 20px ${accentColor}30`
+                    textShadow: `0 0 22px ${accentColor}30`
                   }}
                 >
                   Dr. Ashutosh Shrivastava
                 </div>
                 <div
                   style={{
-                    fontSize: 13,
+                    fontSize: 14,
                     color: accentColor,
                     fontWeight: 500,
                     letterSpacing: 1.5,
@@ -619,10 +619,10 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               </div>
               <div
                 style={{
-                  width: 180,
+                  width: 200,
                   height: 1,
                   background: `${accentColor}30`,
-                  margin: '4px 0 6px'
+                  margin: '5px 0 8px'
                 }}
               />
               <div
@@ -630,12 +630,12 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 1
+                  gap: 2
                 }}
               >
                 <div
                   style={{
-                    fontSize: 17,
+                    fontSize: 18,
                     color: '#ddd',
                     fontWeight: 500
                   }}
@@ -644,7 +644,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 </div>
                 <div
                   style={{
-                    fontSize: 12,
+                    fontSize: 13,
                     color: '#888',
                     fontWeight: 400,
                     letterSpacing: 1.2,
