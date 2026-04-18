@@ -369,26 +369,26 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               </div>
             </div>
 
-            <div
+<div
               className="branding-section"
               style={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: 8,
-                marginBottom: 12
+                gap: 14,
+                marginBottom: 16
               }}
             >
-<div
-              className="branding-line gold"
-              style={{
-                fontSize: 22,
-                color: '#FFD700',
-                fontWeight: 500,
-                letterSpacing: 1.8,
-                textAlign: 'center'
-              }}
-            >
+              <div
+                className="branding-line gold"
+                style={{
+                  fontSize: 44,
+                  color: '#FFDF00',
+                  fontWeight: 500,
+                  letterSpacing: 3,
+                  textAlign: 'center'
+                }}
+              >
                 Organised by <strong>Tech Hub BBS</strong> in collaboration with{' '}
                 <strong>Computer Society of India (CSI)</strong> &amp;{' '}
                 <strong>BBS Coding Club</strong>
@@ -398,10 +398,10 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: 8,
-                fontSize: 21,
-                color: '#999',
-                letterSpacing: 1.8
+                gap: 12,
+                fontSize: 40,
+                color: '#aaa',
+                letterSpacing: 2
               }}
             >
                 <div
@@ -409,7 +409,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: 14,
+                    gap: 18,
                     whiteSpace: 'nowrap'
                   }}
                 >
@@ -419,7 +419,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                     alt="Unstop"
                     className="branding-logo"
                     style={{
-                      height: 55,
+                      height: 65,
                       width: 'auto',
                       objectFit: 'contain',
                       display: 'block',
@@ -432,7 +432,8 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                   style={{
                     textAlign: 'center',
                     width: '100%',
-                    whiteSpace: 'nowrap'
+                    whiteSpace: 'nowrap',
+                    fontSize: 36
                   }}
                 >
                   National Level Technical Quiz
