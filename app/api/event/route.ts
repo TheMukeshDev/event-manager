@@ -102,6 +102,8 @@ function extractDisplayDuration(displayText: string): string {
   return match ? `${match[1]} minutes` : '10 minutes'
 }
 
+export const dynamic = 'force-static'
+
 export async function GET() {
   try {
     const response = await fetch(
@@ -110,8 +112,7 @@ export async function GET() {
         headers: {
           'Accept': 'application/json',
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        },
-        next: { revalidate: 300 }
+        }
       }
     )
 
