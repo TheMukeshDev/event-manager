@@ -88,7 +88,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
     const accentColor = getAccentColor(certificateType)
     const glowColor = getGlowColor(certificateType)
     const bodyText = getBodyText(certificateType)
-    const recipientNameFontSize = name.length > 18 ? 180 : 215
+    const recipientNameFontSize = name.length > 18 ? 145 : 165
 
     useEffect(() => {
       preloadFonts()
@@ -285,14 +285,14 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               className="main-title"
               style={{
                 fontFamily: "'Cinzel', 'Times New Roman', serif",
-                fontSize: 82,
+                fontSize: 120,
                 fontWeight: 700,
                 color: accentColor,
                 textTransform: 'uppercase',
-                letterSpacing: 10,
+                letterSpacing: 12,
                 textAlign: 'center',
-                marginBottom: 20,
-                textShadow: `0 0 32px ${accentColor}30`
+                marginBottom: 35,
+                textShadow: `0 0 40px ${accentColor}35`
               }}
             >
               {title}
@@ -314,18 +314,18 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             >
               This certificate is proudly presented to
             </div>
-              <div
-                className="recipient-name"
-                style={{
-                  fontFamily: "'Great Vibes', 'Georgia', cursive",
-                  fontSize: recipientNameFontSize,
-                  fontWeight: 400,
-                  color: '#ffffff',
-                  margin: '22px 0 25px',
-                  lineHeight: 1.2,
-                  textShadow: '0 0 60px rgba(255,255,255,0.28)'
-                }}
-              >
+<div
+              className="recipient-name"
+              style={{
+                fontFamily: "'Great Vibes', 'Georgia', cursive",
+                fontSize: recipientNameFontSize,
+                fontWeight: 400,
+                color: '#ffffff',
+                margin: '12px 0 38px',
+                lineHeight: 1.25,
+                textShadow: '0 0 60px rgba(255,255,255,0.28)'
+              }}
+            >
                 {name}
               </div>
               <div
@@ -644,7 +644,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
           <div
             className="qr-floating"
-            style={{ position: 'absolute', right: 20, bottom: 140 }}
+            style={{ position: 'absolute', right: 40, bottom: 140 }}
           >
             <div
               className="qr-verification-box"
