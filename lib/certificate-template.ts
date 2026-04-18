@@ -103,7 +103,7 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
   const accentColor = getAccentColor()
   const glowColor = getGlowColor()
   const title = getTitle()
-  const recipientNameFontSize = data.name.length > 18 ? '130' : '158'
+  const recipientNameFontSize = data.name.length > 18 ? '105' : '120'
 
   const techHubLogo = data.logos?.techHub || '/certificates/logos/techhubbs.png'
   const bbsGroupLogo = data.logos?.bbsGroup || '/certificates/logos/bbslogo.png'
@@ -250,13 +250,13 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
     
     .main-title {
       font-family: 'Cinzel', 'Times New Roman', serif;
-      font-size: 65px;
+      font-size: 95px;
       font-weight: 700;
       color: ${accentColor};
       text-transform: uppercase;
-      letter-spacing: 7px;
+      letter-spacing: 8px;
       text-align: center;
-      margin-bottom: 14px;
+      margin-bottom: 28px;
     }
     
     .recipient-section {
@@ -275,8 +275,8 @@ export function getCertificateTemplate(certificateType: string, data: Certificat
       font-size: ${recipientNameFontSize}px;
       font-weight: 400;
       color: #ffffff;
-      margin: 11px 0 18px;
-      line-height: 1.1;
+      margin: 8px 0 28px;
+      line-height: 1.15;
       text-shadow: 0 0 36px rgba(255,255,255,0.15);
     }
     
