@@ -561,14 +561,17 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               className="footer-col center"
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 280 }}
             >
-              <div
-                className="sig-line"
+              <img
+                src="/certificates/logos/sign.png"
+                alt="Signature"
+                className="director-signature"
                 style={{
-                  width: 240,
-                  height: 2,
-                  background: accentColor,
-                  margin: '0 auto 8px',
-                  opacity: 0.5
+                  width: 150,
+                  height: 'auto',
+                  maxHeight: 60,
+                  objectFit: 'contain',
+                  marginBottom: 12,
+                  filter: `brightness(1.1) contrast(1.05)`
                 }}
               />
               <div
@@ -641,7 +644,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
 
           <div
             className="qr-floating"
-            style={{ position: 'absolute', right: 20, bottom: 55 }}
+            style={{ position: 'absolute', right: 20, bottom: 140 }}
           >
             <div
               className="qr-verification-box"
