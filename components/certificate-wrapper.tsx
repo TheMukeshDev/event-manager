@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useCallback, useImperativeHandle, forwardRef } from 'react'
+import { useRef, useCallback, forwardRef } from 'react'
 import dynamic from 'next/dynamic'
 
 export const CERTIFICATE_WIDTH = 2880
@@ -89,23 +89,12 @@ export function ScaledCertificate({
   className = '',
   style = {}
 }: ScaledCertificateProps) {
-  const innerExportRef = useRef<HTMLDivElement>(null)
-
   const scaleX = containerWidth / CERTIFICATE_WIDTH
   const scaleY = containerHeight / CERTIFICATE_HEIGHT
   const scale = Math.min(scaleX, scaleY)
 
   const scaledWidth = CERTIFICATE_WIDTH * scale
   const scaledHeight = CERTIFICATE_HEIGHT * scale
-
-  const handleExportRef = useCallback((el: HTMLDivElement | null) => {
-    if (el) {
-      innerExportRef.current = el
-      if (onRef) {
-        onRef(el)
-      }
-    }
-  }, [onRef])
 
   return (
     <div
@@ -118,7 +107,6 @@ export function ScaledCertificate({
       }}
     >
       <div
-        ref={handleExportRef}
         data-certificate-export="true"
         style={{
           width: CERTIFICATE_WIDTH,

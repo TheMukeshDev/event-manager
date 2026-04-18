@@ -1,17 +1,24 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { X, Send, Loader2, ExternalLink, Download, AlertCircle } from 'lucide-react'
 import dynamic from 'next/dynamic'
+import { downloadCertificatePNG } from '@/components/certificate-export'
 import { generateQRCodeBase64 } from '@/lib/qr-generator'
-import { CERTIFICATE_WIDTH, CERTIFICATE_HEIGHT } from '@/components/certificate-export'
-import { CertificateExportWrapper } from '@/components/certificate-wrapper'
 
 const ScaledCertificate = dynamic(
   () => import('@/components/certificate-wrapper').then((mod) => mod.ScaledCertificate),
   { ssr: false, loading: () => <div className="bg-gray-800 animate-pulse rounded-lg" style={{ width: '100%', aspectRatio: '16/9' }} /> }
 )
+
+const CertificateExportWrapper = dynamic(
+  () => import('@/components/certificate-wrapper').then((mod) => mod.CertificateExportWrapper),
+  { ssr: false }
+)
+
+const CERTIFICATE_WIDTH = 2880
+const CERTIFICATE_HEIGHT = 1620
 
 interface CertificateRecord {
   id: string
@@ -67,53 +74,6 @@ function buildCertificateData(cert: CertificateRecord, qrCodeUrl: string) {
   }
 }
 
-const CERTIFICATE_FONTS = [
-  'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700',
-  'https://fonts.googleapis.com/css2?family=Great+Vibes',
-  'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600',
-  'https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600'
-]
-
-async function waitForAssets(): Promise<void> {
-  if (typeof document === 'undefined') return
-  
-  for (const href of CERTIFICATE_FONTS) {
-    if (!document.querySelector(`link[href="${href}"]`)) {
-      const link = document.createElement('link')
-      link.rel = 'stylesheet'
-      link.href = href
-      document.head.appendChild(link)
-    }
-  }
-  
-  try {
-    if (document.fonts?.ready) {
-      await document.fonts.ready
-    }
-  } catch {}
-  
-  await new Promise<void>((resolve) => setTimeout(resolve, 500))
-}
-
-async function waitForImages(container: HTMLElement): Promise<void> {
-  if (typeof document === 'undefined') return
-  
-  const images = Array.from(container.querySelectorAll('img'))
-  const promises = images.map((img) => {
-    return new Promise<void>((resolve) => {
-      if (img.complete && img.naturalHeight !== 0) {
-        resolve()
-      } else {
-        img.onload = () => resolve()
-        img.onerror = () => resolve()
-        setTimeout(() => resolve(), 3000)
-      }
-    })
-  })
-  await Promise.all(promises)
-  await new Promise<void>((resolve) => setTimeout(resolve, 300))
-}
-
 export function CertificatePreviewModal({ certificate, onClose }: CertificatePreviewModalProps) {
   const [loading, setLoading] = useState(true)
   const [loadingMessage, setLoadingMessage] = useState('Loading preview...')
@@ -122,11 +82,11 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('')
   const [previewHtml, setPreviewHtml] = useState<string | null>(null)
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 })
-  const containerRef = useRef<HTMLDivElement>(null)
-  
-  const exportRef = useRef<HTMLDivElement>(null)
   const [isExporting, setIsExporting] = useState(false)
   const [exportError, setExportError] = useState<string | null>(null)
+  
+  const containerRef = useRef<HTMLDivElement>(null)
+  const exportRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     async function fetchPreview() {
@@ -179,47 +139,21 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
     return () => ro.disconnect()
   }, [viewMode])
 
-  const downloadPNG = useCallback(async () => {
+  const handleDownload = async () => {
     if (!exportRef.current || isExporting || !qrCodeUrl) return
 
     setIsExporting(true)
     setExportError(null)
 
     try {
-      await waitForAssets()
-      await waitForImages(exportRef.current)
-      
-      await new Promise<void>((resolve) => requestAnimationFrame(() => {
-        requestAnimationFrame(() => resolve())
-      }))
-      await new Promise<void>((resolve) => setTimeout(resolve, 300))
-
-      const { toPng } = await import('html-to-image')
-      
-      const dataUrl = await toPng(exportRef.current, {
-        cacheBust: true,
-        pixelRatio: 1,
-        skipAutoScale: true,
-        backgroundColor: '#0d0d0d',
-        width: CERTIFICATE_WIDTH,
-        height: CERTIFICATE_HEIGHT
-      })
-      
-      const firstName = certificate.name.trim().split(' ')[0]
-      const sanitizedName = firstName.replace(/[^a-zA-Z0-9]/g, '-')
-      const filename = `${sanitizedName}-Tech-Hub-BBS.png`
-      
-      const link = document.createElement('a')
-      link.download = filename
-      link.href = dataUrl
-      link.click()
+      await downloadCertificatePNG(exportRef.current, certificate.certificate_id, certificate.name)
     } catch (error: any) {
       console.error('PNG export error:', error)
       setExportError(error.message || 'Failed to export PNG')
     } finally {
       setIsExporting(false)
     }
-  }, [certificate.certificate_id, certificate.name, isExporting, qrCodeUrl])
+  }
 
   const handleSend = async () => {
     setSending(true)
@@ -244,7 +178,7 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
 
   if (viewMode === 'fullpage') {
     return (
-      <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center overflow-auto">
+      <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
         <button
           onClick={() => setViewMode('modal')}
           className="fixed top-4 right-4 z-[101] p-2 rounded-lg bg-gray-800 text-white hover:bg-gray-700"
@@ -290,12 +224,12 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
             <button
               onClick={() => setViewMode('fullpage')}
               className="p-2 rounded-lg text-gray-400 hover:text-cyan-300 hover:bg-cyan-500/20 transition-colors"
-              title="Open Full Page for Export"
+              title="Open Full Page"
             >
               <ExternalLink className="w-5 h-5" />
             </button>
             <button
-              onClick={downloadPNG}
+              onClick={handleDownload}
               disabled={isExporting || !qrCodeUrl}
               className="p-2 rounded-lg text-gray-400 hover:text-cyan-300 hover:bg-cyan-500/20 transition-colors disabled:opacity-50"
               title="Download Certificate"
@@ -379,7 +313,7 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
           </div>
           <div className="flex gap-2">
             <button
-              onClick={downloadPNG}
+              onClick={handleDownload}
               disabled={isExporting || !qrCodeUrl}
               className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-cyan-500 text-white hover:bg-cyan-400 transition-colors text-sm disabled:opacity-50"
             >
@@ -397,6 +331,15 @@ export function CertificatePreviewModal({ certificate, onClose }: CertificatePre
               </button>
             )}
           </div>
+        </div>
+
+        <div className="hidden">
+          {certData && (
+            <CertificateExportWrapper
+              ref={exportRef}
+              certificate={certData}
+            />
+          )}
         </div>
       </motion.div>
     </motion.div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Search, Award, Loader2, ArrowRight, Download, Mail, AlertCircle } from 'lucide-react'
@@ -8,58 +8,10 @@ import dynamic from 'next/dynamic'
 import { downloadCertificatePNG } from '@/components/certificate-export'
 import { generateQRCodeBase64 } from '@/lib/qr-generator'
 
-const ScaledCertificate = dynamic(
-  () => import('@/components/certificate-wrapper').then((mod) => mod.ScaledCertificate),
-  { ssr: false, loading: () => <div className="bg-gray-800 animate-pulse rounded-lg" style={{ width: '100%', aspectRatio: '16/9' }} /> }
-)
-
 const CertificateExportWrapper = dynamic(
   () => import('@/components/certificate-wrapper').then((mod) => mod.CertificateExportWrapper),
   { ssr: false }
 )
-
-const CERTIFICATE_WIDTH = 2880
-const CERTIFICATE_HEIGHT = 1620
-
-const CERTIFICATE_FONTS = [
-  'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700',
-  'https://fonts.googleapis.com/css2?family=Great+Vibes',
-  'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600',
-  'https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600'
-]
-
-async function preloadFonts(): Promise<void> {
-  if (typeof document === 'undefined') return
-  for (const href of CERTIFICATE_FONTS) {
-    if (!document.querySelector(`link[href="${href}"]`)) {
-      const link = document.createElement('link')
-      link.rel = 'stylesheet'
-      link.href = href
-      document.head.appendChild(link)
-    }
-  }
-  try {
-    if (document.fonts?.ready) await document.fonts.ready
-  } catch {}
-  await new Promise<void>((resolve) => setTimeout(resolve, 500))
-}
-
-async function waitForImages(container: HTMLElement): Promise<void> {
-  if (typeof document === 'undefined') return
-  const images = Array.from(container.querySelectorAll('img'))
-  const promises = images.map((img) => {
-    return new Promise<void>((resolve) => {
-      if (img.complete && img.naturalHeight !== 0) resolve()
-      else {
-        img.onload = () => resolve()
-        img.onerror = () => resolve()
-        setTimeout(() => resolve(), 3000)
-      }
-    })
-  })
-  await Promise.all(promises)
-  await new Promise<void>((resolve) => setTimeout(resolve, 300))
-}
 
 interface Certificate {
   certificate_id: string
@@ -153,10 +105,6 @@ export default function DownloadCertificatePage() {
 
     try {
       setDownloading(certificate.certificate_id)
-      await preloadFonts()
-      await waitForImages(certElement)
-      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
-      await new Promise<void>((resolve) => setTimeout(resolve, 300))
       await downloadCertificatePNG(certElement, certificate.certificate_id, certificate.name)
     } catch (err) {
       console.error('Error downloading PNG:', err)
