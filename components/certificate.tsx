@@ -564,19 +564,6 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               className="footer-col center"
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 260 }}
             >
-              <img
-                src="/certificates/logos/sign.png"
-                alt="Signature"
-                className="director-signature"
-                style={{
-                  width: 280,
-                  height: 'auto',
-                  maxHeight: 100,
-                  objectFit: 'contain',
-                  marginBottom: 12,
-                  filter: `brightness(1.5) contrast(1.3) drop-shadow(0 0 8px rgba(255,255,255,0.4))`
-                }}
-              />
               <div
                 style={{
                   display: 'flex',
