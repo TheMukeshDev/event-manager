@@ -242,15 +242,15 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               className="right-techhub"
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
             >
-<img
-              src="/certificates/logos/techhubbs.png"
-              alt="Tech Hub BBS"
-              className="techhub-header-logo"
-              style={{
-                height: 200,
-                width: 'auto',
-                maxWidth: 280,
-                objectFit: 'contain',
+              <img
+                src="/certificates/logos/techhubbs.png"
+                alt="Tech Hub BBS"
+                className="techhub-header-logo"
+                style={{
+                  height: 200,
+                  width: 'auto',
+                  maxWidth: 280,
+                  objectFit: 'contain',
                   filter: `drop-shadow(0 0 14px ${accentColor}35) brightness(1.2) contrast(1.12) saturate(1.08)`
                 }}
               />
@@ -271,17 +271,17 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
             </div>
           </div>
 
-<div
-              className="main-content"
-              style={{
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                paddingTop: 45
-              }}
-            >
+          <div
+            className="main-content"
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              paddingTop: 45
+            }}
+          >
             <div
               className="main-title"
               style={{
@@ -303,30 +303,30 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               className="recipient-section"
               style={{ textAlign: 'center', padding: '4px 0' }}
             >
-<div
-              className="presented-to"
-              style={{
-                fontSize: 31,
-                color: '#888',
-                letterSpacing: 5.5,
-                textTransform: 'uppercase',
-                marginBottom: 10
-              }}
-            >
-              This certificate is proudly presented to
-            </div>
-<div
-              className="recipient-name"
-              style={{
-                fontFamily: "'Great Vibes', 'Georgia', cursive",
-                fontSize: recipientNameFontSize,
-                fontWeight: 400,
-                color: '#ffffff',
-                margin: '8px 0 24px',
-                lineHeight: 1.25,
-                textShadow: '0 0 60px rgba(255,255,255,0.28)'
-              }}
-            >
+              <div
+                className="presented-to"
+                style={{
+                  fontSize: 31,
+                  color: '#888',
+                  letterSpacing: 5.5,
+                  textTransform: 'uppercase',
+                  marginBottom: 10
+                }}
+              >
+                This certificate is proudly presented to
+              </div>
+              <div
+                className="recipient-name"
+                style={{
+                  fontFamily: "'Great Vibes', 'Georgia', cursive",
+                  fontSize: recipientNameFontSize,
+                  fontWeight: 400,
+                  color: '#ffffff',
+                  margin: '8px 0 24px',
+                  lineHeight: 1.25,
+                  textShadow: '0 0 60px rgba(255,255,255,0.28)'
+                }}
+              >
                 {name}
               </div>
               <div
@@ -370,7 +370,7 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               </div>
             </div>
 
-<div
+            <div
               className="branding-section"
               style={{
                 display: 'flex',
@@ -394,17 +394,17 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
                 <strong>Computer Society of India (CSI)</strong> &amp;{' '}
                 <strong>BBS Coding Club</strong>
               </div>
-<div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 12,
-                fontSize: 40,
-                color: '#aaa',
-                letterSpacing: 2
-              }}
-            >
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 12,
+                  fontSize: 40,
+                  color: '#aaa',
+                  letterSpacing: 2
+                }}
+              >
                 <div
                   style={{
                     display: 'flex',
@@ -540,23 +540,23 @@ export const Certificate = forwardRef<HTMLDivElement, CertificateProps>(
               className="footer-col left"
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 140 }}
             >
-<div
-              className="footer-label"
-              style={{
-                fontSize: 16,
-                color: '#666',
-                textTransform: 'uppercase',
-                letterSpacing: 2.2,
-                marginBottom: 2
-              }}
-            >
-              Date of Issue
-            </div>
-            <div
-              className="footer-value"
-              style={{ fontSize: 20, color: '#aaa', fontWeight: 500 }}
-            >
-                {date}
+              <div
+                className="footer-label"
+                style={{
+                  fontSize: 16,
+                  color: '#666',
+                  textTransform: 'uppercase',
+                  letterSpacing: 2.2,
+                  marginBottom: 2
+                }}
+              >
+                Date
+              </div>
+              <div
+                className="footer-value"
+                style={{ fontSize: 20, color: '#aaa', fontWeight: 500 }}
+              >
+                April 14, 2026
               </div>
             </div>
 
